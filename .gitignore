@@ -1,0 +1,5 @@
+/tests/win32/samples.bin
+/tests/win32/.vs
+/tests/win32/Debug
+/tests/win32/x64
+/tests/win32/win32.vcxproj.user
