@@ -90,27 +90,27 @@ void test_value_f3(T & stream)
 int main()
 {
 	{
-		cllio::std_file_writer out;
+		cllio::std_file_write out;
 		out.open("samples.bin",true,false);
 		setup_test_value(out);
 	}
 	{
-		cllio::std_file_reader in;
+		cllio::std_file_read in;
 		in.open("samples.bin",true);
 		test_value_f0(in);
 	}
 	{
-		cllio::std_file_reader in;
+		cllio::std_file_read in;
 		in.open("samples.bin",true);
 		test_value_f1(in);
 	}
 	{
-		cllio::std_file_reader in;
+		cllio::std_file_read in;
 		in.open("samples.bin",true);
 		test_value_f2(in);
 	}
 	{
-		cllio::std_file_reader in;
+		cllio::std_file_read in;
 		in.open("samples.bin",true);
 		test_value_f3(in);
 	}

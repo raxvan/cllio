@@ -20,13 +20,9 @@ Tested:
 
 When `DEBUG` is defined asserts are enabled by default.
 
-1. `CLLIO_CAST_FUNCTION 0` (default) uint32_t from/to uint8_t[4] is done with byte stitching.
-2. `CLLIO_CAST_FUNCTION 1` uint32_t from/to uint8_t[4] is done with `std::memcpy`.
-2. `CLLIO_CAST_FUNCTION 2` uint32_t from/to uint8_t[4] is done with `union`.
-
-3. `CLLIO_FORCE_ASSERT 0` disable asserts for debug
-4. `CLLIO_FORCE_ASSERT 1` enable asserts for release
-5. `CLLIO_FORCE_ASSERT 2` enable asserts without handling function. Code expects to link with: 
+1. `CLLIO_FORCE_ASSERT 0` disable asserts for debug
+2. `CLLIO_FORCE_ASSERT 1` enable asserts for release
+3. `CLLIO_FORCE_ASSERT 2` enable asserts without handling function. Code expects to link with: 
 ```
 namespace cllio
 {

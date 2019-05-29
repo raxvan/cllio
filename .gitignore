@@ -3,3 +3,4 @@
 /tests/win32/Debug
 /tests/win32/x64
 /tests/win32/win32.vcxproj.user
+/build

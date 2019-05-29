@@ -42,17 +42,10 @@
 	#define CLLIO_ASSERT(_COND) do{}while(false)
 #endif
 
-#ifndef CLLIO_CAST_FUNCTION
-	#define CLLIO_CAST_FUNCTION 2
-		// 0 (default) using byte stitching
-		// 1 using std::memcpy
-		// 2 using union
-#endif
-
 #include <cstdio> //for std::FILE, std::size_t
 #include <cstdint> //for uint8_t, etc
 #include <cstdarg> //for va_start
 
-#if CLLIO_CAST_FUNCTION == 1
-	#include <cstring> //for std::memcpy
-#endif
+#include <cstring> //for std::memcpy
+
+#define cllio_memcpy std::memcpy

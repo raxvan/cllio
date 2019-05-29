@@ -1,5 +1,5 @@
 #pragma once
-#include "cllio_config.h"
+#include "cllio_utils.h"
 
 namespace cllio
 {
@@ -14,19 +14,23 @@ namespace cllio
 		std_file_handle& operator = (const std_file_handle &) = delete;
 
 		void close();
+		bool isOpen() const;
+		std::size_t get_file_size();
+		std::size_t get_remaining_size();
 	protected:
+		std_file_handle(std::FILE * handle);
+
 		std::FILE *		m_file_ptr = nullptr;
 	};
 	//-----------------------------------------------------------------------------------------------------------
-	struct std_file_writer : public std_file_handle
+	struct std_file_writer_impl : public std_file_handle
 	{
 	public:
-		std_file_writer() = default;
-		std_file_writer(const std_file_writer&) = delete;
-		std_file_writer& operator = (const std_file_writer &) = delete;
-
-		std_file_writer(std_file_writer&&);
-		std_file_writer& operator = (std_file_writer &&);
+		std_file_writer_impl() = default;
+		std_file_writer_impl(const std_file_writer_impl&) = delete;
+		std_file_writer_impl& operator = (const std_file_writer_impl &) = delete;
+	protected:
+		std_file_writer_impl(std::FILE * handle);
 	public:
 		bool		open(const char * abs_path, const bool binary = true, const bool append = false);
 		void		flush();
@@ -58,22 +62,21 @@ namespace cllio
 
 	//-----------------------------------------------------------------------------------------------------------
 
-	struct std_file_reader : public std_file_handle
+	struct std_file_reader_impl : public std_file_handle
 	{
 	public:
-		std_file_reader() = default;
-		std_file_reader(const std_file_reader&) = delete;
-		std_file_reader& operator = (const std_file_reader &) = delete;
-		std_file_reader(std_file_reader&&);
-		std_file_reader& operator = (std_file_reader &&);
+		std_file_reader_impl() = default;
+		std_file_reader_impl(const std_file_reader_impl&) = delete;
+		std_file_reader_impl& operator = (const std_file_reader_impl &) = delete;
+	protected:
+		std_file_reader_impl(std::FILE * handle);
 	public:
-		std::size_t get_file_size();
 		bool		open(const char * abs_path, const bool binary);
 		bool		open(const char * abs_path);
 		bool		open_binary(const char * abs_path);
 
 	public: //binary
-		bool		buffer_read(void * dest, const std::size_t ammount);
+		void		buffer_read(void * dest, const std::size_t ammount);
 
 	public: //bool 	pop_T(T & out);
 		bool		pop_uint8_t(uint8_t & out);
@@ -131,5 +134,77 @@ namespace cllio
 
 	//-----------------------------------------------------------------------------------------------------------
 
+	template <class T>
+	struct std_file_io_view : public T
+	{
+	public:
+		using base_t = T;
+		using class_t = std_file_io_view<T>;
+	public:
+		std_file_io_view() = default;
+		void close() = delete;
+		bool open(const char*, const bool = true, const bool = false) = delete;
+		bool open(const char*, const bool) = delete;
+		bool open(const char*) = delete;
+		bool open_binary(const char*) = delete;
+	public:
+
+		inline std_file_io_view(std::FILE* file_view)
+			:base_t(file_view)
+		{
+		}
+		inline std_file_io_view(const class_t& other)
+			: base_t(other.m_file_ptr)
+		{
+		}
+		inline class_t& operator =(const class_t& other)
+		{
+			base_t::m_file_ptr = other.m_file_ptr;
+			return (*this);
+		}
+	};
+	template <class T>
+	struct std_file_io_owner : public T
+	{
+	public:
+		using base_t = T;
+		using class_t = std_file_io_owner<T>;
+	public:
+		std_file_io_owner() = default;
+		std_file_io_owner(const class_t& other) = delete;
+		class_t& operator =(const class_t& other) = delete;
+
+		inline ~std_file_io_owner()
+		{
+			base_t::close();
+		}
+		void swap(class_t& other)
+		{
+			std::FILE* tmp = base_t::m_file_ptr;
+			base_t::m_file_ptr = other.m_file_ptr;
+			other.m_file_ptr = tmp;
+		}
+
+		inline std_file_io_owner(class_t&& other)
+		{
+			swap(other);
+		}
+		inline class_t& operator =(class_t&& other)
+		{
+			base_t::close();
+			swap(other);
+			return (*this);
+		}
+	};
+	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+
+	using std_file_read_view = std_file_io_view<std_file_reader_impl>;
+	using std_file_write_view = std_file_io_view<std_file_writer_impl>;
+
+	using std_file_read = std_file_io_owner<std_file_reader_impl>;
+	using std_file_write = std_file_io_owner<std_file_writer_impl>;
+
+	//-----------------------------------------------------------------------------------------------------------
 
 }
