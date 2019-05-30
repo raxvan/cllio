@@ -75,6 +75,7 @@ namespace cllio
 		bool		open(const char * abs_path);
 		bool		open_binary(const char * abs_path);
 
+		
 	public: //binary
 		void		buffer_read(void * dest, const std::size_t ammount);
 
@@ -130,8 +131,25 @@ namespace cllio
 
 		bool		popdefault_float(float & out, const float _default);
 		bool		popdefault_double(double & out, const double _default);
+
+	public: //extra:
+		//read file content int a std::vector like thing of uint8_t
+		template <class T> void 		append_vector_buffer(T & out)
+		{
+			auto current_size = out.size();
+			auto remaining = get_remaining_size(); 
+			out.resize(current_size + remaining);
+			buffer_read(out.data() + current_size,remaining);
+		}
+		template <class T> void 		read_vector_buffer(T & out)
+		{
+			auto remaining = get_remaining_size(); 
+			out.resize(remaining);
+			buffer_read(out.data(),remaining);
+		}
 	};
 
+	
 	//-----------------------------------------------------------------------------------------------------------
 
 	template <class T>

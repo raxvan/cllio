@@ -3,7 +3,7 @@
 
 *This is in early development*
 
-CLLIO (c++ low level io) wants to be a lightweight, ZERO warnings (w4) stream io abstraction layer. It also accommodates different styles of code.
+CLLIO (c++ low level io) wants to be a lightweight, ZERO warnings stream io abstraction layer. It also accommodates different styles of code.
 
 Status:
 - `std::FILE` read/write layer: **Done**
@@ -40,16 +40,16 @@ Readers follow the following format:
 
 where T is :
 
-- `uint8` with `uint8_t`
-- `uint16` with `uint16_t`
-- `uint32` with `uint32_t`
-- `uint64` with `uint64_t`
-- `int8` with `int8_t`
-- `int16` with `int16_t`
-- `int32` with `int32_t`
-- `int64` with `int64_t`
-- `f32` with `float`
-- `f64` with `double`
+- `uint8_t`
+- `uint16_t`
+- `uint32_t`
+- `uint64_t`
+- `int8_t`
+- `int16_t`
+- `int32_t`
+- `int64_t`
+- `float_t`
+- `double`
 
 # Binary Write functions
 

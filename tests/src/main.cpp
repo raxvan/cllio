@@ -3,6 +3,7 @@
 #include <cllio.h>
 #include <limits>
 #include <iostream>
+#include <vector>
 
 std::size_t failed = 0;
 template <class T>
@@ -124,6 +125,20 @@ int main()
 		in.open("../../tests/samples.bin",true);
 		test_value_f3(in);
 	}
+
+	std::vector<uint8_t> buffer;
+	{
+		cllio::std_file_read in;
+		in.open("../../tests/samples.bin",true);
+		in.read_vector_buffer(buffer);
+	}
+	
+	{
+		cllio::memory_read_stream ms(buffer.data());
+		test_value_f0(ms);
+	}
+
+
 
 	if (failed)
 		std::cout << "\nFAILED:" << failed << std::endl;

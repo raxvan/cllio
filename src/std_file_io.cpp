@@ -111,28 +111,28 @@ void		std_file_writer_impl::push_int8_t(const int8_t value)
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_int16_t(const int16_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_int32_t(const int32_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_int64_t(const int64_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 
 void		std_file_writer_impl::push_uint8_t(const uint8_t value)
@@ -140,28 +140,28 @@ void		std_file_writer_impl::push_uint8_t(const uint8_t value)
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_uint16_t(const uint16_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_uint32_t(const uint32_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_uint64_t(const uint64_t value)
 {
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
 	CLLIO_ASSERT(sz == sizeof(value));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 void		std_file_writer_impl::push_float(const float value)
 {
@@ -185,7 +185,7 @@ void		std_file_writer_impl::buffer_write(const void * data, const std::size_t by
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz =std::fwrite(data, 1, byte_count, m_file_ptr);
 	CLLIO_ASSERT(sz == byte_count);
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -295,7 +295,7 @@ void std_file_reader_impl::buffer_read(void * dest, const std::size_t ammount)
 	CLLIO_ASSERT(m_file_ptr != nullptr);
 	std::size_t sz = std::fread(dest, 1, ammount, m_file_ptr);
 	CLLIO_ASSERT(sz == ammount);
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -315,7 +315,7 @@ inline T _std_file_read_v1(std::FILE* f)
 	T tmpbuf;
 	std::size_t sz = std::fread(&tmpbuf, 1, sizeof(T) , f);
 	CLLIO_ASSERT (sz == sizeof(T));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 	return tmpbuf;
 }
 
@@ -440,7 +440,7 @@ float std_file_reader_impl::pop_float()
 	uint32_t tmpbuf;
 	std::size_t sz = std::fread(&tmpbuf, 1, sizeof(tmpbuf) , m_file_ptr);
 	CLLIO_ASSERT (sz == sizeof(tmpbuf));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 	UnionCast<uint32_t,float> data;
 	data.first = tmpbuf;
 	return data.second;
@@ -452,7 +452,7 @@ double std_file_reader_impl::pop_double()
 	uint64_t tmpbuf;
 	std::size_t sz = std::fread(&tmpbuf, 1, sizeof(tmpbuf) , m_file_ptr);
 	CLLIO_ASSERT (sz == sizeof(tmpbuf));
-	CLLIO_UNUSED(sz);
+	consider_it_used(sz);
 	UnionCast<uint64_t,double> data;
 	data.first = tmpbuf;
 	return data.second;
