@@ -89,29 +89,39 @@ void test_value_f3(T & stream)
 
 int main()
 {
+	
 	{
 		cllio::std_file_write out;
-		out.open("samples.bin",true,false);
+		out.open("../../tests/samples.bin",true,false);
 		setup_test_value(out);
 	}
 	{
+		cllio::size_info f;
+		setup_test_value(f);
+		if (f.size() != 1134) //1134 file size
+		{
+			std::cout << "\nSize FAILED\n";
+			return -1;
+		}
+	}
+	{
 		cllio::std_file_read in;
-		in.open("samples.bin",true);
+		in.open("../../tests/samples.bin",true);
 		test_value_f0(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("samples.bin",true);
+		in.open("../../tests/samples.bin",true);
 		test_value_f1(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("samples.bin",true);
+		in.open("../../tests/samples.bin",true);
 		test_value_f2(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("samples.bin",true);
+		in.open("../../tests/samples.bin",true);
 		test_value_f3(in);
 	}
 
