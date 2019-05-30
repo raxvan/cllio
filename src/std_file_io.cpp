@@ -1,6 +1,7 @@
 
 
 #include "std_file_io.h"
+#include "cllio_internal.h"
 
 namespace cllio
 {

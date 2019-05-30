@@ -44,8 +44,3 @@
 
 #include <cstdio> //for std::FILE, std::size_t
 #include <cstdint> //for uint8_t, etc
-#include <cstdarg> //for va_start
-
-#include <cstring> //for std::memcpy
-
-#define cllio_memcpy std::memcpy

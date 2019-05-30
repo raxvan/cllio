@@ -214,11 +214,12 @@ namespace cllio
 			return (*this);
 		}
 	};
+	
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------
 
 	using std_file_read_view = std_file_io_view<std_file_reader_impl>;
-	using std_file_write_view = std_file_io_view<std_file_writer_impl>;
+	using std_file_writ_view = std_file_io_view<std_file_writer_impl>;
 
 	using std_file_read = std_file_io_owner<std_file_reader_impl>;
 	using std_file_write = std_file_io_owner<std_file_writer_impl>;

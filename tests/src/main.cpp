@@ -130,12 +130,33 @@ int main()
 	{
 		cllio::std_file_read in;
 		in.open("../../tests/samples.bin",true);
+		if (in.get_file_size() != 1134) //1134 file size
+		{
+			std::cout << "\nSize FAILED\n";
+			return -1;
+		}
 		in.read_vector_buffer(buffer);
 	}
 	
 	{
-		cllio::memory_read_stream ms(buffer.data());
+		cllio::mem_stream_read_unchecked ms(buffer.data());
 		test_value_f0(ms);
+	}
+	{
+		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		test_value_f0(ms);
+	}
+	{
+		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		test_value_f1(ms);
+	}
+	{
+		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		test_value_f2(ms);
+	}
+	{
+		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		test_value_f3(ms);
 	}
 
 
