@@ -10,6 +10,12 @@ What cllio does not have:
 - direct memory allocations
 - Little/Big Endian cross compatibility (right now, but this will be handled in the future)
 - complex buffering logic
+What it should have:
+- 0 Warnings (W4) on "all" compilers
+- fast compile times, with minimal effort to integrate into project
+- usable functions without the need to write boilerplate
+- error checking to the bone without performance sacrifice
+- no template overkill, functions should be easy to read with a debugger.
 
 Status:
 - `std::FILE` read/write layer: **Working**
