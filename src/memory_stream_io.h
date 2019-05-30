@@ -15,7 +15,15 @@ namespace cllio
 		mem_stream_read_unchecked() = default;
 		mem_stream_read_unchecked(const mem_stream_read_unchecked &) = default;
 		mem_stream_read_unchecked& operator = (const mem_stream_read_unchecked &) = default;
-
+	public:
+		inline bool isValid() const
+		{
+			return m_px != nullptr;
+		}
+		inline const byte_t* begin() const
+		{
+			return m_px;
+		}
 	public:
 		void		buffer_read(void * dest, const std::size_t ammount);
 	public:
@@ -138,7 +146,11 @@ namespace cllio
 		inline byte_t* data()const
 		{
 			return m_px;
-		}		
+		}
+		inline bool isValid() const
+		{
+			return m_px != nullptr;
+		}
 	public:
 		void		push_int8_t(const int8_t value);
 		void		push_int16_t(const int16_t value);
@@ -156,7 +168,7 @@ namespace cllio
 
 
 	//-----------------------------------------------------------------------------------------------------------
-/*
+
 	struct mem_stream_write
 	{
 	protected:
@@ -169,6 +181,19 @@ namespace cllio
 		mem_stream_write() = default;
 		mem_stream_write(const mem_stream_write &) = default;
 		mem_stream_write& operator = (const mem_stream_write &) = default;
+	public:
+		inline bool isValid() const
+		{
+			return m_px != nullptr;
+		}
+		inline const uint8_t* begin() const
+		{
+			return m_px;
+		}
+		inline const uint8_t* end() const
+		{
+			return m_px_end;
+		}
 
 	public:
 		void		push_int8_t(const int8_t value);
@@ -183,5 +208,5 @@ namespace cllio
 
 		void		push_float(const float value);
 		void		push_double(const double value);
-	};*/
+	};
 }

@@ -185,6 +185,19 @@ int main()
 				return -1;
 			}
 		}
+		{
+			std::vector<uint8_t> test_buffer;
+			test_buffer.resize(buffer.size());
+			cllio::mem_stream_write writer(test_buffer.data(),test_buffer.size()); 
+			setup_test_value(writer);
+			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
+			bool iterator_ok = writer.begin() == (test_buffer.data() + buffer.size());
+			if(!(data_ok && iterator_ok))
+			{
+				std::cout << "\nmem_stream_write FAILED\n";
+				return -1;
+			}
+		}
 	}
 	
 	

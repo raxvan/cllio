@@ -604,4 +604,76 @@ namespace cllio
 		tmp.first = value;
 		_write_bynary_uint64_t(m_px,tmp.second);
 	}
+
+	//-----------------------------------------------------------------------------------------------------------
+	mem_stream_write::mem_stream_write(void * px,const std::size_t size_in_bytes)
+		:m_px(static_cast<uint8_t*>(px))
+		,m_px_end(static_cast<uint8_t*>(px) + size_in_bytes)
+	{
+	}
+
+	void		mem_stream_write::push_int8_t(const int8_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint8_t)) <= m_px_end);
+		UnionCast<int8_t,uint8_t> tmp;
+		tmp.first = value;
+		*m_px++ = tmp.second;
+	}
+	void		mem_stream_write::push_int16_t(const int16_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint16_t)) <= m_px_end);
+		UnionCast<int16_t,uint16_t> tmp;
+		tmp.first = value;
+		_write_bynary_uint16_t(m_px,tmp.second);
+	}
+	void		mem_stream_write::push_int32_t(const int32_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint32_t)) <= m_px_end);
+		UnionCast<int32_t,uint32_t> tmp;
+		tmp.first = value;
+		_write_bynary_uint32_t(m_px,tmp.second);
+	}
+	void		mem_stream_write::push_int64_t(const int64_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint64_t)) <= m_px_end);
+		UnionCast<int64_t,uint64_t> tmp;
+		tmp.first = value;
+		_write_bynary_uint64_t(m_px,tmp.second);
+	}
+
+	void		mem_stream_write::push_uint8_t(const uint8_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint8_t)) <= m_px_end);
+		*m_px++ = value;
+	}
+	void		mem_stream_write::push_uint16_t(const uint16_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint16_t)) <= m_px_end);
+		_write_bynary_uint16_t(m_px,value);
+	}
+	void		mem_stream_write::push_uint32_t(const uint32_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint32_t)) <= m_px_end);
+		_write_bynary_uint32_t(m_px,value);
+	}
+	void		mem_stream_write::push_uint64_t(const uint64_t value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint64_t)) <= m_px_end);
+		_write_bynary_uint64_t(m_px,value);
+	}
+
+	void		mem_stream_write::push_float(const float value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint32_t)) <= m_px_end);
+		UnionCast<float,uint32_t> tmp;
+		tmp.first = value;
+		_write_bynary_uint32_t(m_px,tmp.second);
+	}
+	void		mem_stream_write::push_double(const double value)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint64_t)) <= m_px_end);
+		UnionCast<double,uint64_t> tmp;
+		tmp.first = value;
+		_write_bynary_uint64_t(m_px,tmp.second);
+	}
 }
