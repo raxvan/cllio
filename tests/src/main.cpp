@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 
+
 std::size_t failed = 0;
 template <class T>
 T not_value(const T & value)
@@ -88,56 +89,31 @@ void test_value_f3(T & stream)
 	#undef TEST_ITEM
 }
 
-int main()
+void TestFileReaders()
 {
-	
-	{
-		cllio::std_file_write out;
-		out.open("../../tests/samples.bin",true,false);
-		setup_test_value(out);
-	}
-	{
-		cllio::size_info f;
-		setup_test_value(f);
-		if (f.size() != 1134) //1134 file size
-		{
-			std::cout << "\nSize FAILED\n";
-			return -1;
-		}
-	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin",true);
+		in.open("../../tests/samples.bin", true);
 		test_value_f0(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin",true);
+		in.open("../../tests/samples.bin", true);
 		test_value_f1(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin",true);
+		in.open("../../tests/samples.bin", true);
 		test_value_f2(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin",true);
+		in.open("../../tests/samples.bin", true);
 		test_value_f3(in);
 	}
-
-	std::vector<uint8_t> buffer;
-	{
-		cllio::std_file_read in;
-		in.open("../../tests/samples.bin",true);
-		if (in.get_file_size() != 1134) //1134 file size
-		{
-			std::cout << "\nSize FAILED\n";
-			return -1;
-		}
-		in.read_vector_buffer(buffer);
-	}
-	
+}
+void TestMemoryReaders(const std::vector<uint8_t> & buffer)
+{
 	{
 		cllio::mem_stream_read_unchecked ms(buffer.data());
 		test_value_f0(ms);
@@ -159,6 +135,59 @@ int main()
 		test_value_f3(ms);
 	}
 
+}
+int main()
+{
+	
+	{
+		cllio::std_file_write out;
+		out.open("../../tests/samples.bin",true,false);
+		setup_test_value(out);
+	}
+	{
+		cllio::size_info f;
+		setup_test_value(f);
+		if (f.size() != 1134) //1134 file size
+		{
+			std::cout << "\nSize FAILED\n";
+			return -1;
+		}
+	}
+	TestFileReaders();
+
+	//memory
+	
+	{
+		std::vector<uint8_t> buffer;
+		cllio::std_file_read in;
+		in.open("../../tests/samples.bin",true);
+		if (in.get_file_size() != 1134) //1134 file size
+		{
+			std::cout << "\nSize FAILED\n";
+			return -1;
+		}
+		in.read_vector_buffer(buffer);
+		TestMemoryReaders(buffer);
+
+		{
+			//since there is no normal way to check mem_stream_write_unchecked we reserve a double sized buffer for this
+			//we then run the write operations and see if they match
+			std::vector<uint8_t> extended_buffer;
+			extended_buffer.resize(buffer.size() * 2);
+			std::memcpy(extended_buffer.data(), buffer.data(),buffer.size());
+			cllio::mem_stream_write_unchecked writer(extended_buffer.data()); 
+			setup_test_value(writer);
+			bool data_ok = std::memcmp(extended_buffer.data(), buffer.data(), buffer.size()) == 0;
+			bool iterator_ok = writer.data() == (extended_buffer.data() + buffer.size());
+			if(!(data_ok && iterator_ok))
+			{
+				std::cout << "\nmem_stream_write_unchecked FAILED\n";
+				return -1;
+			}
+		}
+	}
+	
+	
 
 
 	if (failed)

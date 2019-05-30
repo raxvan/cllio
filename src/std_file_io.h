@@ -118,7 +118,7 @@ namespace cllio
 
 		float		popdefault_float(const float _default);
 		double		popdefault_double(const double _default);
-	public: //
+	public: //T 	popdefault_T(T& out, const T & default);
 		bool		popdefault_uint8_t(uint8_t & out, const uint8_t _default);
 		bool		popdefault_uint16_t(uint16_t & out, const uint16_t _default);
 		bool		popdefault_uint32_t(uint32_t & out, const uint32_t _default);
