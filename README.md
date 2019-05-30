@@ -48,7 +48,7 @@ where T is :
 - `int16_t`
 - `int32_t`
 - `int64_t`
-- `float_t`
+- `float`
 - `double`
 
 # Binary Write functions
