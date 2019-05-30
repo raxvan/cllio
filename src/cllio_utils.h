@@ -22,7 +22,7 @@ namespace cllio
 	void consider_it_used(const T & v)
 	{
 		//unused variable bypass
-		((const void*)&v);
+		((void)v);
 	}
 	
 

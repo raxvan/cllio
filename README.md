@@ -1,19 +1,30 @@
 
 # About
 
-*This is in early development*
+*Work in progress*
 
 CLLIO (c++ low level io) wants to be a lightweight, ZERO warnings stream io abstraction layer. It also accommodates different styles of code.
 
+What cllio does not have:
+- complex serialization; no templates to write/read vectors or structures
+- direct memory allocations
+- Little/Big Endian cross compatibility (right now, but this will be handled in the future)
+- complex buffering logic
+
 Status:
-- `std::FILE` read/write layer: **Done**
-- `void*` read/write layer: *todo*
+- `std::FILE` read/write layer: **Working**
+- `void*` memory read/write layer: **Working**
 - `socket` read/write layer: *todo*
 
-Tested:
+0 warnings (using premake5 warnings("Extra")):
 - `Visual studio 2019` *0 warnings*
-- `docker ubuntu` *todo*
-- `xcode` *todo*
+- `docker/ubuntu` *0 warnings*
+
+Work in progress:
+- sockets readers/writers: *todo*
+- generic sockets support (selection of https://stackoverflow.com/questions/118945/best-c-c-network-library) : *todo*
+- xcode/macos testing *todo*
+- running static code analyzers: *todo*
 
 
 # Compile Defines

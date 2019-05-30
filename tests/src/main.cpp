@@ -4,6 +4,7 @@
 #include <limits>
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 
 std::size_t failed = 0;

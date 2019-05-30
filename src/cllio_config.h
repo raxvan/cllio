@@ -35,7 +35,7 @@
 #if CLLIO_ASSERTS_ENABLED != 0
 	namespace cllio
 	{
-		extern void cllio_assert_failed(const char * file, const int line, const char * cond);
+		extern "C++" void cllio_assert_failed(const char * file, const int line, const char * cond);
 	}
 	#define CLLIO_ASSERT(_COND) do{ if(!(_COND)) cllio_assert_failed(__FILE__,__LINE__,#_COND); }while(false)
 #else
