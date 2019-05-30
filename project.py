@@ -6,8 +6,6 @@ search = srcbuild.search
 match = srcbuild.match
 path = srcbuild.path
 
-#os.environ['HOST_DIR']
-
 srcbuild.generate({
 	"name" : "cllio",
 	"defines" : [
