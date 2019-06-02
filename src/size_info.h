@@ -3,6 +3,9 @@
 
 namespace cllio
 {
+
+	//can measure sized used by writers
+
 	struct size_info
 	{
 	protected:

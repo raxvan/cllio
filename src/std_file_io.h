@@ -3,6 +3,17 @@
 
 namespace cllio
 {
+
+	//fwd declare
+	struct std_file_reader_impl;
+	struct std_file_writer_impl;
+
+	//usings:
+	//using std_file_read_view -> non owning
+	//using std_file_write_view -> non owning;
+	//using std_file_read -> owning;
+	//using std_file_write -> owning;
+
 	//-----------------------------------------------------------------------------------------------------------
 	struct std_file_handle
 	{
@@ -219,7 +230,7 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 
 	using std_file_read_view = std_file_io_view<std_file_reader_impl>;
-	using std_file_writ_view = std_file_io_view<std_file_writer_impl>;
+	using std_file_write_view = std_file_io_view<std_file_writer_impl>;
 
 	using std_file_read = std_file_io_owner<std_file_reader_impl>;
 	using std_file_write = std_file_io_owner<std_file_writer_impl>;

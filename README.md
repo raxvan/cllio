@@ -21,18 +21,14 @@ What it should have:
 Status:
 - `std::FILE` read/write layer: **Working**
 - `void*` memory read/write layer: **Working**
-- `socket` read/write layer: *todo*
 
 0 warnings (using premake5 warnings("Extra")):
 - `Visual studio 2019` *0 warnings*
 - `docker/ubuntu` *0 warnings*
 
 Work in progress:
-- sockets readers/writers: *todo*
-- generic sockets support (selection of https://stackoverflow.com/questions/118945/best-c-c-network-library) : *todo*
 - xcode/macos testing *todo*
 - running static code analyzers: *todo*
-
 
 # Compile Defines
 
@@ -55,6 +51,7 @@ Readers follow the following format:
 2. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
 3. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
 4. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns true/false.
+5. `void	 buffer_read(void * dest, const std::size_t ammount);` Try to read, UB on failiure
 
 where T is :
 
@@ -74,3 +71,5 @@ where T is :
 Same as read functions for all `T`:
 
 1. `void push_T(const T & value)` will write; UB on failure.
+2. `void buffer_write(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
+

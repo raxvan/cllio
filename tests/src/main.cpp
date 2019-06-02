@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <functional>
 
 
 std::size_t failed = 0;
@@ -139,7 +140,6 @@ void TestMemoryReaders(const std::vector<uint8_t> & buffer)
 }
 int main()
 {
-	
 	{
 		cllio::std_file_write out;
 		out.open("../../tests/samples.bin",true,false);
@@ -159,7 +159,7 @@ int main()
 	//memory
 	
 	{
-		std::vector<uint8_t> buffer;
+		std::vector<cllio::byte_t> buffer;
 		cllio::std_file_read in;
 		in.open("../../tests/samples.bin",true);
 		if (in.get_file_size() != 1134) //1134 file size
@@ -173,7 +173,7 @@ int main()
 		{
 			//since there is no normal way to check mem_stream_write_unchecked we reserve a double sized buffer for this
 			//we then run the write operations and see if they match
-			std::vector<uint8_t> extended_buffer;
+			std::vector<cllio::byte_t> extended_buffer;
 			extended_buffer.resize(buffer.size() * 2);
 			std::memcpy(extended_buffer.data(), buffer.data(),buffer.size());
 			cllio::mem_stream_write_unchecked writer(extended_buffer.data()); 
@@ -187,7 +187,7 @@ int main()
 			}
 		}
 		{
-			std::vector<uint8_t> test_buffer;
+			std::vector<cllio::byte_t> test_buffer;
 			test_buffer.resize(buffer.size());
 			cllio::mem_stream_write writer(test_buffer.data(),test_buffer.size()); 
 			setup_test_value(writer);
@@ -196,6 +196,23 @@ int main()
 			if(!(data_ok && iterator_ok))
 			{
 				std::cout << "\nmem_stream_write FAILED\n";
+				return -1;
+			}
+		}
+		{
+			std::vector<cllio::byte_t> test_buffer;
+			cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>> functor_writer = [&](const std::size_t ns){
+				auto sz = test_buffer.size();
+				test_buffer.resize(sz + ns);
+				return test_buffer.data() + sz;
+			};
+			
+			
+			setup_test_value(functor_writer);
+			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
+			if(!(data_ok))
+			{
+				std::cout << "\nmemory_functor_write FAILED\n";
 				return -1;
 			}
 		}
