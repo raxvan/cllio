@@ -3,7 +3,7 @@ import srcbuild
 
 ctx = srcbuild.Generator()
 
-ctx.puke(
+ctx.run(
 	kind = "lib",
 	incl = [
 		"src"
