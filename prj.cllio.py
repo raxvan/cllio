@@ -3,11 +3,9 @@ import srcbuild
 
 ctx = srcbuild.Generator()
 
-ctx.run(
-	kind = "lib",
+ctx.run("lib",
 	incl = [
 		"src"
 	],
-	src = 
-		ctx.glob("src",[".cpp",".h"])
+	src = ctx.glob("src",[".cpp",".h"])
 )

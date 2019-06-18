@@ -45,3 +45,4 @@
 #include <cstdio> //for std::FILE, std::size_t
 #include <cstdint> //for uint8_t, etc
 #include <cstddef> //for std::ptrdiff_t, should optimize out the include and use std::size_t
+#include <utility> //for std::forward

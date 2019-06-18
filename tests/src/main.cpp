@@ -201,13 +201,12 @@ int main()
 		}
 		{
 			std::vector<cllio::byte_t> test_buffer;
-			cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>> functor_writer = [&](const std::size_t ns){
+			cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>> functor_writer = {[&](const std::size_t ns){
 				auto sz = test_buffer.size();
 				test_buffer.resize(sz + ns);
 				return test_buffer.data() + sz;
-			};
-			
-			
+			}};
+
 			setup_test_value(functor_writer);
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			if(!(data_ok))
@@ -217,14 +216,11 @@ int main()
 			}
 		}
 	}
-	
-	
-
 
 	if (failed)
 		std::cout << "\nFAILED:" << failed << std::endl;
 	else
 		std::cout << "\nOK\n";
 	return 0;
-	
+
 }
