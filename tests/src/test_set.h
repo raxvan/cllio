@@ -1,65 +1,64 @@
 
-	TEST_ITEM(int8_t, std::numeric_limits<int8_t>::max() );
-	TEST_ITEM(int8_t, int8_t(0) );
-	TEST_ITEM(int8_t, std::numeric_limits<int8_t>::min() );
+TEST_ITEM(int8_t, std::numeric_limits<int8_t>::max());
+TEST_ITEM(int8_t, int8_t(0));
+TEST_ITEM(int8_t, std::numeric_limits<int8_t>::min());
 
-	TEST_ITEM(int16_t, std::numeric_limits<int16_t>::max() );
-	TEST_ITEM(int16_t, int16_t(0) );
-	TEST_ITEM(int16_t, std::numeric_limits<int16_t>::min() );
-	
-	TEST_ITEM(int32_t, std::numeric_limits<int32_t>::max() );
-	TEST_ITEM(int32_t, int32_t(0) );
-	TEST_ITEM(int32_t, std::numeric_limits<int32_t>::min() );
-	
-	TEST_ITEM(int64_t, std::numeric_limits<int64_t>::max() );
-	TEST_ITEM(int64_t, int64_t(0) );
-	TEST_ITEM(int64_t, std::numeric_limits<int64_t>::min() );
+TEST_ITEM(int16_t, std::numeric_limits<int16_t>::max());
+TEST_ITEM(int16_t, int16_t(0));
+TEST_ITEM(int16_t, std::numeric_limits<int16_t>::min());
 
-	
-	TEST_ITEM(uint8_t, std::numeric_limits<uint8_t>::max() );
-	TEST_ITEM(uint8_t, uint8_t(0) );
-	TEST_ITEM(uint8_t, std::numeric_limits<uint8_t>::min() );
-	
-	TEST_ITEM(uint16_t, std::numeric_limits<uint16_t>::max() );
-	TEST_ITEM(uint16_t, uint16_t(0) );
-	TEST_ITEM(uint16_t, std::numeric_limits<uint16_t>::min() );
+TEST_ITEM(int32_t, std::numeric_limits<int32_t>::max());
+TEST_ITEM(int32_t, int32_t(0));
+TEST_ITEM(int32_t, std::numeric_limits<int32_t>::min());
 
-	TEST_ITEM(uint32_t, std::numeric_limits<uint32_t>::max() );
-	TEST_ITEM(uint32_t, uint32_t(0) );
-	TEST_ITEM(uint32_t, std::numeric_limits<uint32_t>::min() );
+TEST_ITEM(int64_t, std::numeric_limits<int64_t>::max());
+TEST_ITEM(int64_t, int64_t(0));
+TEST_ITEM(int64_t, std::numeric_limits<int64_t>::min());
 
-	TEST_ITEM(uint64_t, std::numeric_limits<uint64_t>::max() );
-	TEST_ITEM(uint64_t, uint64_t(0) );
-	TEST_ITEM(uint64_t, std::numeric_limits<uint64_t>::min() );
+TEST_ITEM(uint8_t, std::numeric_limits<uint8_t>::max());
+TEST_ITEM(uint8_t, uint8_t(0));
+TEST_ITEM(uint8_t, std::numeric_limits<uint8_t>::min());
 
-	TEST_ITEM(float, 0.0f );
-	TEST_ITEM(float, 1.0f );
-	TEST_ITEM(float, 2.0f );
-	TEST_ITEM(float, (-1.0f) );
-	TEST_ITEM(float, (-2.0f) );
+TEST_ITEM(uint16_t, std::numeric_limits<uint16_t>::max());
+TEST_ITEM(uint16_t, uint16_t(0));
+TEST_ITEM(uint16_t, std::numeric_limits<uint16_t>::min());
 
-	TEST_ITEM(float, std::numeric_limits<float>::infinity() );
-	TEST_ITEM(float, (-std::numeric_limits<float>::infinity()) );
+TEST_ITEM(uint32_t, std::numeric_limits<uint32_t>::max());
+TEST_ITEM(uint32_t, uint32_t(0));
+TEST_ITEM(uint32_t, std::numeric_limits<uint32_t>::min());
 
-	TEST_ITEM(double, 0.0 );
-	TEST_ITEM(double, 1.0 );
-	TEST_ITEM(double, 2.0 );
-	TEST_ITEM(double, (-1.0) );
-	TEST_ITEM(double, (-2.0) );
+TEST_ITEM(uint64_t, std::numeric_limits<uint64_t>::max());
+TEST_ITEM(uint64_t, uint64_t(0));
+TEST_ITEM(uint64_t, std::numeric_limits<uint64_t>::min());
 
-	TEST_ITEM(double, std::numeric_limits<double>::infinity() );
-	TEST_ITEM(double, (-std::numeric_limits<double>::infinity()) );
-	
-	TEST_ITEM(uint32_t, uint32_t(2479269135u));
-	TEST_ITEM(int8_t, int8_t(-1));
-	TEST_ITEM(uint32_t, uint32_t(2479269135u));
-	TEST_ITEM(int16_t, int16_t(-1));
-	TEST_ITEM(uint32_t, uint32_t(2479269135u));
-	TEST_ITEM(int32_t, int32_t(-1));
-	TEST_ITEM(uint32_t, uint32_t(2479269135u));
-	TEST_ITEM(int64_t, int64_t(-1));
+TEST_ITEM(float, 0.0f);
+TEST_ITEM(float, 1.0f);
+TEST_ITEM(float, 2.0f);
+TEST_ITEM(float, (-1.0f));
+TEST_ITEM(float, (-2.0f));
 
-//random sample 8 bit
+TEST_ITEM(float, std::numeric_limits<float>::infinity());
+TEST_ITEM(float, (-std::numeric_limits<float>::infinity()));
+
+TEST_ITEM(double, 0.0);
+TEST_ITEM(double, 1.0);
+TEST_ITEM(double, 2.0);
+TEST_ITEM(double, (-1.0));
+TEST_ITEM(double, (-2.0));
+
+TEST_ITEM(double, std::numeric_limits<double>::infinity());
+TEST_ITEM(double, (-std::numeric_limits<double>::infinity()));
+
+TEST_ITEM(uint32_t, uint32_t(2479269135u));
+TEST_ITEM(int8_t, int8_t(-1));
+TEST_ITEM(uint32_t, uint32_t(2479269135u));
+TEST_ITEM(int16_t, int16_t(-1));
+TEST_ITEM(uint32_t, uint32_t(2479269135u));
+TEST_ITEM(int32_t, int32_t(-1));
+TEST_ITEM(uint32_t, uint32_t(2479269135u));
+TEST_ITEM(int64_t, int64_t(-1));
+
+// random sample 8 bit
 TEST_ITEM(uint8_t, uint8_t(64));
 TEST_ITEM(uint8_t, uint8_t(205));
 TEST_ITEM(uint8_t, uint8_t(240));
@@ -80,11 +79,7 @@ TEST_ITEM(uint8_t, uint8_t(232));
 TEST_ITEM(uint8_t, uint8_t(49));
 TEST_ITEM(uint8_t, uint8_t(167));
 
-
-
-//random sample 16 bit
-
-
+// random sample 16 bit
 
 TEST_ITEM(uint16_t, uint16_t(52876));
 TEST_ITEM(uint16_t, uint16_t(3521));
@@ -152,8 +147,7 @@ TEST_ITEM(uint16_t, uint16_t(31431));
 TEST_ITEM(uint16_t, uint16_t(21797));
 TEST_ITEM(uint16_t, uint16_t(27420));
 
-
-//int32 sample
+// int32 sample
 TEST_ITEM(int32_t, int32_t(94530103));
 TEST_ITEM(int32_t, int32_t(41938830));
 TEST_ITEM(int32_t, int32_t(-381714703));
@@ -222,8 +216,6 @@ TEST_ITEM(int32_t, int32_t(722249236));
 TEST_ITEM(int32_t, int32_t(-562427100));
 TEST_ITEM(int32_t, int32_t(-732944114));
 
-
-
 TEST_ITEM(float, (-1.3858901840e+3f));
 TEST_ITEM(float, (-1.4048607140e+3f));
 TEST_ITEM(float, (-1.3034607200e+2f));
@@ -235,9 +227,9 @@ TEST_ITEM(float, (-7.5807847520e+2f));
 TEST_ITEM(float, (-8.2907223170e+2f));
 TEST_ITEM(float, (-6.9951474660e+2f));
 TEST_ITEM(float, (-6.6014402320e+2f));
-TEST_ITEM(float, ( 6.1608298570e+2f));
+TEST_ITEM(float, (6.1608298570e+2f));
 TEST_ITEM(float, (-2.2967635800e+3f));
-TEST_ITEM(float, ( 8.1000572030e+2f));
+TEST_ITEM(float, (8.1000572030e+2f));
 TEST_ITEM(float, (-7.7603278900e+2f));
 TEST_ITEM(float, (-2.4889371590e+3f));
 TEST_ITEM(float, (-2.2437307810e+3f));
@@ -254,46 +246,41 @@ TEST_ITEM(float, (-1.1304267780e+3f));
 TEST_ITEM(float, (-1.2160025770e+3f));
 TEST_ITEM(float, (-1.8806770890e+3f));
 TEST_ITEM(float, (-1.3894713920e+3f));
-TEST_ITEM(float, ( 2.0287140260e+2f));
+TEST_ITEM(float, (2.0287140260e+2f));
 TEST_ITEM(float, (-1.5816044520e+1f));
 
-
-
-
-TEST_ITEM(double, ( 7.54115671273041516542e+4));
-TEST_ITEM(double, ( 9.58435193863748572767e+4));
+TEST_ITEM(double, (7.54115671273041516542e+4));
+TEST_ITEM(double, (9.58435193863748572767e+4));
 TEST_ITEM(double, (-5.74483225190257886425e+5));
 TEST_ITEM(double, (-1.32387485861313412897e+6));
 TEST_ITEM(double, (-1.12199603830041480251e+6));
 TEST_ITEM(double, (-1.09694071619576611556e+6));
-TEST_ITEM(double, ( 3.11366457786549255252e+6));
+TEST_ITEM(double, (3.11366457786549255252e+6));
 TEST_ITEM(double, (-2.55631816559863090515e+6));
 TEST_ITEM(double, (-9.96232974900588160381e+5));
-TEST_ITEM(double, ( 3.66865131791473366320e+5));
+TEST_ITEM(double, (3.66865131791473366320e+5));
 TEST_ITEM(double, (-4.73770736241958453320e+5));
 TEST_ITEM(double, (-2.28469998094717226923e+6));
 TEST_ITEM(double, (-1.84133676683586928993e+6));
 TEST_ITEM(double, (-8.26529678650657646358e+5));
 TEST_ITEM(double, (-1.40079615336815454066e+6));
 TEST_ITEM(double, (-5.44768086599861388095e+5));
-TEST_ITEM(double, ( 2.46740676296824961901e+6));
+TEST_ITEM(double, (2.46740676296824961901e+6));
 TEST_ITEM(double, (-2.84142352200111723505e+5));
 TEST_ITEM(double, (-1.97680717161400755867e+6));
 TEST_ITEM(double, (-1.83027159528657374904e+6));
 TEST_ITEM(double, (-1.82738139586350042373e+6));
-TEST_ITEM(double, ( 6.68250296317504951730e+5));
+TEST_ITEM(double, (6.68250296317504951730e+5));
 TEST_ITEM(double, (-2.46094702187238074839e+6));
 TEST_ITEM(double, (-1.09770280204508430324e+6));
 TEST_ITEM(double, (-6.64405327957495348528e+5));
 TEST_ITEM(double, (-8.50825266600098693743e+4));
-TEST_ITEM(double, ( 1.33365289095310866833e+6));
+TEST_ITEM(double, (1.33365289095310866833e+6));
 TEST_ITEM(double, (-6.78529917195206508040e+3));
 TEST_ITEM(double, (-1.74868343844425864518e+5));
 TEST_ITEM(double, (-5.78625221381180337630e+5));
 TEST_ITEM(double, (-6.32510016641410882585e+5));
-TEST_ITEM(double, ( 3.99993494114929810166e+5));
-
-
+TEST_ITEM(double, (3.99993494114929810166e+5));
 
 TEST_ITEM(float, (0.5927773f));
 TEST_ITEM(float, (0.4298916f));

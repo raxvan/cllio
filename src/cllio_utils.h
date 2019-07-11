@@ -8,22 +8,20 @@
 namespace cllio
 {
 	using byte_t = uint8_t;
-	
+
 	//--------------------------------------------------------------------------------------------------------
 
 	template <class F, class S>
 	union UnionCast
 	{
-		F 	first;
-		S 	second;
+		F first;
+		S second;
 	};
 
 	template <class T>
-	void consider_it_used(const T & v)
+	void consider_it_used(const T& v)
 	{
-		//unused variable bypass
+		// unused variable bypass
 		((void)v);
 	}
-	
-
 }
