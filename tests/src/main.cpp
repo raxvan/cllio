@@ -222,7 +222,7 @@ int main()
 		{
 			std::vector<cllio::byte_t>													  test_buffer;
 			cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>> functor_writer = [&](const std::size_t ns) {
-				autosz = test_buffer.size();
+				auto sz = test_buffer.size();
 				test_buffer.resize(sz + ns);
 				return test_buffer.data() + sz;
 			};
