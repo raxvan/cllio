@@ -7,6 +7,10 @@
 #include <cstring>
 #include <functional>
 
+const auto ref_file_path = "../../tests/samples.bin";
+const auto file_path = "samples.bin";
+
+
 std::size_t failed = 0;
 template <class T>
 T not_value(const T& value)
@@ -23,7 +27,7 @@ T not_value(const T& value)
 }
 
 template <class T>
-void setup_test_value(T& stream)
+void test_writer(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE) stream.push_##TYPE(VALUE)
 
@@ -116,22 +120,22 @@ void TestFileReaders()
 {
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin", true);
+		in.open(ref_file_path, true);
 		test_value_f0(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin", true);
+		in.open(ref_file_path, true);
 		test_value_f1(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin", true);
+		in.open(ref_file_path, true);
 		test_value_f2(in);
 	}
 	{
 		cllio::std_file_read in;
-		in.open("../../tests/samples.bin", true);
+		in.open(ref_file_path, true);
 		test_value_f3(in);
 	}
 }
@@ -160,20 +164,24 @@ void TestMemoryReaders(const std::vector<uint8_t>& buffer)
 }
 int main()
 {
+
 	{
+		//write file
 		cllio::std_file_write out;
-		out.open("../../tests/samples.bin", true, false);
-		setup_test_value(out);
+		out.open(file_path, true, false);
+		test_writer(out);
 	}
+
 	{
 		cllio::size_info f;
-		setup_test_value(f);
+		test_writer(f);
 		if (f.size() != 1134) // 1134 file size
 		{
-			std::cout << "\nSize FAILED\n";
+			std::cout << "\nFAILURE\n" << "Size mismatch";
 			return -1;
 		}
 	}
+
 	TestFileReaders();
 
 	// memory
@@ -181,10 +189,10 @@ int main()
 	{
 		std::vector<cllio::byte_t> buffer;
 		cllio::std_file_read	   in;
-		in.open("../../tests/samples.bin", true);
+		in.open(ref_file_path, true);
 		if (in.get_file_size() != 1134) // 1134 file size
 		{
-			std::cout << "\nSize FAILED\n";
+			std::cout << "\nFAILURE\n" << "Size mismatch";
 			return -1;
 		}
 		in.read_vector_buffer(buffer);
@@ -197,12 +205,12 @@ int main()
 			extended_buffer.resize(buffer.size() * 2);
 			std::memcpy(extended_buffer.data(), buffer.data(), buffer.size());
 			cllio::mem_stream_write_unchecked writer(extended_buffer.data());
-			setup_test_value(writer);
+			test_writer(writer);
 			bool data_ok = std::memcmp(extended_buffer.data(), buffer.data(), buffer.size()) == 0;
 			bool iterator_ok = writer.data() == (extended_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cout << "\nmem_stream_write_unchecked FAILED\n";
+				std::cout << "\nFAILURE\n" << "mem_stream_write_unchecked";
 				return -1;
 			}
 		}
@@ -210,36 +218,36 @@ int main()
 			std::vector<cllio::byte_t> test_buffer;
 			test_buffer.resize(buffer.size());
 			cllio::mem_stream_write writer(test_buffer.data(), test_buffer.size());
-			setup_test_value(writer);
+			test_writer(writer);
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			bool iterator_ok = writer.begin() == (test_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cout << "\nmem_stream_write FAILED\n";
+				std::cout << "\nFAILURE\n" << "mem_stream_write";
 				return -1;
 			}
 		}
 		{
-			std::vector<cllio::byte_t>													  test_buffer;
+			std::vector<cllio::byte_t> test_buffer;
 			auto functor_writer = cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>>{[&](const std::size_t ns) {
 				auto sz = test_buffer.size();
 				test_buffer.resize(sz + ns);
 				return test_buffer.data() + sz;
 			}};
 
-			setup_test_value(functor_writer);
+			test_writer(functor_writer);
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			if (!(data_ok))
 			{
-				std::cout << "\nmemory_functor_write FAILED\n";
+				std::cout << "\nFAILURE\n" << "memory_functor_write";
 				return -1;
 			}
 		}
 	}
 
 	if (failed)
-		std::cout << "\nFAILED:" << failed << std::endl;
+		std::cout << "\ntest:FAILURE\n";
 	else
-		std::cout << "\nOK\n";
+		std::cout << "\ntest:SUCCESS\n";
 	return 0;
 }
