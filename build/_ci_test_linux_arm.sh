@@ -6,5 +6,5 @@ cd build/cllio_test_linux_make
 make config=debug_arm
 
 ./bin/ARM/Debug/_cllio_test
-python3 -c "import civalidate; civalidate.files_equal('samples.bin','../../tests/samples.bin')"
+python3 -c "import ciutil; ciutil.files_equal('samples.bin','../../tests/samples.bin')"
 

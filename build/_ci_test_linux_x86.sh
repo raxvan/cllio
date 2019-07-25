@@ -7,9 +7,9 @@ make config=debug_x32
 make config=debug_x64
 
 ./bin/x32/Debug/_cllio_test
-python3 -c "import civalidate; civalidate.files_equal('samples.bin','../../tests/samples.bin')"
+python3 -c "import ciutil; ciutil.files_equal('samples.bin','../../tests/samples.bin')"
 
 ./bin/x64/Debug/_cllio_test
-python3 -c "import civalidate; civalidate.files_equal('samples.bin','../../tests/samples.bin')"
+python3 -c "import ciutil; ciutil.files_equal('samples.bin','../../tests/samples.bin')"
 
 
