@@ -11,13 +11,15 @@ namespace cllio
 		if (m_file_ptr != nullptr)
 			std::fclose(m_file_ptr);
 	}
-	void std_file_handle::close()
+	bool std_file_handle::close()
 	{
 		if (m_file_ptr != nullptr)
 		{
 			std::fclose(m_file_ptr);
 			m_file_ptr = nullptr;
+			return true;
 		}
+		return false;
 	}
 	std_file_handle::std_file_handle(std::FILE* handle)
 		: m_file_ptr(handle)

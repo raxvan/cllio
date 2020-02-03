@@ -25,8 +25,10 @@ namespace cllio
 		std_file_handle(const std_file_handle&) = delete;
 		std_file_handle& operator=(const std_file_handle&) = delete;
 
-		void		close();
 		bool		isOpen() const;
+
+		bool		close();
+
 		std::size_t get_file_size();
 		std::size_t get_remaining_size();
 

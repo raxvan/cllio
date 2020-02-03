@@ -5,12 +5,6 @@
 
 namespace cllio
 {
-
-	mem_stream_read_unchecked::mem_stream_read_unchecked(const void* px)
-		: m_px(static_cast<const byte_t*>(px))
-	{
-	}
-	//-----------------------------------------------------------------------------------------------------------
 	inline uint16_t _read_uint16_t(const byte_t*& px)
 	{
 
@@ -41,6 +35,67 @@ namespace cllio
 		r |= (static_cast<uint64_t>(*px++) << 56);
 		return r;
 	}
+
+	inline void _write_bynary_uint16_t(byte_t*& out, const uint16_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
+	}
+	inline void _write_bynary_uint32_t(byte_t*& out, const uint32_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 24) & 0xFF);
+	}
+	inline void _write_bynary_uint64_t(byte_t*& out, const uint64_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 24) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 32) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 40) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 48) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 56) & 0xFF);
+	}
+
+	void _memory_functor_write_details::_write_bynary_uint16_t(byte_t* out, const uint16_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out = static_cast<uint8_t>((value >> 8) & 0xFF);
+	}
+	void _memory_functor_write_details::_write_bynary_uint32_t(byte_t* out, const uint32_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
+		*out = static_cast<uint8_t>((value >> 24) & 0xFF);
+	}
+	void _memory_functor_write_details::_write_bynary_uint64_t(byte_t* out, const uint64_t value)
+	{
+		*out++ = static_cast<uint8_t>(value & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 24) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 32) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 40) & 0xFF);
+		*out++ = static_cast<uint8_t>((value >> 48) & 0xFF);
+		*out = static_cast<uint8_t>((value >> 56) & 0xFF);
+	}
+
+
+	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+
+
+	mem_stream_read_unchecked::mem_stream_read_unchecked(const void* px)
+		: m_px(static_cast<const byte_t*>(px))
+	{
+	}
+	//-----------------------------------------------------------------------------------------------------------
+
 	//-----------------------------------------------------------------------------------------------------------
 	uint8_t mem_stream_read_unchecked::pop_uint8_t()
 	{
@@ -509,29 +564,7 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------
-	inline void _write_bynary_uint16_t(byte_t*& out, const uint16_t value)
-	{
-		*out++ = static_cast<uint8_t>(value & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
-	}
-	inline void _write_bynary_uint32_t(byte_t*& out, const uint32_t value)
-	{
-		*out++ = static_cast<uint8_t>(value & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 24) & 0xFF);
-	}
-	inline void _write_bynary_uint64_t(byte_t*& out, const uint64_t value)
-	{
-		*out++ = static_cast<uint8_t>(value & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 24) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 32) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 40) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 48) & 0xFF);
-		*out++ = static_cast<uint8_t>((value >> 56) & 0xFF);
-	}
+
 	//-----------------------------------------------------------------------------------------------------------
 
 	mem_stream_write_unchecked::mem_stream_write_unchecked(void* px)
@@ -678,5 +711,119 @@ namespace cllio
 		UnionCast<double, uint64_t> tmp;
 		tmp.first = value;
 		_write_bynary_uint64_t(m_px, tmp.second);
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+	bool mem_stream_write::trypush_int8_t(const int8_t value)
+	{
+		if(_can_write<uint8_t>())
+		{
+			UnionCast<int8_t, uint8_t> tmp;
+			tmp.first = value;
+			*m_px++ = tmp.second;
+			return true;
+		}
+		return false;
+
+	}
+	bool mem_stream_write::trypush_int16_t(const int16_t value)
+	{
+		if(_can_write<uint16_t>())
+		{
+			UnionCast<int16_t, uint16_t> tmp;
+			tmp.first = value;
+			_write_bynary_uint16_t(m_px, tmp.second);
+			return true;
+		}
+		return false;
+
+	}
+	bool mem_stream_write::trypush_int32_t(const int32_t value)
+	{
+		if(_can_write<uint32_t>())
+		{
+			UnionCast<int32_t, uint32_t> tmp;
+			tmp.first = value;
+			_write_bynary_uint32_t(m_px, tmp.second);
+			return true;
+		}
+		return false;
+
+	}
+	bool mem_stream_write::trypush_int64_t(const int64_t value)
+	{
+		if(_can_write<uint64_t>())
+		{
+			UnionCast<int64_t, uint64_t> tmp;
+			tmp.first = value;
+			_write_bynary_uint64_t(m_px, tmp.second);
+			return true;
+		}
+		return false;
+
+	}
+
+	bool mem_stream_write::trypush_uint8_t(const uint8_t value)
+	{
+		if(_can_write<uint8_t>())
+		{
+			*m_px++ = value;
+			return true;
+		}
+		return false;
+	}
+	bool mem_stream_write::trypush_uint16_t(const uint16_t value)
+	{
+		if(_can_write<uint16_t>())
+		{
+			_write_bynary_uint16_t(m_px, value);
+			return true;
+		}
+		return false;
+	}
+	bool mem_stream_write::trypush_uint32_t(const uint32_t value)
+	{
+		if(_can_write<uint32_t>())
+		{
+			_write_bynary_uint32_t(m_px, value);
+			return true;
+		}
+		return false;
+	}
+	bool mem_stream_write::trypush_uint64_t(const uint64_t value)
+	{
+		if(_can_write<uint64_t>())
+		{
+			_write_bynary_uint64_t(m_px, value);
+			return true;
+		}
+		return false;
+	}
+
+	bool mem_stream_write::trypush_float(const float value)
+	{
+		if(_can_write<uint32_t>())
+		{
+			UnionCast<float, uint32_t> tmp;
+			tmp.first = value;
+			_write_bynary_uint32_t(m_px, tmp.second);
+			return true;
+		}
+		return false;
+	}
+	bool mem_stream_write::trypush_double(const double value)
+	{
+		if(_can_write<uint64_t>())
+		{
+			UnionCast<double, uint64_t> tmp;
+			tmp.first = value;
+			_write_bynary_uint64_t(m_px, tmp.second);
+			return true;
+		}
+		return false;
 	}
 }
