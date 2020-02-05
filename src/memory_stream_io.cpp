@@ -173,7 +173,7 @@ namespace cllio
 		return m_px_end - m_px;
 	}
 	//-----------------------------------------------------------------------------------------------------------
-	void mem_stream_read::buffer_read(void* dest, const std::size_t ammount)
+	void mem_stream_read::read_raw_buffer(void* dest, const std::size_t ammount)
 	{
 		CLLIO_ASSERT(m_px != nullptr && (m_px + ammount) <= m_px_end);
 		uint8_t* dst8 = static_cast<uint8_t*>(dest);
@@ -186,7 +186,16 @@ namespace cllio
 #endif
 		m_px += ammount;
 	}
-
+	void mem_stream_read::tryread_raw_buffer(void* dest, const std::size_t ammount)
+	{
+		if(m_px != nullptr && (m_px + ammount) <= m_px_end)
+		{
+			read_raw_buffer(dest,ammount);
+			return true;
+		}
+		return false;
+		
+	}
 	bool mem_stream_read::pop_uint8_t(uint8_t& out)
 	{
 		if ((m_px + sizeof(uint8_t)) > m_px_end)

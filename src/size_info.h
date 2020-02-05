@@ -29,7 +29,7 @@ namespace cllio
 		}
 
 	public:
-		inline void buffer_write(const void*, const std::size_t byte_count)
+		inline void push_raw_buffer(const void*, const std::size_t byte_count)
 		{
 			_add_size(byte_count);
 		}

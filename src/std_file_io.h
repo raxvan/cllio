@@ -53,7 +53,7 @@ namespace cllio
 		void flush();
 
 	public: // binary writers, no error check
-		void buffer_write(const void* data, const std::size_t byte_count);
+		void push_raw_buffer(const void* data, const std::size_t byte_count);
 
 	public:
 		void push_int8_t(const int8_t value);
@@ -95,7 +95,7 @@ namespace cllio
 		bool open_binary(const char* abs_path);
 
 	public: // binary
-		void buffer_read(void* dest, const std::size_t ammount);
+		void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public: // bool 	pop_T(T & out);
 		bool pop_uint8_t(uint8_t& out);
@@ -153,24 +153,75 @@ namespace cllio
 		bool popdefault_float(float& out, const float _default);
 		bool popdefault_double(double& out, const double _default);
 
+	public: // void 	 pop_T(T & out, bool& error);
+		void pop_uint8_t(uint8_t& out, bool& error);
+		void pop_uint16_t(uint16_t& out, bool& error);
+		void pop_uint32_t(uint32_t& out, bool& error);
+		void pop_uint64_t(uint64_t& out, bool& error);
+
+		void pop_int8_t(int8_t& out, bool& error);
+		void pop_int16_t(int16_t& out, bool& error);
+		void pop_int32_t(int32_t& out, bool& error);
+		void pop_int64_t(int64_t& out, bool& error);
+
+		void pop_float(float& out, bool& error);
+		void pop_double(double& out, bool& error);
+
 	public: // extra:
 		// read file content int a std::vector like thing of uint8_t
 		template <class T>
-		void append_vector_buffer(T& out)
+		void raw_append_to_container(T& out)
 		{
 			auto current_size = out.size();
 			auto remaining = get_remaining_size();
 			out.resize(current_size + remaining);
-			buffer_read(out.data() + current_size, remaining);
-		}
-		template <class T>
-		void read_vector_buffer(T& out)
-		{
-			auto remaining = get_remaining_size();
-			out.resize(remaining);
-			buffer_read(out.data(), remaining);
+			read_raw_buffer(out.data() + current_size, remaining);
 		}
 	};
+
+
+	inline void std_file_reader_impl::pop_uint8_t(uint8_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint8_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint16_t(uint16_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint16_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint32_t(uint32_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint32_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint64_t(uint64_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint64_t(out) == false;
+	}
+
+	inline void std_file_reader_impl::pop_int8_t(int8_t& out, bool& error) {
+		if(error) return;
+		error = pop_int8_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int16_t(int16_t& out, bool& error) {
+		if(error) return;
+		error = pop_int16_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int32_t(int32_t& out, bool& error) {
+		if(error) return;
+		error = pop_int32_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int64_t(int64_t& out, bool& error) {
+		if(error) return;
+		error = pop_int64_t(out) == false;
+	}
+
+	inline void std_file_reader_impl::pop_float(float& out, bool& error) {
+		if(error) return;
+		error = pop_float(out) == false;
+	}
+	inline void std_file_reader_impl::pop_double(double& out, bool& error) {
+		if(error) return;
+		error = pop_double(out) == false;
+	}
 
 	//-----------------------------------------------------------------------------------------------------------
 

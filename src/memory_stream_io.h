@@ -41,7 +41,7 @@ namespace cllio
 		}
 
 	public:
-		void buffer_read(void* dest, const std::size_t ammount);
+		void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public:
 		uint8_t  pop_uint8_t();
@@ -79,6 +79,10 @@ namespace cllio
 		std::ptrdiff_t size() const;
 
 	public:
+		inline bool hasData()const
+		{
+			return m_px < m_px_end;
+		}
 		inline bool isValid() const
 		{
 			return m_px != nullptr;
@@ -93,7 +97,8 @@ namespace cllio
 		}
 
 	public: // binary
-		void buffer_read(void* dest, const std::size_t ammount);
+		void read_raw_buffer(void* dest, const std::size_t ammount);
+		bool tryread_raw_buffer(void* dest, const std::size_t ammount);
 
 	public: // bool 	pop_T(T & out);
 		bool pop_uint8_t(uint8_t& out);
@@ -150,6 +155,20 @@ namespace cllio
 
 		bool popdefault_float(float& out, const float _default);
 		bool popdefault_double(double& out, const double _default);
+
+	public: // void 	 pop_T(T & out, bool& error);
+		void pop_uint8_t(uint8_t& out, bool& error);
+		void pop_uint16_t(uint16_t& out, bool& error);
+		void pop_uint32_t(uint32_t& out, bool& error);
+		void pop_uint64_t(uint64_t& out, bool& error);
+
+		void pop_int8_t(int8_t& out, bool& error);
+		void pop_int16_t(int16_t& out, bool& error);
+		void pop_int32_t(int32_t& out, bool& error);
+		void pop_int64_t(int64_t& out, bool& error);
+
+		void pop_float(float& out, bool& error);
+		void pop_double(double& out, bool& error);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -176,6 +195,8 @@ namespace cllio
 		{
 			return m_px != nullptr;
 		}
+	public:
+		
 
 	public:
 		void push_int8_t(const int8_t value);
@@ -331,6 +352,55 @@ namespace cllio
 		inline bool trypush_double(const double value);
 	};
 
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+	inline void mem_stream_read::pop_uint8_t(uint8_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint8_t(out) == false;
+	}
+	inline void mem_stream_read::pop_uint16_t(uint16_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint16_t(out) == false;
+	}
+	inline void mem_stream_read::pop_uint32_t(uint32_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint32_t(out) == false;
+	}
+	inline void mem_stream_read::pop_uint64_t(uint64_t& out, bool& error) {
+		if(error) return;
+		error = pop_uint64_t(out) == false;
+	}
+
+	inline void mem_stream_read::pop_int8_t(int8_t& out, bool& error) {
+		if(error) return;
+		error = pop_int8_t(out) == false;
+	}
+	inline void mem_stream_read::pop_int16_t(int16_t& out, bool& error) {
+		if(error) return;
+		error = pop_int16_t(out) == false;
+	}
+	inline void mem_stream_read::pop_int32_t(int32_t& out, bool& error) {
+		if(error) return;
+		error = pop_int32_t(out) == false;
+	}
+	inline void mem_stream_read::pop_int64_t(int64_t& out, bool& error) {
+		if(error) return;
+		error = pop_int64_t(out) == false;
+	}
+
+	inline void mem_stream_read::pop_float(float& out, bool& error) {
+		if(error) return;
+		error = pop_float(out) == false;
+	}
+	inline void mem_stream_read::pop_double(double& out, bool& error) {
+		if(error) return;
+		error = pop_double(out) == false;
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>

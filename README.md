@@ -63,13 +63,14 @@ Readers have functions that follow the following format:
 2. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
 3. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
 4. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns true/false.
-5. `void	 buffer_read(void * dest, const std::size_t ammount);` Try to read, UB on failiure
-
+5. `void 	 pop_T(T & out, bool& error);`  Try to read if 'error == false', on filiure 'error = true'
+6. `void	 read_raw_buffer(void * dest, const std::size_t ammount);` Try to read, UB on failiure
+7. `bool	 tryread_raw_buffer(void * dest, const std::size_t ammount);` If read is not possible function returns false, otherwise it populates 'dest' buffer
 Where `T` is one of 'Supported Types'.
 
 # Binary Write functions
 
-1. `void buffer_write(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
+1. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
 2. `void push_T(const T & value)` will write; UB on failure.
 3. `bool trypush_T(const T & value)` will return false if push failed
 
