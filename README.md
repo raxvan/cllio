@@ -71,8 +71,9 @@ Where `T` is one of 'Supported Types'.
 # Binary Write functions
 
 1. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
-2. `void push_T(const T & value)` will write; UB on failure.
-3. `bool trypush_T(const T & value)` will return false if push failed
+2. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
+3. `void push_T(const T & value)` will write; UB on failure.
+4. `bool trypush_T(const T & value)` will return false if push failed
 
 Where `T` is one of 'Supported Types'.
 
@@ -82,7 +83,7 @@ When `DEBUG` is defined asserts are enabled by default.
 
 1. `CLLIO_FORCE_ASSERT 0` disable asserts for debug
 2. `CLLIO_FORCE_ASSERT 1` enable asserts for release
-3. `CLLIO_FORCE_ASSERT 2` enable asserts without handling function. Code expects to link with: 
+3. `CLLIO_FORCE_ASSERT 2` enable asserts without handling function. Code expects to link with:
 ```
 namespace cllio
 {

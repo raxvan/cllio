@@ -83,6 +83,11 @@ namespace cllio
 		*out++ = static_cast<uint8_t>((value >> 48) & 0xFF);
 		*out = static_cast<uint8_t>((value >> 56) & 0xFF);
 	}
+	void _memory_functor_write_details::_copy_memory(void * _dst, const void* _src, const std::size_t byte_count)
+	{
+		CLLIO_ASSERT(_dst != nullptr && _src != nullptr);
+		std::memcpy(_dst,_src,byte_count);
+	}
 
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -186,7 +191,7 @@ namespace cllio
 #endif
 		m_px += ammount;
 	}
-	void mem_stream_read::tryread_raw_buffer(void* dest, const std::size_t ammount)
+	bool mem_stream_read::tryread_raw_buffer(void* dest, const std::size_t ammount)
 	{
 		if(m_px != nullptr && (m_px + ammount) <= m_px_end)
 		{
@@ -194,7 +199,7 @@ namespace cllio
 			return true;
 		}
 		return false;
-		
+
 	}
 	bool mem_stream_read::pop_uint8_t(uint8_t& out)
 	{

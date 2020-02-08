@@ -87,11 +87,12 @@ namespace cllio
 		{
 			return m_px != nullptr;
 		}
-		inline const uint8_t* begin() const
+	public:
+		inline const byte_t* begin() const
 		{
 			return m_px;
 		}
-		inline const uint8_t* end() const
+		inline const byte_t* end() const
 		{
 			return m_px_end;
 		}
@@ -196,7 +197,7 @@ namespace cllio
 			return m_px != nullptr;
 		}
 	public:
-		
+
 
 	public:
 		void push_int8_t(const int8_t value);
@@ -284,6 +285,7 @@ namespace cllio
 		static void _write_bynary_uint16_t(byte_t* out, const uint16_t value);
 		static void _write_bynary_uint32_t(byte_t* out, const uint32_t value);
 		static void _write_bynary_uint64_t(byte_t* out, const uint64_t value);
+		static void _copy_memory(void * _dst, const void* _src, const std::size_t byte_count);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -322,7 +324,7 @@ namespace cllio
 			byte_t* out = func(sizeof(T));
 			return out;
 		}
-		
+
 	public:
 		inline void push_uint8_t(const uint8_t value);
 		inline void push_uint16_t(const uint16_t value);
@@ -350,6 +352,10 @@ namespace cllio
 
 		inline bool trypush_float(const float value);
 		inline bool trypush_double(const double value);
+
+	public: //raw buffer functions
+		inline void push_raw_buffer(const void * data, const std::size_t byte_count);
+		inline bool trypush_raw_buffer(const void * data, const std::size_t byte_count);
 	};
 
 
@@ -589,6 +595,19 @@ namespace cllio
 			tmp.first = value;
 			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
 		}
+		return (out != nullptr);
+	}
+
+	template <class F> inline void memory_functor_write<F>::push_raw_buffer(const void * data, const std::size_t byte_count)
+	{
+		byte_t* out = func(byte_count);
+		_memory_functor_write_details::_copy_memory(out, data, byte_count);
+	}
+	template <class F> inline bool memory_functor_write<F>::trypush_raw_buffer(const void * data, const std::size_t byte_count)
+	{
+		byte_t* out = func(byte_count);
+		if (out != nullptr)
+			_memory_functor_write_details::_copy_memory(out, data, byte_count);
 		return (out != nullptr);
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------
