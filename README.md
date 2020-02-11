@@ -64,16 +64,17 @@ Readers have functions that follow the following format:
 3. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
 4. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns true/false.
 5. `void 	 pop_T(T & out, bool& error);`  Try to read if 'error == false', on filiure 'error = true'
-6. `void	 read_raw_buffer(void * dest, const std::size_t ammount);` Try to read, UB on failiure
-7. `bool	 tryread_raw_buffer(void * dest, const std::size_t ammount);` If read is not possible function returns false, otherwise it populates 'dest' buffer
+6. `void	 read_raw_buffer(void * dest, const std::size_t byte_count);` Try to read, UB on failiure
+7. `bool	 tryread_raw_buffer(void * dest, const std::size_t byte_count);` If read is not possible function returns false, otherwise it populates 'dest' buffer
+
 Where `T` is one of 'Supported Types'.
 
 # Binary Write functions
 
-1. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
-2. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
-3. `void push_T(const T & value)` will write; UB on failure.
-4. `bool trypush_T(const T & value)` will return false if push failed
+1. `void push_T(const T & value)` will write; UB on failure.
+2. `bool trypush_T(const T & value)` will return false if push failed
+3. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
+4. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
 
 Where `T` is one of 'Supported Types'.
 
