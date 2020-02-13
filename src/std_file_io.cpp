@@ -50,6 +50,10 @@ namespace cllio
 		CLLIO_ASSERT(filesize >= cursor);
 		return filesize - cursor;
 	}
+	std::FILE*  std_file_handle::get_handle()
+	{
+		return m_file_ptr;
+	}
 	//--------------------------------------------------------------------------------------------------------------------
 	std_file_writer_impl::std_file_writer_impl(std::FILE* handle)
 		: std_file_handle(handle)

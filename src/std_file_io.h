@@ -32,6 +32,7 @@ namespace cllio
 		std::size_t get_file_size();
 		std::size_t get_remaining_size();
 
+		std::FILE*  get_handle();
 	protected:
 		std_file_handle(std::FILE* handle);
 

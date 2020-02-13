@@ -197,9 +197,6 @@ namespace cllio
 			return m_px != nullptr;
 		}
 	public:
-
-
-	public:
 		void push_int8_t(const int8_t value);
 		void push_int16_t(const int16_t value);
 		void push_int32_t(const int32_t value);
@@ -292,7 +289,7 @@ namespace cllio
 
 	//write to raw memory given by a functor
 	template <class F>
-	struct memory_functor_write
+	struct memory_functor_write : public F
 	{
 	public:
 		using class_t = memory_functor_write<F>;
@@ -307,21 +304,18 @@ namespace cllio
 		inline memory_functor_write(class_t && other);
 		inline class_t & operator = (class_t && other);
 
-	public:
-		F func;
-
 	protected:
 		template <class T>
 		inline byte_t* _get()
 		{
-			byte_t* out = func(sizeof(T));
+			byte_t* out = (*static_cast<F*>(this))(sizeof(T));
 			CLLIO_ASSERT(out != nullptr);
 			return out;
 		}
 		template <class T>
 		inline byte_t* _tryget()
 		{
-			byte_t* out = func(sizeof(T));
+			byte_t* out = (*static_cast<F*>(this))(sizeof(T));
 			return out;
 		}
 
@@ -411,24 +405,24 @@ namespace cllio
 
 	template <class F>
 	inline memory_functor_write<F>::memory_functor_write(F&& _func)
-			: func(std::forward<F>(_func))
+			: F{std::forward<F>(_func)}
 	{
 	}
 	template <class F>
 	inline memory_functor_write<F>::memory_functor_write(const F& _func)
-		: func(_func)
+		: F{_func}
 	{
 	}
 
 	template <class F>
 	inline memory_functor_write<F>::memory_functor_write(class_t && other)
-		: func(std::forward<F>(other.func))
+		: F{std::forward<F>(other)}
 	{
 	}
 	template <class F>
 	inline typename memory_functor_write<F>::class_t& memory_functor_write<F>::operator = (typename memory_functor_write<F>::class_t&& other)
 	{
-		func = std::move(other.func);
+		*static_cast<F*>(this) = std::move(static_cast<F&>(other));
 		return (*this);
 	}
 
@@ -600,12 +594,12 @@ namespace cllio
 
 	template <class F> inline void memory_functor_write<F>::push_raw_buffer(const void * data, const std::size_t byte_count)
 	{
-		byte_t* out = func(byte_count);
+		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		_memory_functor_write_details::_copy_memory(out, data, byte_count);
 	}
 	template <class F> inline bool memory_functor_write<F>::trypush_raw_buffer(const void * data, const std::size_t byte_count)
 	{
-		byte_t* out = func(byte_count);
+		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		if (out != nullptr)
 			_memory_functor_write_details::_copy_memory(out, data, byte_count);
 		return (out != nullptr);
