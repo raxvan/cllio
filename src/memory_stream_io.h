@@ -99,7 +99,7 @@ namespace cllio
 
 	public: // binary
 		void read_raw_buffer(void* dest, const std::size_t ammount);
-		bool tryread_raw_buffer(void* dest, const std::size_t ammount);
+		bool tryread_raw_buffer(void* dest, const std::size_t ammount); //returns true if read is successfull
 
 	public: // bool 	pop_T(T & out);
 		bool pop_uint8_t(uint8_t& out);
@@ -259,7 +259,7 @@ namespace cllio
 
 		void push_float(const float value);
 		void push_double(const double value);
-
+		void push_ptr(const void* px);
 	public:
 		bool trypush_int8_t(const int8_t value);
 		bool trypush_int16_t(const int16_t value);
@@ -273,6 +273,7 @@ namespace cllio
 
 		bool trypush_float(const float value);
 		bool trypush_double(const double value);
+		bool trypush_ptr(const void* px);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -333,6 +334,8 @@ namespace cllio
 		inline void push_float(const float value);
 		inline void push_double(const double value);
 
+		inline void push_ptr(const void* px);
+
 	public: //special flavor of push that can fail
 		inline bool trypush_uint8_t(const uint8_t value);
 		inline bool trypush_uint16_t(const uint16_t value);
@@ -346,6 +349,7 @@ namespace cllio
 
 		inline bool trypush_float(const float value);
 		inline bool trypush_double(const double value);
+		inline bool trypush_ptr(const void* px);
 
 	public: //raw buffer functions
 		inline void push_raw_buffer(const void * data, const std::size_t byte_count);
@@ -492,7 +496,16 @@ namespace cllio
 		tmp.first = value;
 		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
 	}
+	template <class F> inline void memory_functor_write<F>::push_ptr(const void* px)
+	{
+		byte_t* out = _get<uint64_t>();
+		UnionCast<uint64_t,const void *> tmp;
+		tmp.first = 0;
+		tmp.second = px;
+		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
+	}
 
+	inline void push_ptr();
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F> inline bool memory_functor_write<F>::trypush_uint8_t(const uint8_t value)
@@ -588,6 +601,18 @@ namespace cllio
 			UnionCast<double, uint64_t> tmp;
 			tmp.first = value;
 			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+		}
+		return (out != nullptr);
+	}
+	template <class F> inline bool memory_functor_write<F>::trypush_ptr(const void* px)
+	{
+		byte_t* out = _tryget<uint64_t>();
+		if (out != nullptr)
+		{
+			UnionCast<uint64_t,const void*> tmp;
+			tmp.first = 0;
+			tmp.second = px;
+			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
 		}
 		return (out != nullptr);
 	}

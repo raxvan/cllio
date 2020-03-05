@@ -195,7 +195,7 @@ int main()
 			std::cout << "\nFAILURE\n" << "Size mismatch";
 			return -1;
 		}
-		in.read_vector_buffer(buffer);
+		in.read_into_container(buffer);
 		TestMemoryReaders(buffer);
 
 		{

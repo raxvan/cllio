@@ -69,6 +69,7 @@ namespace cllio
 
 		void push_float(const float value);
 		void push_double(const double value);
+		void push_ptr(const void* px);
 
 	public: // text output
 		std::size_t str_printf(const char* format, ...);
@@ -171,7 +172,7 @@ namespace cllio
 	public: // extra:
 		// read file content int a std::vector like thing of uint8_t
 		template <class T>
-		void raw_append_to_container(T& out)
+		void read_into_container(T& out)
 		{
 			auto current_size = out.size();
 			auto remaining = get_remaining_size();

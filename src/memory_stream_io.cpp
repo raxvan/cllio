@@ -726,7 +726,15 @@ namespace cllio
 		tmp.first = value;
 		_write_bynary_uint64_t(m_px, tmp.second);
 	}
-
+	void mem_stream_write::push_ptr(const void* px)
+	{
+		CLLIO_ASSERT(m_px != nullptr && (m_px + sizeof(uint64_t)) <= m_px_end);
+		UnionCast<uint64_t,const void*> tmp;
+		tmp.first = 0;
+		tmp.second = px;
+		_write_bynary_uint64_t(m_px, tmp.first);
+	}
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -840,4 +848,17 @@ namespace cllio
 		}
 		return false;
 	}
+	bool mem_stream_write::trypush_ptr(const void* px)
+	{
+		if (_can_write<uint64_t>())
+		{
+			UnionCast<uint64_t,const void *> tmp;
+			tmp.first = 0;
+			tmp.second = px;
+			_write_bynary_uint64_t(m_px, tmp.first);
+			return true;
+		}
+		return false;
+	}
+	
 }

@@ -183,7 +183,13 @@ namespace cllio
 		data.first = value;
 		push_uint64_t(data.second);
 	}
-
+	void std_file_writer_impl::push_ptr(const void* px)
+	{
+		UnionCast<uint64_t,const void*> data;
+		data.first = 0;
+		data.second = px;
+		push_uint64_t(data.first);
+	}
 	//--------------------------------------------------------------------------------------------------------------------
 
 	void std_file_writer_impl::push_raw_buffer(const void* data, const std::size_t byte_count)

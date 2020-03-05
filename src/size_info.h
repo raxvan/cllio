@@ -82,6 +82,10 @@ namespace cllio
 		{
 			_add_size<uint64_t>();
 		}
+		inline void push_ptr(const void*)
+		{
+			_add_size<uint64_t>();
+		}
 	public:
 		inline void trypush_int8_t(const int8_t)
 		{
@@ -122,6 +126,10 @@ namespace cllio
 			_add_size<uint32_t>();
 		}
 		inline void trypush_double(const double)
+		{
+			_add_size<uint64_t>();
+		}
+		inline void trypush_ptr(const void*)
 		{
 			_add_size<uint64_t>();
 		}

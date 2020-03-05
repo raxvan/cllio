@@ -106,6 +106,10 @@ namespace cllio
 		{
 			_trace<uint64_t>("push_double");
 		}
+		inline void push_ptr(const void *)
+		{
+			_trace<uint64_t>("push_ptr");
+		}
 	public:
 		inline void trypush_int8_t(const int8_t)
 		{
@@ -146,6 +150,10 @@ namespace cllio
 			_trace<uint32_t>("trypush_float");
 		}
 		inline void trypush_double(const double)
+		{
+			_trace<uint64_t>("trypush_double");
+		}
+		inline void trypush_ptr(const void *)
 		{
 			_trace<uint64_t>("trypush_double");
 		}

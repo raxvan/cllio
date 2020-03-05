@@ -35,11 +35,12 @@ TODO:
 - `mem_stream_write` writes to `void*`
 - `mem_stream_write_unchecked` writes to `void*` no end() checks
 - `memory_functor_write<F>` writes to functor result of `cllio::byte_t* F::operator(std::size_t)`
-- `size_info` calculates write size
 - `std_file_read_view` read from `std::FILE*`
 - `std_file_write_view` write to `std::FILE*`
 - `std_file_read` read from `std::FILE*`, owns file handle
 - `std_file_write` write from `std::FILE*`, owns file handle
+- `size_info` calculates write size
+- `call_trace_info` debug
 
 # Supported Types:
 
@@ -73,8 +74,11 @@ Where `T` is one of 'Supported Types'.
 
 1. `void push_T(const T & value)` will write; UB on failure.
 2. `bool trypush_T(const T & value)` will return false if push failed
-3. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
-4. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
+3. `void push_ptr(const void *)` will write; UB on failure.
+4. `bool trypush_ptr(const void*)` will return false if push failed
+5. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
+6. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
+
 
 Where `T` is one of 'Supported Types'.
 
