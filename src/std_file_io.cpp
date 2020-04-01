@@ -330,7 +330,20 @@ namespace cllio
 		consider_it_used(sz);
 		return tmpbuf;
 	}
-
+	template <class T>
+	inline T _std_file_read_v2(std::FILE* f, bool& error)
+	{
+		T tmpbuf;
+		if (error)
+			return T(0);
+		if(sizeof(T) != std::fread(&tmpbuf, 1, sizeof(T), f))
+		{
+			error = true;
+			return T(0);
+		}
+		return tmpbuf;
+	}
+	//--------------------------------------------------------------------------------------------------------------------
 	bool std_file_reader_impl::pop_uint8_t(uint8_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
@@ -351,7 +364,7 @@ namespace cllio
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		return _std_file_read_v0<uint64_t>(m_file_ptr, out);
 	}
-	//--------------------------------------------------------------------------------------------------------------------
+
 	bool std_file_reader_impl::pop_int8_t(int8_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
@@ -371,6 +384,48 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		return _std_file_read_v0<int64_t>(m_file_ptr, out);
+	}
+	//--------------------------------------------------------------------------------------------------------------------
+	uint8_t std_file_reader_impl::pop_uint8_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<uint8_t>(m_file_ptr, error);
+	}
+	uint16_t std_file_reader_impl::pop_uint16_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<uint16_t>(m_file_ptr, error);
+	}
+	uint32_t std_file_reader_impl::pop_uint32_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<uint32_t>(m_file_ptr, error);
+	}
+	uint64_t std_file_reader_impl::pop_uint64_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<uint64_t>(m_file_ptr, error);
+	}
+
+	int8_t std_file_reader_impl::pop_int8_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<int8_t>(m_file_ptr, error);
+	}
+	int16_t std_file_reader_impl::pop_int16_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<int16_t>(m_file_ptr, error);
+	}
+	int32_t std_file_reader_impl::pop_int32_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<int32_t>(m_file_ptr, error);
+	}
+	int64_t std_file_reader_impl::pop_int64_t(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<int64_t>(m_file_ptr, error);
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	bool std_file_reader_impl::pop_float(float& out)

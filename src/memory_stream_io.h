@@ -170,6 +170,20 @@ namespace cllio
 
 		void pop_float(float& out, bool& error);
 		void pop_double(double& out, bool& error);
+
+	public: // T 	 pop_T(bool& error);
+		uint8_t  pop_uint8_t(bool& error);
+		uint16_t pop_uint16_t(bool& error);
+		uint32_t pop_uint32_t(bool& error);
+		uint64_t pop_uint64_t(bool& error);
+
+		int8_t  pop_int8_t(bool& error);
+		int16_t pop_int16_t(bool& error);
+		int32_t pop_int32_t(bool& error);
+		int64_t pop_int64_t(bool& error);
+
+		float  pop_float(bool& error);
+		double pop_double(bool& error);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -356,6 +370,21 @@ namespace cllio
 		inline bool trypush_raw_buffer(const void * data, const std::size_t byte_count);
 	};
 
+	//--------------------------------------------------------------------------------------------------------------------------------
+	template <class V>
+	struct vector_append_utility
+	{
+		V		buffer;
+		inline cllio::byte_t* operator()(const std::size_t sz)
+		{
+			auto index = buffer.size();
+			buffer.resize(buffer.size() + sz);
+			return &buffer[index];
+		}
+	};
+
+	template <class V>
+	using memory_vector_serializer = memory_functor_write< vector_append_utility<V> >;
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------

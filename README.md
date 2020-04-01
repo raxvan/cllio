@@ -42,6 +42,8 @@ TODO:
 - `size_info` calculates write size
 - `call_trace_info` debug
 
+Note: calling any read/write functions on a closed `std_file_*` is UB;
+
 # Supported Types:
 
 Read/Write functions can handle following types:
@@ -62,13 +64,15 @@ Readers have functions that follow the following format:
 
 1. `bool 	 pop_T(T & out);`  Try to read, returns false on failure.
 2. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
-3. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
-4. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns true/false.
-5. `void 	 pop_T(T & out, bool& error);`  Try to read if 'error == false', on filiure 'error = true'
-6. `void	 read_raw_buffer(void * dest, const std::size_t byte_count);` Try to read, UB on failiure
-7. `bool	 tryread_raw_buffer(void * dest, const std::size_t byte_count);` If read is not possible function returns false, otherwise it populates 'dest' buffer
+3. `T 	 	 pop_T(bool& error);` Try to read, returns T(0) on error and error = true.
+4. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
+5. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns true/false.
+6. `void 	 pop_T(T & out, bool& error);`  Try to read if 'error == false', on filiure 'error = true'
+7. `void	 read_raw_buffer(void * dest, const std::size_t byte_count);` Try to read, UB on failiure
+8. `bool	 tryread_raw_buffer(void * dest, const std::size_t byte_count);` If read is not possible function returns false, otherwise it populates 'dest' buffer
 
 Where `T` is one of 'Supported Types'.
+
 
 # Binary Write functions
 

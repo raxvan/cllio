@@ -201,6 +201,7 @@ namespace cllio
 		return false;
 
 	}
+	//-----------------------------------------------------------------------------------------------------------
 	bool mem_stream_read::pop_uint8_t(uint8_t& out)
 	{
 		if ((m_px + sizeof(uint8_t)) > m_px_end)
@@ -294,6 +295,123 @@ namespace cllio
 		tmp.first = _read_uint64_t(m_px);
 		out = tmp.second;
 		return true;
+	}
+
+	//-----------------------------------------------------------------------------------------------------------
+
+	uint8_t mem_stream_read::pop_uint8_t(bool& error)
+	{
+		if ((m_px + sizeof(uint8_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		return *m_px++;
+	}
+	uint16_t mem_stream_read::pop_uint16_t(bool& error)
+	{
+		if ((m_px + sizeof(uint16_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		return _read_uint16_t(m_px);
+	}
+	uint32_t mem_stream_read::pop_uint32_t(bool& error)
+	{
+		if ((m_px + sizeof(uint32_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		return _read_uint32_t(m_px);
+	}
+	uint64_t mem_stream_read::pop_uint64_t(bool& error)
+	{
+		if ((m_px + sizeof(uint64_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		return _read_uint64_t(m_px);
+	}
+
+	int8_t mem_stream_read::pop_int8_t(bool& error)
+	{
+		if ((m_px + sizeof(uint8_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint8_t, int8_t> tmp;
+		tmp.first = *m_px++;
+		return tmp.second;
+	}
+	int16_t mem_stream_read::pop_int16_t(bool& error)
+	{
+		if ((m_px + sizeof(uint16_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint16_t, int16_t> tmp;
+		tmp.first = _read_uint16_t(m_px);
+		return tmp.second;
+	}
+	int32_t mem_stream_read::pop_int32_t(bool& error)
+	{
+		if ((m_px + sizeof(uint32_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint32_t, int32_t> tmp;
+		tmp.first = _read_uint32_t(m_px);
+		return tmp.second;
+	}
+	int64_t mem_stream_read::pop_int64_t(bool& error)
+	{
+		if ((m_px + sizeof(uint64_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint64_t, int64_t> tmp;
+		tmp.first = _read_uint64_t(m_px);
+		return tmp.second;
+	}
+
+	float mem_stream_read::pop_float(bool& error)
+	{
+		if ((m_px + sizeof(uint32_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0.0f;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint32_t, float> tmp;
+		tmp.first = _read_uint32_t(m_px);
+		return tmp.second;
+	}
+	double mem_stream_read::pop_double(bool& error)
+	{
+		if ((m_px + sizeof(uint64_t)) > m_px_end || error == true)
+		{
+			error = true;
+			return 0.0;
+		}
+		CLLIO_ASSERT(m_px != nullptr);
+		UnionCast<uint64_t, double> tmp;
+		tmp.first = _read_uint64_t(m_px);
+		return tmp.second;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -734,7 +852,7 @@ namespace cllio
 		tmp.second = px;
 		_write_bynary_uint64_t(m_px, tmp.first);
 	}
-	
+
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -860,5 +978,5 @@ namespace cllio
 		}
 		return false;
 	}
-	
+
 }
