@@ -45,7 +45,7 @@ void test_value_f0(T& stream)
 		if ((VALUE) != v)                                                                   \
 		{                                                                                   \
 			failed++;                                                                       \
-			std::cout << "FAILED " #TYPE "pop_" #TYPE "() with value " #VALUE << std::endl; \
+			std::cerr << "FAILED " #TYPE "pop_" #TYPE "() with value " #VALUE << std::endl; \
 		}                                                                                   \
 		else                                                                                \
 			std::cout << "OK " #TYPE " pop_" #TYPE "() with value " << #VALUE << std::endl; \
@@ -66,7 +66,7 @@ void test_value_f1(T& stream)
 		if ((VALUE) != value || f == false)                                                       \
 		{                                                                                         \
 			failed++;                                                                             \
-			std::cout << "FAILED bool pop_" #TYPE "(" #TYPE "&) with value " #VALUE << std::endl; \
+			std::cerr << "FAILED bool pop_" #TYPE "(" #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                         \
 		else                                                                                      \
 			std::cout << "OK bool pop_" #TYPE "(" #TYPE "&) with value " << #VALUE << std::endl;  \
@@ -86,7 +86,7 @@ void test_value_f2(T& stream)
 		if ((VALUE) != value || f == false)                                                                                \
 		{                                                                                                                  \
 			failed++;                                                                                                      \
-			std::cout << "FAILED bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " #VALUE << std::endl; \
+			std::cerr << "FAILED bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                                  \
 		else                                                                                                               \
 			std::cout << "OK bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " << #VALUE << std::endl;  \
@@ -105,7 +105,7 @@ void test_value_f3(T& stream)
 		if ((VALUE) != value)                                                                                       \
 		{                                                                                                           \
 			failed++;                                                                                               \
-			std::cout << "FAILED " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " #VALUE << std::endl; \
+			std::cerr << "FAILED " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                           \
 		else                                                                                                        \
 			std::cout << "OK " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " << #VALUE << std::endl;  \
@@ -173,26 +173,28 @@ int main()
 	}
 
 	{
+		//get output size
 		cllio::size_info f;
 		test_writer(f);
 		if (f.size() != 1134) // 1134 file size
 		{
-			std::cout << "\nFAILURE\n" << "Size mismatch";
+			std::cerr << "\nFAILURE\n" << "Size mismatch";
 			return -1;
 		}
 	}
 
-	TestFileReaders();
-
-	// memory
-
 	{
+		TestFileReaders();
+	}
+	
+	{
+		// memory teste
 		std::vector<cllio::byte_t> buffer;
 		cllio::std_file_read	   in;
 		in.open(ref_file_path, true);
 		if (in.get_file_size() != 1134) // 1134 file size
 		{
-			std::cout << "\nFAILURE\n" << "Size mismatch";
+			std::cerr << "\nFAILURE\n" << "Size mismatch";
 			return -1;
 		}
 		in.read_into_container(buffer);
@@ -210,7 +212,7 @@ int main()
 			bool iterator_ok = writer.data() == (extended_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cout << "\nFAILURE\n" << "mem_stream_write_unchecked";
+				std::cerr << "\nFAILURE\n" << "mem_stream_write_unchecked";
 				return -1;
 			}
 		}
@@ -223,7 +225,7 @@ int main()
 			bool iterator_ok = writer.begin() == (test_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cout << "\nFAILURE\n" << "mem_stream_write";
+				std::cerr << "\nFAILURE\n" << "mem_stream_write";
 				return -1;
 			}
 		}
@@ -239,14 +241,14 @@ int main()
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			if (!(data_ok))
 			{
-				std::cout << "\nFAILURE\n" << "memory_functor_write";
+				std::cerr << "\nFAILURE\n" << "memory_functor_write";
 				return -1;
 			}
 		}
 	}
 
 	if (failed)
-		std::cout << "\ntest:FAILURE\n";
+		std::cerr << "\ntest:FAILURE\n";
 	else
 		std::cout << "\ntest:SUCCESS\n";
 	return 0;
