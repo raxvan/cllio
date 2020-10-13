@@ -1,11 +1,18 @@
 #!/bin/bash
+set -e -o pipefail
 
-python3 /wcore/workspace/cllio/prj.cllio-test.py make linux
+MAIN_WORKSPACE=$1
+THIS_WORKSPACE=$2
+
+python3 ${THIS_WORKSPACE}/cllio/prj.cllio-test.py make linux
 
 #build and stuff
-cd /wcore/workspace/cllio/build/cllio-test_linux_make
-make config=debug_x32 all
+cd ${THIS_WORKSPACE}/cllio/build/cllio-test_linux_make
+make config=debug_x64 all
 
-./bin/x32/Debug/_cllio-test
+#run leak detection
+valgrind --leak-check=full --log-fd=1 --error-exitcode=1911 ./bin/x64/Debug/_cllio-test
 
 python3 -c "import ciutil; ciutil.files_equal('samples.bin','../../tests/samples.bin')"
+
+

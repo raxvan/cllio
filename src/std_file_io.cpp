@@ -21,6 +21,10 @@ namespace cllio
 		}
 		return false;
 	}
+	void std_file_handle::swap(std_file_handle& other)
+	{
+		std::swap(m_file_ptr,other.m_file_ptr);
+	}
 	std_file_handle::std_file_handle(std::FILE* handle)
 		: m_file_ptr(handle)
 	{

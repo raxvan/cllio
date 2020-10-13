@@ -33,6 +33,8 @@ namespace cllio
 		std::size_t get_remaining_size();
 
 		std::FILE*  get_handle();
+
+		void 		swap(std_file_handle& other);
 	protected:
 		std_file_handle(std::FILE* handle);
 
