@@ -83,9 +83,17 @@ namespace cllio
 		{
 			return m_px < m_px_end;
 		}
+		inline bool hasData(const std::size_t expected_bytes)const
+		{
+			return (m_px + expected_bytes) <= m_px_end;
+		}
 		inline bool isValid() const
 		{
 			return m_px != nullptr;
+		}
+		inline void operator += (const std::size_t offset)
+		{
+			m_px += offset;
 		}
 	public:
 		inline const byte_t* begin() const
