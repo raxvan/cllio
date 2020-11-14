@@ -4,7 +4,7 @@ set -e -o pipefail
 MAIN_WORKSPACE=$1
 THIS_WORKSPACE=$2
 
-python3 ${THIS_WORKSPACE}/cllio/prj.cllio-test.py make linux
+python3 ${THIS_WORKSPACE}/cllio/prj.cllio-test.py -a make linux
 
 #build and stuff
 cd ${THIS_WORKSPACE}/cllio/build/cllio-test_linux_make

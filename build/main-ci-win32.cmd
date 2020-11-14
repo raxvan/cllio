@@ -8,7 +8,7 @@ set "THIS_WORKSPACE=%~2"
 
 ::-------------------------------------------------------------------------------------
 ::compile and run
-powershell %MAIN_WORKSPACE%/exec.cmd %THIS_WORKSPACE% python3 /wcore/workspace/cllio/prj.cllio-test.py vs2019 win32
+powershell %MAIN_WORKSPACE%/exec.cmd %THIS_WORKSPACE% python3 /wcore/workspace/cllio/prj.cllio-test.py -a vs2019 win32
 
 cd %THIS_WORKSPACE%/cllio/build/cllio-test_win32_vs2019
 
