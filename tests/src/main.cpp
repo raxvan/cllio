@@ -7,11 +7,16 @@
 #include <cstring>
 #include <functional>
 
-const auto ref_file_path = "../../tests/samples.bin";
-const auto file_path = "samples.bin";
-
-
+const auto	ref_file_path = "../../tests/samples.bin";
+const auto	file_path = "samples.bin";
 std::size_t failed = 0;
+
+void on_func_failed()
+{
+	failed++;
+	std::cerr << "FAILED\n" << std::endl;
+}
+
 template <class T>
 T not_value(const T& value)
 {
@@ -37,14 +42,14 @@ void test_writer(T& stream)
 }
 
 template <class T>
-void test_value_f0(T& stream)
+void run_read_functions_f0(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                                              \
 	{                                                                                       \
 		TYPE v = stream.pop_##TYPE();                                                       \
 		if ((VALUE) != v)                                                                   \
 		{                                                                                   \
-			failed++;                                                                       \
+			on_func_failed();                                                               \
 			std::cerr << "FAILED " #TYPE "pop_" #TYPE "() with value " #VALUE << std::endl; \
 		}                                                                                   \
 		else                                                                                \
@@ -57,7 +62,7 @@ void test_value_f0(T& stream)
 }
 
 template <class T>
-void test_value_f1(T& stream)
+void run_read_functions_f1(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                                                    \
 	{                                                                                             \
@@ -65,7 +70,7 @@ void test_value_f1(T& stream)
 		bool f = stream.pop_##TYPE(value);                                                        \
 		if ((VALUE) != value || f == false)                                                       \
 		{                                                                                         \
-			failed++;                                                                             \
+			on_func_failed();                                                                     \
 			std::cerr << "FAILED bool pop_" #TYPE "(" #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                         \
 		else                                                                                      \
@@ -77,7 +82,28 @@ void test_value_f1(T& stream)
 #undef TEST_ITEM
 }
 template <class T>
-void test_value_f2(T& stream)
+void run_read_functions_f2(T& stream)
+{
+#define TEST_ITEM(TYPE, VALUE)                                                                    \
+	{                                                                                             \
+		bool r = false;                                                                           \
+		TYPE value = stream.pop_##TYPE(r);                                                        \
+		if ((VALUE) != value || r == true)                                                        \
+		{                                                                                         \
+			on_func_failed();                                                                     \
+			std::cerr << "FAILED " #TYPE " pop_" #TYPE "(bool&) with value " #VALUE << std::endl; \
+		}                                                                                         \
+		else                                                                                      \
+			std::cout << "OK " #TYPE " pop_" #TYPE "(bool&) with value " #VALUE << std::endl;     \
+	}
+
+#include "test_set.h"
+
+#undef TEST_ITEM
+}
+
+template <class T>
+void run_read_functions_f3(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                                                                             \
 	{                                                                                                                      \
@@ -85,7 +111,7 @@ void test_value_f2(T& stream)
 		bool f = stream.popdefault_##TYPE(value, not_value(VALUE));                                                        \
 		if ((VALUE) != value || f == false)                                                                                \
 		{                                                                                                                  \
-			failed++;                                                                                                      \
+			on_func_failed();                                                                                              \
 			std::cerr << "FAILED bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                                  \
 		else                                                                                                               \
@@ -96,15 +122,16 @@ void test_value_f2(T& stream)
 
 #undef TEST_ITEM
 }
+
 template <class T>
-void test_value_f3(T& stream)
+void run_read_functions_f4(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                                                                      \
 	{                                                                                                               \
 		TYPE value = stream.popdefault_##TYPE(not_value(VALUE));                                                    \
 		if ((VALUE) != value)                                                                                       \
 		{                                                                                                           \
-			failed++;                                                                                               \
+			on_func_failed();                                                                                       \
 			std::cerr << "FAILED " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                           \
 		else                                                                                                        \
@@ -121,64 +148,74 @@ void TestFileReaders()
 	{
 		cllio::std_file_read in;
 		in.open(ref_file_path, true);
-		test_value_f0(in);
+		run_read_functions_f0(in);
 	}
 	{
 		cllio::std_file_read in;
 		in.open(ref_file_path, true);
-		test_value_f1(in);
+		run_read_functions_f1(in);
 	}
 	{
 		cllio::std_file_read in;
 		in.open(ref_file_path, true);
-		test_value_f2(in);
+		run_read_functions_f2(in);
 	}
 	{
 		cllio::std_file_read in;
 		in.open(ref_file_path, true);
-		test_value_f3(in);
+		run_read_functions_f3(in);
+	}
+	{
+		cllio::std_file_read in;
+		in.open(ref_file_path, true);
+		run_read_functions_f4(in);
 	}
 }
 void TestMemoryReaders(const std::vector<uint8_t>& buffer)
 {
 	{
 		cllio::mem_stream_read_unchecked ms(buffer.data());
-		test_value_f0(ms);
+		run_read_functions_f0(ms);
+	}
+
+	{
+		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		run_read_functions_f0(ms);
 	}
 	{
 		cllio::mem_stream_read ms(buffer.data(), buffer.size());
-		test_value_f0(ms);
+		run_read_functions_f1(ms);
 	}
 	{
 		cllio::mem_stream_read ms(buffer.data(), buffer.size());
-		test_value_f1(ms);
+		run_read_functions_f2(ms);
 	}
 	{
 		cllio::mem_stream_read ms(buffer.data(), buffer.size());
-		test_value_f2(ms);
+		run_read_functions_f3(ms);
 	}
 	{
 		cllio::mem_stream_read ms(buffer.data(), buffer.size());
-		test_value_f3(ms);
+		run_read_functions_f4(ms);
 	}
 }
 int main()
 {
-
+	const std::size_t sample_file_expected_size = 1134;
 	{
-		//write file
+		// write sample file
 		cllio::std_file_write out;
 		out.open(file_path, true, false);
 		test_writer(out);
 	}
 
 	{
-		//get output size
+		// get output size
 		cllio::size_info f;
 		test_writer(f);
-		if (f.size() != 1134) // 1134 file size
+		if (f.size() != sample_file_expected_size)
 		{
-			std::cerr << "\nFAILURE\n" << "Size mismatch";
+			std::cerr << "Error: cllio::size_info size mismatch.\n";
 			return -1;
 		}
 	}
@@ -186,22 +223,57 @@ int main()
 	{
 		TestFileReaders();
 	}
-	
+
 	{
-		// memory teste
+		// memory test
 		std::vector<cllio::byte_t> buffer;
-		cllio::std_file_read	   in;
-		in.open(ref_file_path, true);
-		if (in.get_file_size() != 1134) // 1134 file size
+
 		{
-			std::cerr << "\nFAILURE\n" << "Size mismatch";
-			return -1;
+			cllio::std_file_read in;
+			in.open(ref_file_path, true);
+			if (in.isOpen() == false)
+			{
+				std::cerr << "Failed open test file.\n";
+				return -1;
+			}
+			if (in.get_file_size() != sample_file_expected_size)
+			{
+				std::cerr << "Error: Test file Size mismatch.\n";
+				return -1;
+			}
+			in.read_into_container(buffer);
+			if (buffer.size() != sample_file_expected_size)
+			{
+				std::cerr << "Failed to read entire file into container.\n";
+				return -1;
+			}
+			in.close();
+			if (in.isOpen() == true)
+			{
+				std::cerr << "Error: Input file should be closed.\n";
+				return -1;
+			}
 		}
-		in.read_into_container(buffer);
+
+		{
+			cllio::file_read_mapview in(ref_file_path);
+			if (in.size() != buffer.size())
+			{
+				std::cerr << "Error: cllio::file_read_mapview size mismatch.\n";
+				return -1;
+			}
+			bool data_ok = std::memcmp(in.data(), in.data(), buffer.size()) == 0;
+			if (data_ok == false)
+			{
+				std::cerr << "Error: cllio::file_read_mapview data mismatch.\n";
+				return -1;
+			}
+		}
+
 		TestMemoryReaders(buffer);
 
 		{
-			// since there is no normal way to check mem_stream_write_unchecked we reserve a double sized buffer for this
+			// since there is no normal way to check mem_stream_write_unchecked UB we reserve a double sized buffer for this
 			// we then run the write operations and see if they match
 			std::vector<cllio::byte_t> extended_buffer;
 			extended_buffer.resize(buffer.size() * 2);
@@ -212,7 +284,7 @@ int main()
 			bool iterator_ok = writer.data() == (extended_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cerr << "\nFAILURE\n" << "mem_stream_write_unchecked";
+				std::cerr << "Error: cllio::mem_stream_write_unchecked data or iterator mismatch.\n";
 				return -1;
 			}
 		}
@@ -225,31 +297,36 @@ int main()
 			bool iterator_ok = writer.begin() == (test_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cerr << "\nFAILURE\n" << "mem_stream_write";
+				std::cerr << "Error: cllio::mem_stream_write data or iterator mismatch.\n";
 				return -1;
 			}
 		}
 		{
 			std::vector<cllio::byte_t> test_buffer;
-			auto functor_writer = cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>>{[&](const std::size_t ns) {
-				auto sz = test_buffer.size();
+			auto					   functor_writer = cllio::memory_functor_write<std::function<cllio::byte_t*(const std::size_t)>> { [&](const std::size_t ns) {
+				auto				   sz = test_buffer.size();
 				test_buffer.resize(sz + ns);
 				return test_buffer.data() + sz;
-			}};
+			} };
 
 			test_writer(functor_writer);
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			if (!(data_ok))
 			{
-				std::cerr << "\nFAILURE\n" << "memory_functor_write";
+				std::cerr << "Error: cllio::memory_functor_write data or iterator mismatch.\n";
 				return -1;
 			}
 		}
 	}
 
 	if (failed)
+	{
 		std::cerr << "\ntest:FAILURE\n";
+		return -1;
+	}
 	else
+	{
 		std::cout << "\ntest:SUCCESS\n";
-	return 0;
+		return 0;
+	}
 }

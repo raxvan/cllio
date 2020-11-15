@@ -6,8 +6,8 @@ namespace cllio
 
 	struct static_string
 	{
-		const char* 		str;
-		const std::size_t 	size;
+		const char*		  str;
+		const std::size_t size;
 	};
 
 	// debug utils:
@@ -17,49 +17,53 @@ namespace cllio
 	// _local_size is the ammount of bytes in this call
 	// _fs name of the function called
 
-	using trace_function_t = void(const std::size_t,const std::size_t, const static_string& s);
+	using trace_function_t = void(const std::size_t, const std::size_t, const static_string& s);
 
 	template <class F>
 	struct call_trace_info : public F
 	{
 	protected:
 		std::size_t m_size = 0;
+
 	protected:
-		template <class T,std::size_t N>
+		template <class T, std::size_t N>
 		inline void _trace(const char (&c_str)[N])
 		{
-			(*static_cast<F*>(this))(m_size,sizeof(T),static_string{c_str,N});
+			(*static_cast<F*>(this))(m_size, sizeof(T), static_string { c_str, N });
 			m_size += sizeof(T);
 		}
 		template <std::size_t N>
-		inline void _trace(const std::size_t sz,const char (&c_str)[N])
+		inline void _trace(const std::size_t sz, const char (&c_str)[N])
 		{
-			(*static_cast<F*>(this))(m_size,sz,static_string{c_str,N});
+			(*static_cast<F*>(this))(m_size, sz, static_string { c_str, N });
 			m_size += sz;
 		}
+
 	public:
 		call_trace_info() = default;
 		call_trace_info(const call_trace_info<F>&) = default;
-		call_trace_info<F>& operator =(const call_trace_info<F>&) = default;
+		call_trace_info<F>& operator=(const call_trace_info<F>&) = default;
 
 		call_trace_info(const F& _func)
 			: F(_func)
 		{
 		}
+
 	public:
 		template <std::size_t N>
 		inline void log(const char (&c_str)[N])
 		{
-			(*static_cast<F*>(this))(m_size,0,static_string{c_str,N});
+			(*static_cast<F*>(this))(m_size, 0, static_string { c_str, N });
 		}
+
 	public:
 		inline void push_raw_buffer(const void*, const std::size_t byte_count)
 		{
-			_trace(byte_count,"push_raw_buffer");
+			_trace(byte_count, "push_raw_buffer");
 		}
-		inline bool trypush_raw_buffer(const void *, const std::size_t byte_count)
+		inline bool trypush_raw_buffer(const void*, const std::size_t byte_count)
 		{
-			_trace(byte_count,"trypush_raw_buffer");
+			_trace(byte_count, "trypush_raw_buffer");
 			return true;
 		}
 
@@ -106,10 +110,11 @@ namespace cllio
 		{
 			_trace<uint64_t>("push_double");
 		}
-		inline void push_ptr(const void *)
+		inline void push_ptr(const void*)
 		{
 			_trace<uint64_t>("push_ptr");
 		}
+
 	public:
 		inline void trypush_int8_t(const int8_t)
 		{
@@ -153,7 +158,7 @@ namespace cllio
 		{
 			_trace<uint64_t>("trypush_double");
 		}
-		inline void trypush_ptr(const void *)
+		inline void trypush_ptr(const void*)
 		{
 			_trace<uint64_t>("trypush_double");
 		}

@@ -33,7 +33,7 @@ namespace cllio
 		{
 			_add_size(byte_count);
 		}
-		inline bool trypush_raw_buffer(const void *, const std::size_t byte_count)
+		inline bool trypush_raw_buffer(const void*, const std::size_t byte_count)
 		{
 			_add_size(byte_count);
 			return true;
@@ -86,6 +86,7 @@ namespace cllio
 		{
 			_add_size<uint64_t>();
 		}
+
 	public:
 		inline void trypush_int8_t(const int8_t)
 		{

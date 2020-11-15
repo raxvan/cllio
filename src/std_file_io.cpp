@@ -23,7 +23,7 @@ namespace cllio
 	}
 	void std_file_handle::swap(std_file_handle& other)
 	{
-		std::swap(m_file_ptr,other.m_file_ptr);
+		std::swap(m_file_ptr, other.m_file_ptr);
 	}
 	std_file_handle::std_file_handle(std::FILE* handle)
 		: m_file_ptr(handle)
@@ -54,7 +54,7 @@ namespace cllio
 		CLLIO_ASSERT(filesize >= cursor);
 		return filesize - cursor;
 	}
-	std::FILE*  std_file_handle::get_handle()
+	std::FILE* std_file_handle::get_handle()
 	{
 		return m_file_ptr;
 	}
@@ -63,6 +63,11 @@ namespace cllio
 		: std_file_handle(handle)
 	{
 	}
+	std_file_reader_impl::std_file_reader_impl(std::FILE* handle)
+		: std_file_handle(handle)
+	{
+	}
+	//--------------------------------------------------------------------------------------------------------------------
 	bool std_file_writer_impl::open(const char* abs_path, const bool binary, const bool append)
 	{
 		if (m_file_ptr != nullptr)
@@ -189,7 +194,7 @@ namespace cllio
 	}
 	void std_file_writer_impl::push_ptr(const void* px)
 	{
-		UnionCast<uint64_t,const void*> data;
+		UnionCast<uint64_t, const void*> data;
 		data.first = 0;
 		data.second = px;
 		push_uint64_t(data.first);
@@ -340,7 +345,7 @@ namespace cllio
 		T tmpbuf;
 		if (error)
 			return T(0);
-		if(sizeof(T) != std::fread(&tmpbuf, 1, sizeof(T), f))
+		if (sizeof(T) != std::fread(&tmpbuf, 1, sizeof(T), f))
 		{
 			error = true;
 			return T(0);
@@ -431,6 +436,17 @@ namespace cllio
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		return _std_file_read_v2<int64_t>(m_file_ptr, error);
 	}
+	float std_file_reader_impl::pop_float(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<float>(m_file_ptr, error);
+	}
+	double std_file_reader_impl::pop_double(bool& error)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		return _std_file_read_v2<double>(m_file_ptr, error);
+	}
+
 	//--------------------------------------------------------------------------------------------------------------------
 	bool std_file_reader_impl::pop_float(float& out)
 	{
