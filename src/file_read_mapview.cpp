@@ -14,6 +14,15 @@
 #	endif
 #endif
 
+#ifdef PRJ_PLATFORM_IS_LINUX
+#	include <stdio.h>
+#	include <sys/mman.h>
+#	include <stdlib.h>
+#	include <sys/stat.h>
+#	include <fcntl.h>
+#	include <unistd.h>
+#endif
+
 namespace cllio
 {
 	file_read_mapview::file_read_mapview(const std::filesystem::path& p)
@@ -76,6 +85,53 @@ namespace cllio
 
 		if (h.file_handle != NULL)
 			CloseHandle(h.file_handle);
+	}
+#endif
+
+#ifdef PRJ_PLATFORM_IS_LINUX
+	file_read_mapview::file_read_mapview(const char* abs_file_path)
+	{
+		this->m_data = nullptr;
+		this->m_size = 0;
+
+		m_file_handle = -1;
+		m_mmap_handle = nullptr;
+
+		m_file_handle = open(abs_file_path, O_RDONLY);
+		if (m_file_handle < 0)
+			return;
+
+		struct stat statbuf;
+		int			err = fstat(m_file_handle, &statbuf);
+		if (err < 0)
+			return;
+
+		void* ptr = mmap(NULL, statbuf.st_size, PROT_READ, MAP_PRIVATE, m_file_handle, 0);
+		if (ptr == MAP_FAILED)
+		{
+			return;
+		}
+		else
+		{
+			m_mmap_handle = ptr;
+		}
+
+		m_data = ptr;
+		m_size = std::size_t(statbuf.st_size);
+	}
+	file_read_mapview::~file_read_mapview()
+	{
+		if (m_mmap_handle != nullptr)
+		{
+			/* err = */ munmap(m_mmap_handle, m_size);
+			/*if (err != 0) {
+				printf("UnMapping Failed\n");
+			}
+			*/
+		}
+
+		if (m_file_handle >= 0)
+			close(m_file_handle);
 	}
 #endif
 

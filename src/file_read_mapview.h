@@ -37,6 +37,10 @@ namespace cllio
 		byte_t m_handles[sizeof(void*) * 2];
 		friend struct file_read_mapview_handle_impl;
 #endif
+#ifdef PRJ_PLATFORM_IS_LINUX
+		int	  m_file_handle;
+		void* m_mmap_handle;
+#endif
 	};
 
 }
