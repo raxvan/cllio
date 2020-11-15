@@ -105,7 +105,10 @@ namespace cllio
 		{
 			return m_px_end;
 		}
-
+		inline const byte_t* data() const
+		{
+			return m_px;
+		}
 	public: // binary
 		void read_raw_buffer(void* dest, const std::size_t ammount);
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
@@ -270,7 +273,6 @@ namespace cllio
 		{
 			return (m_px != nullptr && (m_px + sizeof(T)) <= m_px_end);
 		}
-
 	public:
 		void push_int8_t(const int8_t value);
 		void push_int16_t(const int16_t value);
