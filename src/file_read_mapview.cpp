@@ -31,7 +31,7 @@ namespace cllio
 	}
 
 #ifdef PRJ_PLATFORM_IS_WIN32
-	#define HAS_IMPLEMENTATION
+#	define HAS_IMPLEMENTATION
 	struct file_read_mapview_handle_impl
 	{
 		HANDLE file_handle;
@@ -90,7 +90,7 @@ namespace cllio
 #endif
 
 #ifdef PRJ_PLATFORM_IS_LINUX
-	#define HAS_IMPLEMENTATION
+#	define HAS_IMPLEMENTATION
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
 		this->m_data = nullptr;
@@ -140,7 +140,7 @@ namespace cllio
 }
 
 #ifdef HAS_IMPLEMENTATION
-	#undef HAS_IMPLEMENTATION
+#	undef HAS_IMPLEMENTATION
 #else
-	#error "No implementation for file_read_mapview, check platform"
+#	error "No implementation for file_read_mapview, check platform"
 #endif
