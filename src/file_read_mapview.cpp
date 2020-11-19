@@ -31,17 +31,18 @@ namespace cllio
 	}
 
 #ifdef PRJ_PLATFORM_IS_WIN32
+	#define HAS_IMPLEMENTATION
 	struct file_read_mapview_handle_impl
 	{
 		HANDLE file_handle;
 		HANDLE file_mapping;
 
-		static inline file_read_mapview_handle_impl& get_handle(file_read_mapview& h)
+		static inline file_read_mapview_handle_impl& get_handle(file_read_mapview_platform_impl& h)
 		{
 			static_assert(sizeof(file_read_mapview_handle_impl) <= sizeof(h.m_handles), "Invalid handle");
 			return *static_cast<file_read_mapview_handle_impl*>(static_cast<void*>(&h.m_handles[0]));
 		}
-		static inline const file_read_mapview_handle_impl& get_handle(const file_read_mapview& h)
+		static inline const file_read_mapview_handle_impl& get_handle(const file_read_mapview_platform_impl& h)
 		{
 			static_assert(sizeof(file_read_mapview_handle_impl) <= sizeof(h.m_handles), "Invalid handle");
 			return *static_cast<const file_read_mapview_handle_impl*>(static_cast<const void*>(&h.m_handles[0]));
@@ -89,6 +90,7 @@ namespace cllio
 #endif
 
 #ifdef PRJ_PLATFORM_IS_LINUX
+	#define HAS_IMPLEMENTATION
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
 		this->m_data = nullptr;
@@ -136,3 +138,9 @@ namespace cllio
 #endif
 
 }
+
+#ifdef HAS_IMPLEMENTATION
+	#undef HAS_IMPLEMENTATION
+#else
+	#error "No implementation for file_read_mapview, check platform"
+#endif

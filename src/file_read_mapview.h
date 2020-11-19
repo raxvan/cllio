@@ -6,7 +6,21 @@
 
 namespace cllio
 {
-	struct file_read_mapview
+
+	struct file_read_mapview_platform_impl
+	{
+#ifdef PRJ_PLATFORM_IS_WIN32
+		byte_t m_handles[sizeof(void*) * 2];
+		friend struct file_read_mapview_handle_impl;
+#endif
+
+#ifdef PRJ_PLATFORM_IS_LINUX
+		int	  m_file_handle;
+		void* m_mmap_handle;
+#endif
+	};
+
+	struct file_read_mapview : public file_read_mapview_platform_impl
 	{
 	public:
 		file_read_mapview() = default;
@@ -31,16 +45,6 @@ namespace cllio
 	protected:
 		const void* m_data = nullptr;
 		std::size_t m_size = 0;
-
-	protected:
-#ifdef PRJ_PLATFORM_IS_WIN32
-		byte_t m_handles[sizeof(void*) * 2];
-		friend struct file_read_mapview_handle_impl;
-#endif
-#ifdef PRJ_PLATFORM_IS_LINUX
-		int	  m_file_handle;
-		void* m_mmap_handle;
-#endif
 	};
 
 }
