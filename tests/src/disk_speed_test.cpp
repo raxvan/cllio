@@ -156,7 +156,8 @@ public:
 		cllio::std_file_read handle;
 		if (handle.open(abs_file_path, true) == false)
 			return false;
-		handle.read_into_container(data);
+		if (handle.read_into_container(data) == false)
+			data.pop_back();// last element was not complete
 		return true;
 	}
 

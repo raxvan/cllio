@@ -204,13 +204,25 @@ namespace cllio
 	public: // extra:
 		// read file content int a std::vector like thing of uint8_t
 		template <class T>
-		void read_into_container(T& out)
+		bool read_into_container(T& out)
 		{
+			bool ok;
 			auto current_size = out.size();
 			auto remaining = get_remaining_size();
 			auto elements_to_read = remaining / sizeof(typename T::value_type);
-			out.resize(current_size + elements_to_read);
+			
+			if (remaining % sizeof(typename T::value_type) != 0)
+			{
+				out.resize(current_size + elements_to_read + 1, 0);
+				ok = false;
+			}
+			else
+			{
+				out.resize(current_size + elements_to_read);
+				ok = true;
+			}
 			read_raw_buffer(out.data() + current_size, remaining);
+			return ok;
 		}
 	};
 
