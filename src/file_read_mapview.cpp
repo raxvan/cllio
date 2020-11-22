@@ -30,7 +30,39 @@ namespace cllio
 	{
 	}
 
+	void file_read_mapview::swap(file_read_mapview& other)
+	{
 #ifdef PRJ_PLATFORM_IS_WIN32
+		byte_t tmp[sizeof(void*) * 2];
+		std::memcpy(tmp, this->m_handles, sizeof(tmp));
+		std::memcpy(this->m_handles, other.m_handles, sizeof(tmp));
+		std::memcpy(other.m_handles, tmp, sizeof(tmp));
+#endif
+#ifdef PRJ_PLATFORM_IS_LINUX
+		std::swap(m_file_handle, other.m_file_handle);
+		std::swap(m_mmap_handle, other.m_mmap_handle);
+#endif
+		std::swap(m_data, other.m_data);
+		std::swap(m_size, other.m_size);
+	}
+
+	file_read_mapview::file_read_mapview(file_read_mapview&& other)
+	{
+		other.swap(*this);
+	}
+	file_read_mapview& file_read_mapview::operator=(file_read_mapview&& other)
+	{
+		file_read_mapview tmp;
+		tmp.swap(*this);
+		other.swap(*this);
+		return (*this);
+	}
+
+#ifdef PRJ_PLATFORM_IS_WIN32
+	file_read_mapview_platform_impl::file_read_mapview_platform_impl()
+	{
+		std::memset(m_handles, 0, sizeof(m_handles));
+	}
 #	define HAS_IMPLEMENTATION
 	struct file_read_mapview_handle_impl
 	{

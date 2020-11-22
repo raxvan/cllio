@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "size_info.h"

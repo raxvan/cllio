@@ -13,8 +13,13 @@ powershell %MAIN_WORKSPACE%/exec.cmd %THIS_WORKSPACE% python3 /wcore/workspace/c
 cd %THIS_WORKSPACE%/cllio/build/cllio-test_win32_vs2019
 
 "%ENVCONF_DEVENV%" _cllio_test.sln /Build Debug
+"%ENVCONF_DEVENV%" _cllio_test.sln /Build Release
 
 "bin/x32/Debug/_cllio-test.exe"
+
+::run perf test
+"bin/x32/Release/_cllio-test.exe"
+
 
 ::-------------------------------------------------------------------------------------
 ::run RunCodeAnalysis on Release

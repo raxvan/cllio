@@ -120,7 +120,6 @@ namespace cllio
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------
-
 	void std_file_writer_impl::push_int8_t(const int8_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
@@ -199,6 +198,80 @@ namespace cllio
 		data.second = px;
 		push_uint64_t(data.first);
 	}
+	//--------------------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------------------
+	bool std_file_writer_impl::trypush_int8_t(const int8_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_int16_t(const int16_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_int32_t(const int32_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_int64_t(const int64_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+
+	bool std_file_writer_impl::trypush_uint8_t(const uint8_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_uint16_t(const uint16_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_uint32_t(const uint32_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_uint64_t(const uint64_t value)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(&value, 1, sizeof(value), m_file_ptr);
+		return (sz == sizeof(value));
+	}
+	bool std_file_writer_impl::trypush_float(const float value)
+	{
+		static_assert(sizeof(float) <= sizeof(uint32_t), "sizeof(float) > 4 bytes?");
+		UnionCast<float, uint32_t> data;
+		data.first = value;
+		return trypush_uint32_t(data.second);
+	}
+	bool std_file_writer_impl::trypush_double(const double value)
+	{
+		static_assert(sizeof(double) <= sizeof(uint64_t), "sizeof(double) > 8 bytes?");
+		UnionCast<double, uint64_t> data;
+		data.first = value;
+		return trypush_uint64_t(data.second);
+	}
+	bool std_file_writer_impl::trypush_ptr(const void* px)
+	{
+		UnionCast<uint64_t, const void*> data;
+		data.first = 0;
+		data.second = px;
+		return trypush_uint64_t(data.first);
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------
 
 	void std_file_writer_impl::push_raw_buffer(const void* data, const std::size_t byte_count)

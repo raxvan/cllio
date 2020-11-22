@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstring>
 #include <functional>
+#include "disk_speed_test.h"
 
 const auto	ref_file_path = "../../tests/samples.bin";
 const auto	file_path = "samples.bin";
@@ -199,7 +200,8 @@ void TestMemoryReaders(const std::vector<uint8_t>& buffer)
 		run_read_functions_f4(ms);
 	}
 }
-int main()
+
+bool run_main_tests()
 {
 	const std::size_t sample_file_expected_size = 1134;
 	{
@@ -216,7 +218,7 @@ int main()
 		if (f.size() != sample_file_expected_size)
 		{
 			std::cerr << "Error: cllio::size_info size mismatch.\n";
-			return -1;
+			return false;
 		}
 	}
 
@@ -234,24 +236,24 @@ int main()
 			if (in.isOpen() == false)
 			{
 				std::cerr << "Failed open test file.\n";
-				return -1;
+				return false;
 			}
 			if (in.get_file_size() != sample_file_expected_size)
 			{
 				std::cerr << "Error: Test file Size mismatch.\n";
-				return -1;
+				return false;
 			}
 			in.read_into_container(buffer);
 			if (buffer.size() != sample_file_expected_size)
 			{
 				std::cerr << "Failed to read entire file into container.\n";
-				return -1;
+				return false;
 			}
 			in.close();
 			if (in.isOpen() == true)
 			{
 				std::cerr << "Error: Input file should be closed.\n";
-				return -1;
+				return false;
 			}
 		}
 
@@ -260,13 +262,13 @@ int main()
 			if (in.size() != buffer.size())
 			{
 				std::cerr << "Error: cllio::file_read_mapview size mismatch.\n";
-				return -1;
+				return false;
 			}
 			bool data_ok = std::memcmp(in.data(), in.data(), buffer.size()) == 0;
 			if (data_ok == false)
 			{
 				std::cerr << "Error: cllio::file_read_mapview data mismatch.\n";
-				return -1;
+				return false;
 			}
 		}
 
@@ -285,7 +287,7 @@ int main()
 			if (!(data_ok && iterator_ok))
 			{
 				std::cerr << "Error: cllio::mem_stream_write_unchecked data or iterator mismatch.\n";
-				return -1;
+				return false;
 			}
 		}
 		{
@@ -298,7 +300,7 @@ int main()
 			if (!(data_ok && iterator_ok))
 			{
 				std::cerr << "Error: cllio::mem_stream_write data or iterator mismatch.\n";
-				return -1;
+				return false;
 			}
 		}
 		{
@@ -314,7 +316,7 @@ int main()
 			if (!(data_ok))
 			{
 				std::cerr << "Error: cllio::memory_functor_write data or iterator mismatch.\n";
-				return -1;
+				return false;
 			}
 		}
 	}
@@ -322,11 +324,43 @@ int main()
 	if (failed)
 	{
 		std::cerr << "\ntest:FAILURE\n";
-		return -1;
+		return false;
 	}
 	else
 	{
 		std::cout << "\ntest:SUCCESS\n";
-		return 0;
+		return true;
 	}
+}
+
+int main(int argc, const char** argv)
+{
+#ifdef DEBUG
+	std::cout << "arg count " << argc << std::endl;
+	for (int i = 0; i < argc; i++)
+		std::cout << "arg[" << i << "]=" << argv[i] << std::endl;
+#endif
+
+	if (run_main_tests() == false)
+		return -1;
+
+#ifndef DEBUG
+	//#if 1
+	// run test only on release
+	if (argc > 1)
+	{
+		disk_access_test speed_test; // run speed test
+		const char*		 file = argv[1];
+		if (speed_test.run(file) == false)
+			return -1;
+	}
+	else
+	{
+		disk_access_test speed_test; // run speed test
+		if (speed_test.run(nullptr) == false)
+			return -1;
+	}
+#endif
+
+	return 0;
 }

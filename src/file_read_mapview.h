@@ -12,11 +12,12 @@ namespace cllio
 #ifdef PRJ_PLATFORM_IS_WIN32
 		byte_t m_handles[sizeof(void*) * 2];
 		friend struct file_read_mapview_handle_impl;
+		file_read_mapview_platform_impl();
 #endif
 
 #ifdef PRJ_PLATFORM_IS_LINUX
-		int	  m_file_handle;
-		void* m_mmap_handle;
+		int	  m_file_handle = 0;
+		void* m_mmap_handle = nullptr;
 #endif
 	};
 
@@ -27,10 +28,15 @@ namespace cllio
 		file_read_mapview(const file_read_mapview&) = delete;
 		file_read_mapview& operator=(const file_read_mapview&) = delete;
 
+		file_read_mapview(file_read_mapview&&);
+		file_read_mapview& operator=(file_read_mapview&&);
+
 	public:
 		file_read_mapview(const std::filesystem::path& p);
 		file_read_mapview(const char* abs_file_path);
 		~file_read_mapview();
+
+		void swap(file_read_mapview& other);
 
 	public:
 		inline const void* data() const

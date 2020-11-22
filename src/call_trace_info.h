@@ -1,4 +1,5 @@
 #pragma once
+
 #include "cllio_utils.h"
 
 namespace cllio
@@ -13,8 +14,8 @@ namespace cllio
 	// debug utils:
 	// requires compatible function `void operator()(const std::size_t _total_size,const std::size_t _local_size, const static_string& _fs)`
 	// where:
-	// _total_size is the ammount of bytes pushed
-	// _local_size is the ammount of bytes in this call
+	// _total_size is the amount of bytes pushed
+	// _local_size is the amount of bytes in this call
 	// _fs name of the function called
 
 	using trace_function_t = void(const std::size_t, const std::size_t, const static_string& s);

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "cllio_utils.h"
 
 namespace cllio
@@ -73,6 +74,20 @@ namespace cllio
 		void push_float(const float value);
 		void push_double(const double value);
 		void push_ptr(const void* px);
+
+		bool trypush_int8_t(const int8_t value);
+		bool trypush_int16_t(const int16_t value);
+		bool trypush_int32_t(const int32_t value);
+		bool trypush_int64_t(const int64_t value);
+
+		bool trypush_uint8_t(const uint8_t value);
+		bool trypush_uint16_t(const uint16_t value);
+		bool trypush_uint32_t(const uint32_t value);
+		bool trypush_uint64_t(const uint64_t value);
+
+		bool trypush_float(const float value);
+		bool trypush_double(const double value);
+		bool trypush_ptr(const void* px);
 
 	public: // text output
 		std::size_t str_printf(const char* format, ...);
@@ -193,7 +208,8 @@ namespace cllio
 		{
 			auto current_size = out.size();
 			auto remaining = get_remaining_size();
-			out.resize(current_size + remaining);
+			auto elements_to_read = remaining / sizeof(typename T::value_type);
+			out.resize(current_size + elements_to_read);
 			read_raw_buffer(out.data() + current_size, remaining);
 		}
 	};
