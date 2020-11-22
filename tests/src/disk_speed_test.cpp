@@ -23,15 +23,34 @@ profiler_timer::~profiler_timer()
 		{
 			// sec
 			ddelta = ddelta / 1000.0;
-			std::cout << "-> " << ddelta << " sec\n";
+			std::cout << " -> " << ddelta << " sec\n";
 		}
 		else
 		{
-			std::cout << "-> " << ddelta << " ms\n";
+			std::cout << " -> " << ddelta << " ms\n";
 		}
 	}
 
 	std::cout << std::endl;
+}
+
+bool read_validator::validate(const uint32_t value,const char * reader)
+{
+	if (value != refvalue)
+	{
+		if (initialized == false)
+		{
+			refvalue = value;
+			initialized = true;
+		}
+		else
+		{
+			//
+			std::cerr << "Invalid test result (" << value << ") for reader " << reader << std::endl;
+			return false;
+		}
+	}
+	return true;
 }
 
 bool disk_access_test::generate_sample_file(const char* path)
@@ -69,6 +88,10 @@ bool disk_access_test::generate_sample_file(const char* path)
 	return true;
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -193,7 +216,7 @@ public:
 		start = index;
 		end = std::min(index + SZ, uint32_t_count());
 		if (std::fread(buffer, sizeof(uint32_t), end - start, handle.get_handle()) == 0)
-			return 0;
+			return 0; //err?
 		return buffer[index - start];
 	}
 	const char* get_name() const
@@ -208,7 +231,7 @@ public:
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 template <class T>
-bool test_seq_reader(const bool validate_results, T& reader)
+bool test_seq_reader(read_validator& validator, T& reader)
 {
 	uint32_t result = 1;
 
@@ -218,17 +241,11 @@ bool test_seq_reader(const bool validate_results, T& reader)
 		result = (result) ^ reader.read(i);
 	}
 
-	if (validate_results && result != 1)
-	{
-		std::cerr << "Invalid result (" << result << ") for seq reader " << reader.get_name() << std::endl;
-		return false;
-	}
-
-	return true;
+	return validator.validate(result, reader.get_name());
 }
 
 template <class T>
-bool test_rnd_reader(const bool validate_results, T& reader)
+bool test_rnd_reader(read_validator& validator, T& reader)
 {
 	uint32_t result = 1;
 
@@ -241,17 +258,11 @@ bool test_rnd_reader(const bool validate_results, T& reader)
 		result = (result) ^ reader.read(index % size);
 	}
 
-	if (validate_results && result != 1)
-	{
-		std::cerr << "Invalid result (" << result << ") for rnd reader " << reader.get_name() << std::endl;
-		return false;
-	}
-
-	return true;
+	return validator.validate(result, reader.get_name());
 }
 
 template <class T>
-bool test_rnd_chunk_reader(const bool validate_results, T& reader, const std::size_t chunk_size, const std::size_t number_of_reads)
+bool test_rnd_chunk_reader(read_validator& validator, T& reader, const std::size_t chunk_size, const std::size_t number_of_reads)
 {
 	uint32_t result = 1;
 
@@ -267,13 +278,7 @@ bool test_rnd_chunk_reader(const bool validate_results, T& reader, const std::si
 			result = (result) ^ reader.read(j);
 	}
 
-	if (validate_results && result != 65537)
-	{
-		std::cerr << "Invalid result (" << result << ") for rnd chunk reader " << reader.get_name() << std::endl;
-		return false;
-	}
-
-	return true;
+	return validator.validate(result, reader.get_name());
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -292,7 +297,7 @@ bool disk_access_test::run(const char* path_to_test_file)
 	return run_internal(path_to_test_file, false);
 }
 
-bool disk_access_test::run_internal(const char* path_to_test_file, const bool validate_results)
+bool disk_access_test::run_internal(const char* path_to_test_file, const bool known_content)
 {
 	std::cout << "----------- INFO -----------\n";
 
@@ -310,6 +315,18 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 		}
 	}
 
+	read_validator seq_validator;
+	read_validator rnd_validator;
+	read_validator rnd_chunk_validator;
+
+	if (known_content)
+	{
+		seq_validator.validate(uint32_t(1), "init seq");
+		rnd_validator.validate(uint32_t(1), "init rnd");
+		rnd_chunk_validator.validate(uint32_t(65537), "init rnd chunk");
+	}
+
+
 	std::cout << "----------- RUNNING SEQ READ -----------\n";
 	{
 		// test uint32_t seq read
@@ -322,7 +339,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("mmap/iterate [seq]");
-				if (test_seq_reader(validate_results, r) == false)
+				if (test_seq_reader(seq_validator, r) == false)
 					return false;
 			}
 		}
@@ -335,7 +352,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fread [seq]");
-				if (test_seq_reader(validate_results, r) == false)
+				if (test_seq_reader(seq_validator, r) == false)
 					return false;
 			}
 		}
@@ -348,7 +365,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + freed [seq]");
-				if (test_seq_reader(validate_results, r) == false)
+				if (test_seq_reader(seq_validator, r) == false)
 					return false;
 			}
 		}
@@ -361,7 +378,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("iterate std::vector [seq]");
-				if (test_seq_reader(validate_results, r) == false)
+				if (test_seq_reader(seq_validator, r) == false)
 					return false;
 			}
 		}
@@ -374,7 +391,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + fread buffered(std::vector) [seq]");
-				if (test_seq_reader(validate_results, r) == false)
+				if (test_seq_reader(seq_validator, r) == false)
 					return false;
 			}
 		}
@@ -393,7 +410,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("mmap/iterate [rnd]");
-				if (test_rnd_reader(validate_results, r) == false)
+				if (test_rnd_reader(rnd_validator, r) == false)
 					return false;
 			}
 		}
@@ -406,7 +423,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + fread [rnd]");
-				if (test_rnd_reader(validate_results, r) == false)
+				if (test_rnd_reader(rnd_validator, r) == false)
 					return false;
 			}
 		}
@@ -419,7 +436,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("iterate std::vector [rnd]");
-				if (test_rnd_reader(validate_results, r) == false)
+				if (test_rnd_reader(rnd_validator, r) == false)
 					return false;
 			}
 		}
@@ -432,7 +449,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + fread buffered(std::vector) [rnd]");
-				if (test_rnd_reader(validate_results, r) == false)
+				if (test_rnd_reader(rnd_validator, r) == false)
 					return false;
 			}
 		}
@@ -455,7 +472,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("mmap/iterate [rnd chunk]");
-				if (test_rnd_chunk_reader(validate_results, r, chunk_size, number_of_reads) == false)
+				if (test_rnd_chunk_reader(rnd_chunk_validator, r, chunk_size, number_of_reads) == false)
 					return false;
 			}
 		}
@@ -468,7 +485,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + fread [rnd chunk]");
-				if (test_rnd_chunk_reader(validate_results, r, chunk_size, number_of_reads) == false)
+				if (test_rnd_chunk_reader(rnd_chunk_validator, r, chunk_size, number_of_reads) == false)
 					return false;
 			}
 		}
@@ -481,7 +498,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("iterate std::vector [rnd chunk]");
-				if (test_rnd_chunk_reader(validate_results, r, chunk_size, number_of_reads) == false)
+				if (test_rnd_chunk_reader(rnd_chunk_validator, r, chunk_size, number_of_reads) == false)
 					return false;
 			}
 		}
@@ -494,7 +511,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool va
 			}
 			{
 				profiler_timer _("fseek + fread buffered(std::vector) [rnd chunk]");
-				if (test_rnd_chunk_reader(validate_results, r, chunk_size, number_of_reads) == false)
+				if (test_rnd_chunk_reader(rnd_chunk_validator, r, chunk_size, number_of_reads) == false)
 					return false;
 			}
 		}

@@ -15,6 +15,14 @@ struct profiler_timer
 	~profiler_timer();
 };
 
+struct read_validator
+{
+	uint32_t refvalue = 0;
+	bool	 initialized = false;
+
+	bool validate(const uint32_t value, const char* reader);
+};
+
 class disk_access_test
 {
 public:
