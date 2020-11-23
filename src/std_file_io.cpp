@@ -68,7 +68,7 @@ namespace cllio
 	{
 	}
 	//--------------------------------------------------------------------------------------------------------------------
-	bool std_file_writer_impl::open(const char* abs_path, const bool binary, const bool append)
+	bool std_file_writer_impl::create(const char* abs_path, const bool binary, const bool append)
 	{
 		if (m_file_ptr != nullptr)
 			std::fclose(m_file_ptr);
@@ -327,25 +327,9 @@ namespace cllio
 	//--------------------------------------------------------------------------------------------------------------------
 	bool std_file_reader_impl::open(const char* abs_path, const bool is_binary)
 	{
-		if (m_file_ptr != nullptr)
-			std::fclose(m_file_ptr);
-#ifdef _MSC_VER
-		errno_t err;
 		if (is_binary)
-			err = fopen_s(&m_file_ptr, abs_path, "rb");
-		else
-			err = fopen_s(&m_file_ptr, abs_path, "r");
-		if (err == 0)
-			return true; // ok
-		m_file_ptr = nullptr;
-		return false;
-#else
-		if (is_binary)
-			m_file_ptr = std::fopen(abs_path, "rb");
-		else
-			m_file_ptr = std::fopen(abs_path, "r");
-		return m_file_ptr != nullptr;
-#endif
+			return open_binary(abs_path);
+		return open(abs_path);
 	}
 	bool std_file_reader_impl::open(const char* abs_path)
 	{

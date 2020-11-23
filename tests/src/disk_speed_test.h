@@ -27,7 +27,7 @@ class disk_access_test
 {
 public:
 	bool run(const char* path_to_test_file);
-	bool run_internal(const char* path_to_test_file, const bool validate_results);
+	bool run_internal(const char* path_to_test_file, const bool validate_results, const std::size_t known_content_size);
 
-	bool generate_sample_file(const char* path);
+	std::size_t generate_sample_file(const char* path);
 };

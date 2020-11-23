@@ -54,7 +54,7 @@ namespace cllio
 		std_file_writer_impl(std::FILE* handle);
 
 	public:
-		bool open(const char* abs_path, const bool binary = true, const bool append = false);
+		bool create(const char* abs_path, const bool binary = true, const bool append = false);
 		void flush();
 
 	public: // binary writers, no error check

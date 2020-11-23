@@ -207,7 +207,7 @@ bool run_main_tests()
 	{
 		// write sample file
 		cllio::std_file_write out;
-		out.open(file_path, true, false);
+		out.create(file_path, true, false);
 		test_writer(out);
 	}
 
@@ -340,9 +340,12 @@ int main(int argc, const char** argv)
 	for (int i = 0; i < argc; i++)
 		std::cout << "arg[" << i << "]=" << argv[i] << std::endl;
 #endif
-
-	if (run_main_tests() == false)
-		return -1;
+	
+	if (argc == 1)
+	{
+		if (run_main_tests() == false)
+			return -1;
+	}
 
 #ifndef DEBUG
 	//#if 1
