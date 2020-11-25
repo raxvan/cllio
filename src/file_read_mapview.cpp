@@ -40,7 +40,6 @@ namespace cllio
 #endif
 #ifdef PRJ_PLATFORM_IS_LINUX
 		std::swap(m_file_handle, other.m_file_handle);
-		std::swap(m_mmap_handle, other.m_mmap_handle);
 #endif
 		std::swap(m_data, other.m_data);
 		std::swap(m_size, other.m_size);
@@ -83,28 +82,33 @@ namespace cllio
 
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
-		this->m_data = nullptr;
-		this->m_size = 0;
 		auto& h = file_read_mapview_handle_impl::get_handle(*this);
 		h.file_handle = NULL;
 		h.file_mapping = NULL;
 
-		h.file_handle = CreateFile(abs_file_path, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
-		if (h.file_handle == NULL)
+		HANDLE fh = CreateFile(abs_file_path, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+		if (fh == NULL)
 			return;
 
-		this->m_size = (std::size_t)GetFileSize(h.file_handle, NULL);
-		DWORD flProtect = PAGE_READONLY;
-
-		h.file_mapping = CreateFileMapping(h.file_handle, NULL, flProtect, 0, 0, NULL);
-		if (h.file_mapping == NULL)
+		std::size_t sz = (std::size_t)GetFileSize(fh, NULL);
+		if(sz == 0)
+		{
+			CloseHandle(fh);
 			return;
+		}
 
-		// dwDesiredAccess = FILE_MAP_WRITE;
-		DWORD dwDesiredAccess = FILE_MAP_READ;
+		HANDLE mh = CreateFileMapping(fh, NULL, PAGE_READONLY, 0, 0, NULL);
+		if (mh == NULL)
+		{
+			CloseHandle(fh);
+			return;
+		}
 
-		// dwDesiredAccess |= FILE_MAP_EXECUTE;
-		this->m_data = (const void*)MapViewOfFile(h.file_mapping, dwDesiredAccess, 0, 0, 0);
+		h.file_handle = fh;
+		h.file_mapping = mh;
+
+		this->m_data = (const void*)MapViewOfFile(mh, FILE_MAP_READ, 0, 0, 0);
+		this->m_size = sz;
 	}
 	file_read_mapview::~file_read_mapview()
 	{
@@ -125,39 +129,39 @@ namespace cllio
 #	define HAS_IMPLEMENTATION
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
-		this->m_data = nullptr;
-		this->m_size = 0;
-
 		m_file_handle = -1;
-		m_mmap_handle = nullptr;
 
-		m_file_handle = open(abs_file_path, O_RDONLY);
-		if (m_file_handle < 0)
+		int fh = open(abs_file_path, O_RDONLY);
+		if (fh < 0)
 			return;
 
 		struct stat statbuf;
-		int			err = fstat(m_file_handle, &statbuf);
-		if (err < 0)
+		int			err = fstat(fh, &statbuf);
+		if (err < 0 || statbuf.st_size <= 0)
+		{
+			//stat failed close file also
+			close(fh);
 			return;
+		}
 
-		void* ptr = mmap(NULL, statbuf.st_size, PROT_READ, MAP_PRIVATE, m_file_handle, 0);
+		void* ptr = mmap(NULL, statbuf.st_size, PROT_READ, MAP_PRIVATE, fh, 0);
 		if (ptr == MAP_FAILED)
 		{
+			close(fh);
 			return;
 		}
-		else
-		{
-			m_mmap_handle = ptr;
-		}
+
+		m_file_handle = fh;
 
 		m_data = ptr;
+		
 		m_size = std::size_t(statbuf.st_size);
 	}
 	file_read_mapview::~file_read_mapview()
 	{
-		if (m_mmap_handle != nullptr)
+		if (m_data != nullptr)
 		{
-			/* err = */ munmap(m_mmap_handle, m_size);
+			/* err = */ munmap(m_data, m_size);
 			/*if (err != 0) {
 				printf("UnMapping Failed\n");
 			}

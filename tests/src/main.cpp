@@ -1,4 +1,5 @@
 
+#include "virtual_file_stream.h"
 
 #include <cllio.h>
 #include <limits>

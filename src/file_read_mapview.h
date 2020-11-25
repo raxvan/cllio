@@ -17,7 +17,6 @@ namespace cllio
 
 #ifdef PRJ_PLATFORM_IS_LINUX
 		int	  m_file_handle = 0;
-		void* m_mmap_handle = nullptr;
 #endif
 	};
 
@@ -49,7 +48,11 @@ namespace cllio
 		}
 
 	protected:
+#ifdef PRJ_PLATFORM_IS_WIN32
 		const void* m_data = nullptr;
+#else
+		void* m_data = nullptr;
+#endif
 		std::size_t m_size = 0;
 	};
 
