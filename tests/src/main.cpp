@@ -1,6 +1,4 @@
 
-#include "virtual_file_stream.h"
-
 #include <cllio.h>
 #include <limits>
 #include <iostream>
@@ -334,6 +332,51 @@ bool run_main_tests()
 	}
 }
 
+bool test_utils()
+{
+	auto check_value = [](const uint64_t i) {
+		char buffer[16];
+		std::memset(&buffer[0], 0, 16);
+
+		uint64_t ref = i;
+		cllio::mem_stream_write w(&buffer[4], 8);
+		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
+			return false;
+
+		uint64_t check = std::numeric_limits<uint64_t>::max();
+		cllio::mem_stream_read r(&buffer[4], 8);
+		if (cllio::utils::read_packed_uint64_t(r, check) == false)
+			return false;
+
+		if (check != ref)
+			return false;
+
+		char buffer_check = buffer[0] | buffer[1] | buffer[2] | buffer[3];
+		buffer_check = buffer[12] | buffer[13] | buffer[14] | buffer[15];
+		if (buffer_check != 0)
+			return false;
+
+		return true;
+	};
+	auto check_and_print = [&](const uint64_t& value) {
+		auto r = check_value(value);
+		if (r == false)
+			std::cerr << "packed uint64 read/write failed with value " << value << std::endl;
+		return r;
+	};
+	for (uint64_t i = 0; i < 2048;i++)
+	{
+		check_and_print(i);
+		check_and_print(i + std::numeric_limits<uint16_t>::max() - 1024);
+		check_and_print(i + std::numeric_limits<uint32_t>::max() - 1024);
+		check_and_print(i * 104729);
+		check_and_print((i + std::numeric_limits<uint16_t>::max() - 1024) * 104729);
+		check_and_print((i + std::numeric_limits<uint32_t>::max() - 1024) * 104729);
+	}
+
+	return true;
+}
+
 int main(int argc, const char** argv)
 {
 #ifdef DEBUG
@@ -344,7 +387,10 @@ int main(int argc, const char** argv)
 	
 	if (argc == 1)
 	{
-		if (run_main_tests() == false)
+		//if (run_main_tests() == false)
+		//	return -1;
+
+		if (test_utils() == false)
 			return -1;
 	}
 

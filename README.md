@@ -4,13 +4,13 @@
 CLLIO (c++ low level io) wants to be a lightweight, ZERO warnings stream io and serialization abstraction layer.
 
 What cllio does not have:
-- complex serialization; no templates to write/read vectors or structures
+- no complex serialization code.
 - direct memory allocations
 - complex buffering logic
 
 What it should have:
 - 0 Warnings (W4) on "all" compilers
-- fast compile times, with minimal effort to integrate into project
+- minimal effort to integrate into project
 - usable functions without the need to write boilerplate
 - *EXTREME* error checking without performance sacrifice
 - no template overkill, functions should be easy to read with a debugger.
@@ -80,8 +80,8 @@ Where `T` is one of 'Supported Types'.
 2. `bool trypush_T(const T & value)` will return false if push failed
 3. `void push_ptr(const void *)` will write; UB on failure.
 4. `bool trypush_ptr(const void*)` will return false if push failed
-5. `void push_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
-6. `bool trypush_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
+5. `void write_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
+6. `bool trywrite_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
 
 
 Where `T` is one of 'Supported Types'.

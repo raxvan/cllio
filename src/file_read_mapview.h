@@ -48,11 +48,13 @@ namespace cllio
 		}
 
 	protected:
+
 #ifdef PRJ_PLATFORM_IS_WIN32
 		const void* m_data = nullptr;
 #else
 		void* m_data = nullptr;
 #endif
+
 		std::size_t m_size = 0;
 	};
 

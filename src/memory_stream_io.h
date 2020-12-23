@@ -41,7 +41,7 @@ namespace cllio
 		}
 
 	public:
-		void read_raw_buffer(void* dest, const std::size_t ammount);
+		//void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public:
 		uint8_t	 pop_uint8_t();
@@ -304,6 +304,9 @@ namespace cllio
 		bool trypush_float(const float value);
 		bool trypush_double(const double value);
 		bool trypush_ptr(const void* px);
+
+	public:
+		bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -382,8 +385,8 @@ namespace cllio
 		inline bool trypush_ptr(const void* px);
 
 	public: // raw buffer functions
-		inline void push_raw_buffer(const void* data, const std::size_t byte_count);
-		inline bool trypush_raw_buffer(const void* data, const std::size_t byte_count);
+		inline void write_raw_buffer(const void* data, const std::size_t byte_count);
+		inline bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
 	};
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -705,13 +708,13 @@ namespace cllio
 	}
 
 	template <class F>
-	inline void memory_functor_write<F>::push_raw_buffer(const void* data, const std::size_t byte_count)
+	inline void memory_functor_write<F>::write_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		_memory_functor_write_details::_copy_memory(out, data, byte_count);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_raw_buffer(const void* data, const std::size_t byte_count)
+	inline bool memory_functor_write<F>::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		if (out != nullptr)

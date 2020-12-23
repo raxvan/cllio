@@ -274,12 +274,18 @@ namespace cllio
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------
 
-	void std_file_writer_impl::push_raw_buffer(const void* data, const std::size_t byte_count)
+	void std_file_writer_impl::write_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::size_t sz = std::fwrite(data, 1, byte_count, m_file_ptr);
 		CLLIO_ASSERT(sz == byte_count);
 		consider_it_used(sz);
+	}
+	bool std_file_writer_impl::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fwrite(data, 1, byte_count, m_file_ptr);
+		return (sz == byte_count);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------
@@ -375,6 +381,13 @@ namespace cllio
 		CLLIO_ASSERT(sz == ammount);
 		consider_it_used(sz);
 	}
+	bool std_file_reader_impl::tryread_raw_buffer(void* dest, const std::size_t ammount)
+	{
+		CLLIO_ASSERT(m_file_ptr != nullptr);
+		std::size_t sz = std::fread(dest, 1, ammount, m_file_ptr);
+		return (sz == ammount);
+	}
+	
 
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------

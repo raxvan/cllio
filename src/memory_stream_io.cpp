@@ -971,5 +971,15 @@ namespace cllio
 		}
 		return false;
 	}
+	bool mem_stream_write::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
+	{
+		if ((m_px != nullptr && (m_px + byte_count) <= m_px_end))
+		{
+			std::memcpy(m_px, data, byte_count);
+			m_px += byte_count;
+			return true;
+		}
+		return false;
+	}
 
 }

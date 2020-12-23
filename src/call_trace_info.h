@@ -58,13 +58,13 @@ namespace cllio
 		}
 
 	public:
-		inline void push_raw_buffer(const void*, const std::size_t byte_count)
+		inline void write_raw_buffer(const void*, const std::size_t byte_count)
 		{
-			_trace(byte_count, "push_raw_buffer");
+			_trace(byte_count, "write_raw_buffer");
 		}
-		inline bool trypush_raw_buffer(const void*, const std::size_t byte_count)
+		inline bool trywrite_raw_buffer(const void*, const std::size_t byte_count)
 		{
-			_trace(byte_count, "trypush_raw_buffer");
+			_trace(byte_count, "trywrite_raw_buffer");
 			return true;
 		}
 
