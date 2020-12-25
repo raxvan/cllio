@@ -384,11 +384,11 @@ int main(int argc, const char** argv)
 	for (int i = 0; i < argc; i++)
 		std::cout << "arg[" << i << "]=" << argv[i] << std::endl;
 #endif
-	
+
 	if (argc == 1)
 	{
-		//if (run_main_tests() == false)
-		//	return -1;
+		if (run_main_tests() == false)
+			return -1;
 
 		if (test_utils() == false)
 			return -1;
