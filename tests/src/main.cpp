@@ -7,7 +7,7 @@
 #include <functional>
 #include "disk_speed_test.h"
 
-const auto	ref_file_path = "../../tests/samples.bin";
+const auto	ref_file_path = "../../../tests/samples.bin";
 const auto	file_path = "samples.bin";
 std::size_t failed = 0;
 

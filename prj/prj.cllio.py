@@ -5,7 +5,7 @@ ctx = srcbuild.Generator()
 
 ctx.run("lib",
 	incl = [
-		"src"
+		"../src"
 	],
-	src = ctx.glob("src",[".cpp",".h"])
+	src = ctx.glob("../src",[".cpp",".h"])
 )
