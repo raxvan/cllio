@@ -45,11 +45,12 @@ namespace cllio
 		std::swap(m_size, other.m_size);
 	}
 
-	file_read_mapview::file_read_mapview(file_read_mapview&& other)
+	file_read_mapview::file_read_mapview(file_read_mapview&& other) noexcept
 	{
 		other.swap(*this);
 	}
-	file_read_mapview& file_read_mapview::operator=(file_read_mapview&& other)
+
+	file_read_mapview& file_read_mapview::operator=(file_read_mapview&& other) noexcept
 	{
 		file_read_mapview tmp;
 		tmp.swap(*this);
@@ -154,7 +155,7 @@ namespace cllio
 		m_file_handle = fh;
 
 		m_data = ptr;
-		
+
 		m_size = std::size_t(statbuf.st_size);
 	}
 	file_read_mapview::~file_read_mapview()

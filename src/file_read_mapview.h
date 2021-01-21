@@ -27,8 +27,8 @@ namespace cllio
 		file_read_mapview(const file_read_mapview&) = delete;
 		file_read_mapview& operator=(const file_read_mapview&) = delete;
 
-		file_read_mapview(file_read_mapview&&);
-		file_read_mapview& operator=(file_read_mapview&&);
+		file_read_mapview(file_read_mapview&&) noexcept;
+		file_read_mapview& operator=(file_read_mapview&&) noexcept;
 
 	public:
 		file_read_mapview(const std::filesystem::path& p);
