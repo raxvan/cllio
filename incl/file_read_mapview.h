@@ -4,23 +4,32 @@
 #include "cllio_utils.h"
 #include <filesystem>
 
+#ifndef CLLIO_FILE_READ_MAPVIEW
+	#ifdef _WIN32
+		#define CLLIO_FILE_READ_MAPVIEW_WIN32
+	#else
+		#define CLLIO_FILE_READ_MAPVIEW_MMAP
+	#endif
+#endif
+
+
 namespace cllio
 {
 
 	struct file_read_mapview_platform_impl
 	{
-#ifdef PRJ_PLATFORM_IS_WIN32
+#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		byte_t m_handles[sizeof(void*) * 2];
 		friend struct file_read_mapview_handle_impl;
 		file_read_mapview_platform_impl();
 #endif
 
-#ifdef PRJ_PLATFORM_IS_LINUX
+#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		int	  m_file_handle = 0;
 #endif
 	};
 
-	struct file_read_mapview : public file_read_mapview_platform_impl
+	struct file_read_mapview : protected file_read_mapview_platform_impl
 	{
 	public:
 		file_read_mapview() = default;
@@ -49,12 +58,15 @@ namespace cllio
 
 	protected:
 
-#ifdef PRJ_PLATFORM_IS_WIN32
+#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		const void* m_data = nullptr;
-#else
+#endif
+
+#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		void* m_data = nullptr;
 #endif
 
+	protected:
 		std::size_t m_size = 0;
 	};
 

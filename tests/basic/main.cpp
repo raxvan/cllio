@@ -5,9 +5,8 @@
 #include <vector>
 #include <cstring>
 #include <functional>
-#include "disk_speed_test.h"
 
-const auto	ref_file_path = "../../../tests/samples.bin";
+const auto	ref_file_path = "../../tests/samples.bin";
 const auto	file_path = "samples.bin";
 std::size_t failed = 0;
 
@@ -393,24 +392,6 @@ int main(int argc, const char** argv)
 		if (test_utils() == false)
 			return -1;
 	}
-
-#ifndef DEBUG
-	//#if 1
-	// run test only on release
-	if (argc > 1)
-	{
-		disk_access_test speed_test; // run speed test
-		const char*		 file = argv[1];
-		if (speed_test.run(file) == false)
-			return -1;
-	}
-	else
-	{
-		disk_access_test speed_test; // run speed test
-		if (speed_test.run(nullptr) == false)
-			return -1;
-	}
-#endif
 
 	return 0;
 }

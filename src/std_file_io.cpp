@@ -344,10 +344,9 @@ namespace cllio
 #ifdef _MSC_VER
 		errno_t err = fopen_s(&m_file_ptr, abs_path, "r");
 		if (err == 0)
-		{
 			return true; // ok
-		}
-		m_file_ptr = nullptr;
+		
+		m_file_ptr = nullptr; //TODO: check if this assignment is needed
 		return false;
 #else
 		m_file_ptr = std::fopen(abs_path, "r");
@@ -361,10 +360,9 @@ namespace cllio
 #ifdef _MSC_VER
 		errno_t err = fopen_s(&m_file_ptr, abs_path, "rb");
 		if (err == 0)
-		{
 			return true; // ok
-		}
-		m_file_ptr = nullptr;
+		
+		m_file_ptr = nullptr; //TODO: check if this assignment is needed
 		return false;
 #else
 		m_file_ptr = std::fopen(abs_path, "rb");

@@ -10,7 +10,7 @@ namespace cllio
 
 		uint16_t r;
 		r = (static_cast<uint16_t>(*px++));
-		r |= (static_cast<uint16_t>(*px++) << 8);
+		r |= (static_cast<uint16_t>(*px++) << uint16_t(8));
 		return r;
 	}
 	inline uint32_t _read_uint32_t(const byte_t*& px)

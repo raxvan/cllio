@@ -1,7 +1,7 @@
 
 #include <file_read_mapview.h>
 
-#ifdef PRJ_PLATFORM_IS_WIN32
+#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 #	include <memory>
 #	include <io.h>
 #	include <windows.h>
@@ -14,7 +14,7 @@
 #	endif
 #endif
 
-#ifdef PRJ_PLATFORM_IS_LINUX
+#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 #	include <stdio.h>
 #	include <sys/mman.h>
 #	include <stdlib.h>
@@ -32,13 +32,13 @@ namespace cllio
 
 	void file_read_mapview::swap(file_read_mapview& other)
 	{
-#ifdef PRJ_PLATFORM_IS_WIN32
+#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		byte_t tmp[sizeof(void*) * 2];
 		std::memcpy(tmp, this->m_handles, sizeof(tmp));
 		std::memcpy(this->m_handles, other.m_handles, sizeof(tmp));
 		std::memcpy(other.m_handles, tmp, sizeof(tmp));
 #endif
-#ifdef PRJ_PLATFORM_IS_LINUX
+#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		std::swap(m_file_handle, other.m_file_handle);
 #endif
 		std::swap(m_data, other.m_data);
@@ -58,7 +58,7 @@ namespace cllio
 		return (*this);
 	}
 
-#ifdef PRJ_PLATFORM_IS_WIN32
+#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 	file_read_mapview_platform_impl::file_read_mapview_platform_impl()
 	{
 		std::memset(m_handles, 0, sizeof(m_handles));
@@ -108,8 +108,10 @@ namespace cllio
 		h.file_handle = fh;
 		h.file_mapping = mh;
 
-		this->m_data = (const void*)MapViewOfFile(mh, FILE_MAP_READ, 0, 0, 0);
+		this->m_data = (const void*)MapViewOfFile(mh, FILE_MAP_READ, 0, 0, 0); // https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile
 		this->m_size = sz;
+
+		CLLIO_ASSERT(this->m_data != nullptr);
 	}
 	file_read_mapview::~file_read_mapview()
 	{
@@ -126,7 +128,7 @@ namespace cllio
 	}
 #endif
 
-#ifdef PRJ_PLATFORM_IS_LINUX
+#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 #	define HAS_IMPLEMENTATION
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
