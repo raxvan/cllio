@@ -1,11 +1,7 @@
 #pragma once
 
-#include "size_info.h"
-#include "call_trace_info.h"
 #include "std_file_io.h"
 #include "memory_stream_io.h"
-#include "file_read_mapview.h"
-
 
 namespace cllio
 {
@@ -18,12 +14,12 @@ namespace cllio
 		static inline bool write_packed_uint64_t(W& writer, const uint64_t value)
 		{
 			const uint8_t low_mask = (1 << 5) - 1;
-			
+
 			if (value <= low_mask) //first 5 bits
 				return writer.trypush_uint8_t(char(value));
 
 			uint8_t buffer[9];
-			
+
 			std::size_t itr = 0;
 			{
 				uint64_t tmp = value;
@@ -129,8 +125,6 @@ namespace cllio
 			CLLIO_ASSERT(tmp < std::numeric_limits<std::size_t>::max());
 			return _callback(std::size_t(tmp));
 		}
-	public:
-		
 	};
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cllio_utils.h"
+#include "cllio_internal_utils.h"
 
 namespace cllio
 {
@@ -227,69 +227,6 @@ namespace cllio
 		}
 	};
 
-	inline void std_file_reader_impl::pop_uint8_t(uint8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint8_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint16_t(uint16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint16_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint32_t(uint32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint32_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint64_t(uint64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint64_t(out) == false;
-	}
-
-	inline void std_file_reader_impl::pop_int8_t(int8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int8_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int16_t(int16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int16_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int32_t(int32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int32_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int64_t(int64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int64_t(out) == false;
-	}
-
-	inline void std_file_reader_impl::pop_float(float& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_float(out) == false;
-	}
-	inline void std_file_reader_impl::pop_double(double& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_double(out) == false;
-	}
-
 	//-----------------------------------------------------------------------------------------------------------
 
 	template <class T>
@@ -369,4 +306,72 @@ namespace cllio
 	using std_file_write = std_file_io_owner<std_file_writer_impl>;
 
 	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+
+	inline void std_file_reader_impl::pop_uint8_t(uint8_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_uint8_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint16_t(uint16_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_uint16_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint32_t(uint32_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_uint32_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_uint64_t(uint64_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_uint64_t(out) == false;
+	}
+
+	inline void std_file_reader_impl::pop_int8_t(int8_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_int8_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int16_t(int16_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_int16_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int32_t(int32_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_int32_t(out) == false;
+	}
+	inline void std_file_reader_impl::pop_int64_t(int64_t& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_int64_t(out) == false;
+	}
+
+	inline void std_file_reader_impl::pop_float(float& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_float(out) == false;
+	}
+	inline void std_file_reader_impl::pop_double(double& out, bool& error)
+	{
+		if (error)
+			return;
+		error = pop_double(out) == false;
+	}
+
+
 }

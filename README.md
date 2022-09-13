@@ -28,7 +28,7 @@ TODO:
 - running static code analyzers: *todo*
 - LE, BE support
 
-# Classes:
+# Base Classes:
 
 - `mem_stream_read` reads from `const void*`
 - `mem_stream_read_unchecked` reads from `const void*` no end() checks
@@ -39,8 +39,13 @@ TODO:
 - `std_file_write_view` write to `std::FILE*`
 - `std_file_read` read from `std::FILE*`, owns file handle
 - `std_file_write` write from `std::FILE*`, owns file handle
+
+# Helper classes
+
 - `size_info` calculates write size
-- `call_trace_info` debug
+- `call_trace_info` debug utility, prints all calls to serialization primitives
+- `file_read_mapview` maps file to `const void*`, use `data()` and `size()`
+- `tcpsocket` for simple socket io
 
 Note: calling any read/write functions on a closed `std_file_*` is UB;
 
@@ -62,8 +67,8 @@ Read/Write functions can handle following types:
 # Binary Read functions
 Readers have functions that follow the following format:
 
-1. `bool 	 pop_T(T & out);`  Try to read, returns false on failure.
-2. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
+1. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
+2. `bool 	 pop_T(T & out);`  Try to read, returns false on failure.
 3. `T 	 	 pop_T(bool& error);` Try to read, returns T(0) on error and error = true.
 4. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
 5. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns false.

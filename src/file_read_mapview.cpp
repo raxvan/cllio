@@ -1,6 +1,8 @@
 
 #include <file_read_mapview.h>
 
+#ifdef CLLIO_FILE_READ_MAPVIEW
+
 #ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 #	include <memory>
 #	include <io.h>
@@ -182,4 +184,6 @@ namespace cllio
 #	undef HAS_IMPLEMENTATION
 #else
 #	error "No implementation for file_read_mapview, check platform"
+#endif
+
 #endif

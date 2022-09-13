@@ -1,57 +1,60 @@
 
 #pragma once
 
-#include "cllio_utils.h"
-#include <atomic>
+#include "cllio_internal_utils.h"
+
+#ifdef CLLIO_SOCKET_IMPL
+
 #include <array>
 
-#ifndef CLLIO_SOCKET
-	#ifdef _WIN32
-		#define CLLIO_SOCKET_WIN32
-	#else
-		#define CLLIO_SOCKET_POSIX
-	#endif
+#ifdef _WIN32
+	#define CLLIO_SOCKET_WIN32
+#else
+	#define CLLIO_SOCKET_POSIX
 #endif
-
 
 namespace cllio
 {
-	
+
 	struct socket_platform_impl
 	{
 		friend struct socket_handle_impl;
-		
+
 #ifdef CLLIO_SOCKET_WIN32
 		enum {
 			kDataSize = sizeof(void*)
 		};
-		static std::atomic<bool> wsa_lock;
-		static uint32_t wsa_share;
+
+		//helpers in case you want to manually init/destroy globally
+		static void initialize();
+		static void destroy();
 #endif
 
 #ifdef CLLIO_SOCKET_POSIX
 		enum {
 			kDataSize = sizeof(int)
 		};
+
+		inline static void initialize() {}
+		inline static void destroy() {}
 #endif
 
 		std::array<byte_t, kDataSize> m_handle_data = {};
 
 		socket_platform_impl();
+		~socket_platform_impl();
 	};
 
 	struct tcpsocket : protected socket_platform_impl
 	{
 	public:
-		
 		tcpsocket(const tcpsocket&) = delete;
 		tcpsocket& operator=(const tcpsocket&) = delete;
 
-		
-
 	public:
-		tcpsocket();
-		~tcpsocket();
+		tcpsocket() = default;
+		~tcpsocket() = default;
+
 		tcpsocket(tcpsocket&&) noexcept;
 		tcpsocket& operator=(tcpsocket&&) noexcept;
 	public:

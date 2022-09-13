@@ -3,12 +3,22 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
+#define CLLIO_SOCKET_AUTO_INIT_WIN32 //tcp socket automatically initialized/destroyes wsa context
+#define CLLIO_SOCKET_IMPL // enable/remove socket impl
+
+
+#define CLLIO_FILE_READ_MAPVIEW // enable/remove file read map view
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
 #if defined(CLLIO_INSTRUMENTS) || defined(TESTING_BUILD) //enable assert
 #define CLLIO_ASSERT_ENABLED
+
 namespace cllio
 {
 	extern "C++" void cllio_assert_failed(const char* file, const int line, const char* cond);
 }
+
 #	define CLLIO_ASSERT(_COND)                                  \
 		do                                                       \
 		{                                                        \
@@ -20,7 +30,13 @@ namespace cllio
 		{                                                        \
 			cllio_assert_failed(__FILE__, __LINE__, CSTR_MSG);   \
 		} while (false)
-#else
+#endif
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+#ifndef CLLIO_ASSERT
+
 #define CLLIO_ASSERT(...) \
 		do                      \
 		{                       \
@@ -29,6 +45,7 @@ namespace cllio
 		do                      \
 		{                       \
 		} while (false)
+
 #endif
 
 //--------------------------------------------------------------------------------------------------------------------------------

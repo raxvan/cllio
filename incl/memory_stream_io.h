@@ -1,5 +1,5 @@
 #pragma once
-#include "cllio_utils.h"
+#include "cllio_internal_utils.h"
 
 namespace cllio
 {
@@ -31,7 +31,7 @@ namespace cllio
 		mem_stream_read_unchecked& operator=(const mem_stream_read_unchecked&) = default;
 
 	public:
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -39,9 +39,6 @@ namespace cllio
 		{
 			return m_px;
 		}
-
-	public:
-		//void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public:
 		uint8_t	 pop_uint8_t();
@@ -87,7 +84,7 @@ namespace cllio
 		{
 			return (m_px + expected_bytes) <= m_px_end;
 		}
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -110,6 +107,11 @@ namespace cllio
 			return m_px;
 		}
 
+		template <class T>
+		inline bool _can_read() const
+		{
+			return (m_px + sizeof(T)) <= m_px_end;
+		}
 	public: // binary
 		void read_raw_buffer(void* dest, const std::size_t ammount);
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
@@ -219,7 +221,7 @@ namespace cllio
 		{
 			return m_px;
 		}
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -256,7 +258,7 @@ namespace cllio
 		mem_stream_write& operator=(const mem_stream_write&) = default;
 
 	public:
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -272,7 +274,7 @@ namespace cllio
 		template <class T>
 		inline bool _can_write() const
 		{
-			return (m_px != nullptr && (m_px + sizeof(T)) <= m_px_end);
+			return (m_px + sizeof(T)) <= m_px_end;
 		}
 
 	public:
@@ -307,16 +309,6 @@ namespace cllio
 
 	public:
 		bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
-	};
-
-	//-----------------------------------------------------------------------------------------------------------
-
-	struct _memory_functor_write_details
-	{
-		static void _write_bynary_uint16_t(byte_t* out, const uint16_t value);
-		static void _write_bynary_uint32_t(byte_t* out, const uint32_t value);
-		static void _write_bynary_uint64_t(byte_t* out, const uint64_t value);
-		static void _copy_memory(void* _dst, const void* _src, const std::size_t byte_count);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -510,19 +502,19 @@ namespace cllio
 	inline void memory_functor_write<F>::push_uint16_t(const uint16_t value)
 	{
 		byte_t* out = _get<uint16_t>();
-		_memory_functor_write_details::_write_bynary_uint16_t(out, value);
+		_serializer_utils::_write_bynary_uint16_t(out, value);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_uint32_t(const uint32_t value)
 	{
 		byte_t* out = _get<uint32_t>();
-		_memory_functor_write_details::_write_bynary_uint32_t(out, value);
+		_serializer_utils::_write_bynary_uint32_t(out, value);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_uint64_t(const uint64_t value)
 	{
 		byte_t* out = _get<uint64_t>();
-		_memory_functor_write_details::_write_bynary_uint64_t(out, value);
+		_serializer_utils::_write_bynary_uint64_t(out, value);
 	}
 
 	template <class F>
@@ -539,7 +531,7 @@ namespace cllio
 		byte_t*						 out = _get<int16_t>();
 		UnionCast<int16_t, uint16_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint16_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_int32_t(const int32_t value)
@@ -547,7 +539,7 @@ namespace cllio
 		byte_t*						 out = _get<int32_t>();
 		UnionCast<int32_t, uint32_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_int64_t(const int64_t value)
@@ -555,7 +547,7 @@ namespace cllio
 		byte_t*						 out = _get<int64_t>();
 		UnionCast<int64_t, uint64_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 	}
 
 	template <class F>
@@ -564,7 +556,7 @@ namespace cllio
 		byte_t*					   out = _get<float>();
 		UnionCast<float, uint32_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_double(const double value)
@@ -572,7 +564,7 @@ namespace cllio
 		byte_t*						out = _get<double>();
 		UnionCast<double, uint64_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 	}
 	template <class F>
 	inline void memory_functor_write<F>::push_ptr(const void* px)
@@ -581,10 +573,9 @@ namespace cllio
 		UnionCast<uint64_t, const void*> tmp;
 		tmp.first = 0;
 		tmp.second = px;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
 	}
 
-	inline void push_ptr();
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
@@ -600,7 +591,7 @@ namespace cllio
 	{
 		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint16_t(out, value);
+			_serializer_utils::_write_bynary_uint16_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
@@ -608,7 +599,7 @@ namespace cllio
 	{
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint32_t(out, value);
+			_serializer_utils::_write_bynary_uint32_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
@@ -616,7 +607,7 @@ namespace cllio
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint64_t(out, value);
+			_serializer_utils::_write_bynary_uint64_t(out, value);
 		return (out != nullptr);
 	}
 
@@ -640,7 +631,7 @@ namespace cllio
 		{
 			UnionCast<int16_t, uint16_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint16_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
@@ -652,7 +643,7 @@ namespace cllio
 		{
 			UnionCast<int32_t, uint32_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
@@ -664,7 +655,7 @@ namespace cllio
 		{
 			UnionCast<int64_t, uint64_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
@@ -677,7 +668,7 @@ namespace cllio
 		{
 			UnionCast<float, uint32_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
@@ -689,7 +680,7 @@ namespace cllio
 		{
 			UnionCast<double, uint64_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
@@ -702,7 +693,7 @@ namespace cllio
 			UnionCast<uint64_t, const void*> tmp;
 			tmp.first = 0;
 			tmp.second = px;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
 		}
 		return (out != nullptr);
 	}
@@ -711,14 +702,14 @@ namespace cllio
 	inline void memory_functor_write<F>::write_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
-		_memory_functor_write_details::_copy_memory(out, data, byte_count);
+		_serializer_utils::_copy_memory(out, data, byte_count);
 	}
 	template <class F>
 	inline bool memory_functor_write<F>::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		if (out != nullptr)
-			_memory_functor_write_details::_copy_memory(out, data, byte_count);
+			_serializer_utils::_copy_memory(out, data, byte_count);
 		return (out != nullptr);
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------

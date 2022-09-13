@@ -1,23 +1,24 @@
 
 #pragma once
 
-#include "cllio_utils.h"
+#include "cllio_internal_utils.h"
+
+#ifdef CLLIO_FILE_READ_MAPVIEW
+
 #include <filesystem>
 
-#ifndef CLLIO_FILE_READ_MAPVIEW
-	#ifdef _WIN32
-		#define CLLIO_FILE_READ_MAPVIEW_WIN32
-	#else
-		#define CLLIO_FILE_READ_MAPVIEW_MMAP
-	#endif
+#ifdef _WIN32
+	#define CLLIO_FILE_READ_MAPVIEW_WIN32
+#else
+	#define CLLIO_FILE_READ_MAPVIEW_MMAP
 #endif
-
 
 namespace cllio
 {
 
 	struct file_read_mapview_platform_impl
 	{
+
 #ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		byte_t m_handles[sizeof(void*) * 2];
 		friend struct file_read_mapview_handle_impl;
@@ -27,6 +28,7 @@ namespace cllio
 #ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		int	  m_file_handle = 0;
 #endif
+
 	};
 
 	struct file_read_mapview : protected file_read_mapview_platform_impl
@@ -71,3 +73,5 @@ namespace cllio
 	};
 
 }
+
+#endif
