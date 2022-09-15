@@ -6,8 +6,8 @@ namespace cllio
 {
 
 	// fwd declare
-	struct std_file_reader_impl;
-	struct std_file_writer_impl;
+	struct stdfile_rstream_impl;
+	struct stdfile_wstream_impl;
 
 	// usings:
 	// using std_file_read_view -> non owning
@@ -43,15 +43,15 @@ namespace cllio
 		std::FILE* m_file_ptr = nullptr;
 	};
 	//-----------------------------------------------------------------------------------------------------------
-	struct std_file_writer_impl : public std_file_handle
+	struct stdfile_wstream_impl : public std_file_handle
 	{
 	public:
-		std_file_writer_impl() = default;
-		std_file_writer_impl(const std_file_writer_impl&) = delete;
-		std_file_writer_impl& operator=(const std_file_writer_impl&) = delete;
+		stdfile_wstream_impl() = default;
+		stdfile_wstream_impl(const stdfile_wstream_impl&) = delete;
+		stdfile_wstream_impl& operator=(const stdfile_wstream_impl&) = delete;
 
 	protected:
-		std_file_writer_impl(std::FILE* handle);
+		stdfile_wstream_impl(std::FILE* handle);
 
 	public:
 		bool create(const char* abs_path, const bool binary = true, const bool append = false);
@@ -100,15 +100,15 @@ namespace cllio
 
 	//-----------------------------------------------------------------------------------------------------------
 
-	struct std_file_reader_impl : public std_file_handle
+	struct stdfile_rstream_impl : public std_file_handle
 	{
 	public:
-		std_file_reader_impl() = default;
-		std_file_reader_impl(const std_file_reader_impl&) = delete;
-		std_file_reader_impl& operator=(const std_file_reader_impl&) = delete;
+		stdfile_rstream_impl() = default;
+		stdfile_rstream_impl(const stdfile_rstream_impl&) = delete;
+		stdfile_rstream_impl& operator=(const stdfile_rstream_impl&) = delete;
 
 	protected:
-		std_file_reader_impl(std::FILE* handle);
+		stdfile_rstream_impl(std::FILE* handle);
 
 	public:
 		bool open(const char* abs_path, const bool binary);
@@ -176,14 +176,14 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 
 	template <class T>
-	struct std_file_io_view : public T
+	struct stdfile_stream_view : public T
 	{
 	public:
 		using base_t = T;
-		using class_t = std_file_io_view<T>;
+		using class_t = stdfile_stream_view<T>;
 
 	public:
-		std_file_io_view() = default;
+		stdfile_stream_view() = default;
 		void close() = delete;
 		bool open(const char*, const bool = true, const bool = false) = delete;
 		bool open(const char*, const bool) = delete;
@@ -191,11 +191,11 @@ namespace cllio
 		bool open_binary(const char*) = delete;
 
 	public:
-		inline std_file_io_view(std::FILE* file_view)
+		inline stdfile_stream_view(std::FILE* file_view)
 			: base_t(file_view)
 		{
 		}
-		inline std_file_io_view(const class_t& other)
+		inline stdfile_stream_view(const class_t& other)
 			: base_t(other.m_file_ptr)
 		{
 		}
@@ -206,18 +206,18 @@ namespace cllio
 		}
 	};
 	template <class T>
-	struct std_file_io_owner : public T
+	struct stdfile_stream_owner : public T
 	{
 	public:
 		using base_t = T;
-		using class_t = std_file_io_owner<T>;
+		using class_t = stdfile_stream_owner<T>;
 
 	public:
-		std_file_io_owner() = default;
-		std_file_io_owner(const class_t& other) = delete;
+		stdfile_stream_owner() = default;
+		stdfile_stream_owner(const class_t& other) = delete;
 		class_t& operator=(const class_t& other) = delete;
 
-		inline ~std_file_io_owner()
+		inline ~stdfile_stream_owner()
 		{
 			base_t::close();
 		}
@@ -228,7 +228,7 @@ namespace cllio
 			other.m_file_ptr = tmp;
 		}
 
-		inline std_file_io_owner(class_t&& other)
+		inline stdfile_stream_owner(class_t&& other)
 		{
 			swap(other);
 		}
@@ -244,12 +244,12 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 
 	// non owning
-	using std_file_read_view = std_file_io_view<std_file_reader_impl>;
-	using std_file_write_view = std_file_io_view<std_file_writer_impl>;
+	using stdfile_rstream_view = stdfile_stream_view<stdfile_rstream_impl>;
+	using stdfile_wstream_view = stdfile_stream_view<stdfile_wstream_impl>;
 
 	// owning
-	using std_file_read = std_file_io_owner<std_file_reader_impl>;
-	using std_file_write = std_file_io_owner<std_file_writer_impl>;
+	using stdfile_rstream = stdfile_stream_owner<stdfile_rstream_impl>;
+	using stdfile_wstream = stdfile_stream_owner<stdfile_wstream_impl>;
 
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------

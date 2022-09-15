@@ -31,10 +31,10 @@ Status:
 - `memory_wstream_unchecked` writes to `void*` no end() checks
 - `memory_rfunc<F>` reads from a return value of a functor `const cllio::byte_t* F::operator(std::size_t)`
 - `memory_wfunc<F>` writes to functor result of `cllio::byte_t* F::operator(std::size_t)`
-- `std_file_read_view` read from `std::FILE*`
-- `std_file_write_view` write to `std::FILE*`
-- `std_file_read` read from `std::FILE*`, owns file handle
-- `std_file_write` write from `std::FILE*`, owns file handle
+- `stdfile_rstream_view` read from `std::FILE*`, does not own the file
+- `stdfile_wstream_view` write to `std::FILE*`, does not own the file
+- `stdfile_rstream` read from `std::FILE*`, owns file handle
+- `stdfile_wstream` write from `std::FILE*`, owns file handle
 
 # Helper classes
 
