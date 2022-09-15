@@ -23,18 +23,14 @@ Status:
 - `Visual studio 2019` *0 warnings*
 - `docker/ubuntu` *0 warnings*
 
-TODO:
-- xcode/macos testing *todo*
-- running static code analyzers: *todo*
-- LE, BE support
-
 # Base Classes:
 
-- `mem_stream_read` reads from `const void*`
-- `mem_stream_read_unchecked` reads from `const void*` no end() checks
-- `mem_stream_write` writes to `void*`
-- `mem_stream_write_unchecked` writes to `void*` no end() checks
-- `memory_functor_write<F>` writes to functor result of `cllio::byte_t* F::operator(std::size_t)`
+- `memory_rstream` reads from `const void*`
+- `memory_rstream_unchecked` reads from `const void*` no end() checks
+- `memory_wstream` writes to `void*`
+- `memory_wstream_unchecked` writes to `void*` no end() checks
+- `memory_rfunc<F>` reads from a return value of a functor `const cllio::byte_t* F::operator(std::size_t)`
+- `memory_wfunc<F>` writes to functor result of `cllio::byte_t* F::operator(std::size_t)`
 - `std_file_read_view` read from `std::FILE*`
 - `std_file_write_view` write to `std::FILE*`
 - `std_file_read` read from `std::FILE*`, owns file handle
@@ -46,6 +42,10 @@ TODO:
 - `call_trace_info` debug utility, prints all calls to serialization primitives
 - `file_read_mapview` maps file to `const void*`, use `data()` and `size()`
 - `tcpsocket` for simple socket io
+
+# Other
+
+- `memory_vector_serializer<V>` typedef for writer to a std::vector like container (`size()/resize()`)
 
 Note: calling any read/write functions on a closed `std_file_*` is UB;
 
@@ -68,7 +68,7 @@ Read/Write functions can handle following types:
 Readers have functions that follow the following format:
 
 1. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
-2. `bool 	 pop_T(T & out);`  Try to read, returns false on failure.
+2. `bool 	 pop_T(T & out);`  Try to read, returns false on failure and `out` is unchanged
 3. `T 	 	 pop_T(bool& error);` Try to read, returns T(0) on error and error = true.
 4. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
 5. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns false.
@@ -78,6 +78,7 @@ Readers have functions that follow the following format:
 
 Where `T` is one of 'Supported Types'.
 
+Note: one some Undefined behaviors there is an assert
 
 # Binary Write functions
 
@@ -90,17 +91,3 @@ Where `T` is one of 'Supported Types'.
 
 
 Where `T` is one of 'Supported Types'.
-
-# Compile Defines
-
-When `DEBUG` is defined asserts are enabled by default.
-
-1. `CLLIO_FORCE_ASSERT 0` disable asserts for debug
-2. `CLLIO_FORCE_ASSERT 1` enable asserts for release
-3. `CLLIO_FORCE_ASSERT 2` enable asserts without handling function. Code expects to link with:
-```
-namespace cllio
-{
-	extern void cllio_assert_failed(const char * file, const int line, const char * cond);
-}
-```

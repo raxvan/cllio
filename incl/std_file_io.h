@@ -146,61 +146,7 @@ namespace cllio
 		float  pop_float();
 		double pop_double();
 
-	public: // T 	popdefault_T(const T & default);
-		uint8_t	 popdefault_uint8_t(const uint8_t _default);
-		uint16_t popdefault_uint16_t(const uint16_t _default);
-		uint32_t popdefault_uint32_t(const uint32_t _default);
-		uint64_t popdefault_uint64_t(const uint64_t _default);
-
-		int8_t	popdefault_int8_t(const int8_t _default);
-		int16_t popdefault_int16_t(const int16_t _default);
-		int32_t popdefault_int32_t(const int32_t _default);
-		int64_t popdefault_int64_t(const int64_t _default);
-
-		float  popdefault_float(const float _default);
-		double popdefault_double(const double _default);
-
-	public: // T 	popdefault_T(T& out, const T & default);
-		bool popdefault_uint8_t(uint8_t& out, const uint8_t _default);
-		bool popdefault_uint16_t(uint16_t& out, const uint16_t _default);
-		bool popdefault_uint32_t(uint32_t& out, const uint32_t _default);
-		bool popdefault_uint64_t(uint64_t& out, const uint64_t _default);
-
-		bool popdefault_int8_t(int8_t& out, const int8_t _default);
-		bool popdefault_int16_t(int16_t& out, const int16_t _default);
-		bool popdefault_int32_t(int32_t& out, const int32_t _default);
-		bool popdefault_int64_t(int64_t& out, const int64_t _default);
-
-		bool popdefault_float(float& out, const float _default);
-		bool popdefault_double(double& out, const double _default);
-
-	public: // void 	 pop_T(T & out, bool& error);
-		void pop_uint8_t(uint8_t& out, bool& error);
-		void pop_uint16_t(uint16_t& out, bool& error);
-		void pop_uint32_t(uint32_t& out, bool& error);
-		void pop_uint64_t(uint64_t& out, bool& error);
-
-		void pop_int8_t(int8_t& out, bool& error);
-		void pop_int16_t(int16_t& out, bool& error);
-		void pop_int32_t(int32_t& out, bool& error);
-		void pop_int64_t(int64_t& out, bool& error);
-
-		void pop_float(float& out, bool& error);
-		void pop_double(double& out, bool& error);
-
-	public: // T 	 pop_T(bool& error);
-		uint8_t	 pop_uint8_t(bool& error);
-		uint16_t pop_uint16_t(bool& error);
-		uint32_t pop_uint32_t(bool& error);
-		uint64_t pop_uint64_t(bool& error);
-
-		int8_t	pop_int8_t(bool& error);
-		int16_t pop_int16_t(bool& error);
-		int32_t pop_int32_t(bool& error);
-		int64_t pop_int64_t(bool& error);
-
-		float  pop_float(bool& error);
-		double pop_double(bool& error);
+	#include "cllio_pop_variants.h"
 
 	public: // extra:
 		// read file content int a std::vector like thing of uint8_t
@@ -309,69 +255,6 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------
 	//-----------------------------------------------------------------------------------------------------------
-
-	inline void std_file_reader_impl::pop_uint8_t(uint8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint8_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint16_t(uint16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint16_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint32_t(uint32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint32_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_uint64_t(uint64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint64_t(out) == false;
-	}
-
-	inline void std_file_reader_impl::pop_int8_t(int8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int8_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int16_t(int16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int16_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int32_t(int32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int32_t(out) == false;
-	}
-	inline void std_file_reader_impl::pop_int64_t(int64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int64_t(out) == false;
-	}
-
-	inline void std_file_reader_impl::pop_float(float& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_float(out) == false;
-	}
-	inline void std_file_reader_impl::pop_double(double& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_double(out) == false;
-	}
 
 
 }

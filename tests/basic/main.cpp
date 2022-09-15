@@ -173,28 +173,28 @@ void TestFileReaders()
 void TestMemoryReaders(const std::vector<uint8_t>& buffer)
 {
 	{
-		cllio::mem_stream_read_unchecked ms(buffer.data());
+		cllio::memory_rstream_unchecked ms(buffer.data());
 		run_read_functions_f0(ms);
 	}
 
 	{
-		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		cllio::memory_rstream ms(buffer.data(), buffer.size());
 		run_read_functions_f0(ms);
 	}
 	{
-		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		cllio::memory_rstream ms(buffer.data(), buffer.size());
 		run_read_functions_f1(ms);
 	}
 	{
-		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		cllio::memory_rstream ms(buffer.data(), buffer.size());
 		run_read_functions_f2(ms);
 	}
 	{
-		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		cllio::memory_rstream ms(buffer.data(), buffer.size());
 		run_read_functions_f3(ms);
 	}
 	{
-		cllio::mem_stream_read ms(buffer.data(), buffer.size());
+		cllio::memory_rstream ms(buffer.data(), buffer.size());
 		run_read_functions_f4(ms);
 	}
 }
@@ -273,31 +273,31 @@ bool run_main_tests()
 		TestMemoryReaders(buffer);
 
 		{
-			// since there is no normal way to check mem_stream_write_unchecked UB we reserve a double sized buffer for this
+			// since there is no normal way to check memory_wstream_unchecked UB we reserve a double sized buffer for this
 			// we then run the write operations and see if they match
 			std::vector<cllio::byte_t> extended_buffer;
 			extended_buffer.resize(buffer.size() * 2);
 			std::memcpy(extended_buffer.data(), buffer.data(), buffer.size());
-			cllio::mem_stream_write_unchecked writer(extended_buffer.data());
+			cllio::memory_wstream_unchecked writer(extended_buffer.data());
 			test_writer(writer);
 			bool data_ok = std::memcmp(extended_buffer.data(), buffer.data(), buffer.size()) == 0;
 			bool iterator_ok = writer.data() == (extended_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cerr << "Error: cllio::mem_stream_write_unchecked data or iterator mismatch.\n";
+				std::cerr << "Error: cllio::memory_wstream_unchecked data or iterator mismatch.\n";
 				return false;
 			}
 		}
 		{
 			std::vector<cllio::byte_t> test_buffer;
 			test_buffer.resize(buffer.size());
-			cllio::mem_stream_write writer(test_buffer.data(), test_buffer.size());
+			cllio::memory_wstream writer(test_buffer.data(), test_buffer.size());
 			test_writer(writer);
 			bool data_ok = std::memcmp(test_buffer.data(), buffer.data(), buffer.size()) == 0;
 			bool iterator_ok = writer.begin() == (test_buffer.data() + buffer.size());
 			if (!(data_ok && iterator_ok))
 			{
-				std::cerr << "Error: cllio::mem_stream_write data or iterator mismatch.\n";
+				std::cerr << "Error: cllio::memory_wstream data or iterator mismatch.\n";
 				return false;
 			}
 		}
@@ -338,12 +338,12 @@ bool test_utils()
 		std::memset(&buffer[0], 0, 16);
 
 		uint64_t ref = i;
-		cllio::mem_stream_write w(&buffer[4], 8);
+		cllio::memory_wstream w(&buffer[4], 8);
 		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
 			return false;
 
 		uint64_t check = std::numeric_limits<uint64_t>::max();
-		cllio::mem_stream_read r(&buffer[4], 8);
+		cllio::memory_rstream r(&buffer[4], 8);
 		if (cllio::utils::read_packed_uint64_t(r, check) == false)
 			return false;
 

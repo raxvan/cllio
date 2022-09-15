@@ -5,7 +5,9 @@
 
 #ifdef CLLIO_FILE_READ_MAPVIEW
 
-#include <filesystem>
+#ifdef CLLIO_CPP17
+	#include <filesystem>
+#endif
 
 #ifdef _WIN32
 	#define CLLIO_FILE_READ_MAPVIEW_WIN32
@@ -42,7 +44,9 @@ namespace cllio
 		file_read_mapview& operator=(file_read_mapview&&) noexcept;
 
 	public:
+#ifdef CLLIO_CPP17
 		file_read_mapview(const std::filesystem::path& p);
+#endif
 		file_read_mapview(const char* abs_file_path);
 		~file_read_mapview();
 

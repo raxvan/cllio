@@ -72,6 +72,37 @@ namespace cllio
 			*out++ = static_cast<uint8_t>((value >> 48) & 0xFF);
 			*out++ = static_cast<uint8_t>((value >> 56) & 0xFF);
 		}
+
+		inline static int16_t _read_int16_t(const byte_t*& px)
+		{
+			UnionCast<uint16_t, int16_t> tmp;
+			tmp.first = _inline_serializer_utils::_read_uint16_t(px);
+			return tmp.second;
+		}
+		inline static int32_t _read_int32_t(const byte_t*& px)
+		{
+			UnionCast<uint32_t, int32_t> tmp;
+			tmp.first = _inline_serializer_utils::_read_uint32_t(px);
+			return tmp.second;
+		}
+		inline static int64_t _read_int64_t(const byte_t*& px)
+		{
+			UnionCast<uint64_t, int64_t> tmp;
+			tmp.first = _inline_serializer_utils::_read_uint64_t(px);
+			return tmp.second;
+		}
+		inline static float _read_float(const byte_t*& px)
+		{
+			UnionCast<uint32_t, float> tmp;
+			tmp.first = _inline_serializer_utils::_read_uint32_t(px);
+			return tmp.second;
+		}
+		inline static double _read_double(const byte_t*& px)
+		{
+			UnionCast<uint64_t, double> tmp;
+			tmp.first = _inline_serializer_utils::_read_uint64_t(px);
+			return tmp.second;
+		}
 	};
 
 }

@@ -1,10 +1,11 @@
 
-#include "cllio_internal_utils.h"
+#include <cllio_internal_utils.h>
 
 #ifdef CLLIO_ASSERT_ENABLED
 #	include <iostream>
 #	include <cassert>
 #endif
+#include <cstring>
 
 namespace cllio
 {
@@ -45,6 +46,37 @@ namespace cllio
 	{
 		CLLIO_ASSERT(_dst != nullptr && _src != nullptr);
 		std::memcpy(_dst, _src, byte_count);
+	}
+
+
+	uint16_t _serializer_utils::_read_uint16_t(const byte_t* px)
+	{
+		uint16_t r;
+		r = (static_cast<uint16_t>(*px++));
+		r |= (static_cast<uint16_t>(*px++) << uint16_t(8));
+		return r;
+	}
+	uint32_t _serializer_utils::_read_uint32_t(const byte_t* px)
+	{
+		uint32_t r;
+		r = (static_cast<uint32_t>(*px++));
+		r |= (static_cast<uint32_t>(*px++) << 8);
+		r |= (static_cast<uint32_t>(*px++) << 16);
+		r |= (static_cast<uint32_t>(*px++) << 24);
+		return r;
+	}
+	uint64_t _serializer_utils::_read_uint64_t(const byte_t* px)
+	{
+		uint64_t r;
+		r = (static_cast<uint64_t>(*px++));
+		r |= (static_cast<uint64_t>(*px++) << 8);
+		r |= (static_cast<uint64_t>(*px++) << 16);
+		r |= (static_cast<uint64_t>(*px++) << 24);
+		r |= (static_cast<uint64_t>(*px++) << 32);
+		r |= (static_cast<uint64_t>(*px++) << 40);
+		r |= (static_cast<uint64_t>(*px++) << 48);
+		r |= (static_cast<uint64_t>(*px++) << 56);
+		return r;
 	}
 
 

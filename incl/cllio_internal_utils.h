@@ -18,6 +18,9 @@ namespace cllio
 
 	struct _serializer_utils
 	{
+		static uint16_t _read_uint16_t(const byte_t* px);
+		static uint32_t _read_uint32_t(const byte_t* px);
+		static uint64_t _read_uint64_t(const byte_t* px);
 		static void _write_bynary_uint16_t(byte_t* out, const uint16_t value);
 		static void _write_bynary_uint32_t(byte_t* out, const uint32_t value);
 		static void _write_bynary_uint64_t(byte_t* out, const uint64_t value);

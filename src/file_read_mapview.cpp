@@ -1,5 +1,5 @@
 
-#include <file_read_mapview.h>
+#include <cllio_tools/file_read_mapview.h>
 
 #ifdef CLLIO_FILE_READ_MAPVIEW
 
@@ -27,10 +27,13 @@
 
 namespace cllio
 {
+
+#ifdef CLLIO_CPP17
 	file_read_mapview::file_read_mapview(const std::filesystem::path& p)
 		: file_read_mapview(p.string().c_str())
 	{
 	}
+#endif
 
 	void file_read_mapview::swap(file_read_mapview& other)
 	{
