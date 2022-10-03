@@ -5,15 +5,15 @@
 
 #ifdef CLLIO_FILE_READ_MAPVIEW
 
-#ifdef CLLIO_CPP17
-	#include <filesystem>
-#endif
+#	ifdef CLLIO_CPP17
+#		include <filesystem>
+#	endif
 
-#ifdef _WIN32
-	#define CLLIO_FILE_READ_MAPVIEW_WIN32
-#else
-	#define CLLIO_FILE_READ_MAPVIEW_MMAP
-#endif
+#	ifdef _WIN32
+#		define CLLIO_FILE_READ_MAPVIEW_WIN32
+#	else
+#		define CLLIO_FILE_READ_MAPVIEW_MMAP
+#	endif
 
 namespace cllio
 {
@@ -21,16 +21,15 @@ namespace cllio
 	struct file_read_mapview_platform_impl
 	{
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
+#	ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		byte_t m_handles[sizeof(void*) * 2];
 		friend struct file_read_mapview_handle_impl;
 		file_read_mapview_platform_impl();
-#endif
+#	endif
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
-		int	  m_file_handle = 0;
-#endif
-
+#	ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
+		int m_file_handle = 0;
+#	endif
 	};
 
 	struct file_read_mapview : protected file_read_mapview_platform_impl
@@ -44,9 +43,9 @@ namespace cllio
 		file_read_mapview& operator=(file_read_mapview&&) noexcept;
 
 	public:
-#ifdef CLLIO_CPP17
+#	ifdef CLLIO_CPP17
 		file_read_mapview(const std::filesystem::path& p);
-#endif
+#	endif
 		file_read_mapview(const char* abs_file_path);
 		~file_read_mapview();
 
@@ -63,14 +62,13 @@ namespace cllio
 		}
 
 	protected:
-
-#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
+#	ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		const void* m_data = nullptr;
-#endif
+#	endif
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
+#	ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		void* m_data = nullptr;
-#endif
+#	endif
 
 	protected:
 		std::size_t m_size = 0;

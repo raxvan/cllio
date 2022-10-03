@@ -3,49 +3,49 @@
 
 #ifdef CLLIO_FILE_READ_MAPVIEW
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
-#	include <memory>
-#	include <io.h>
-#	include <windows.h>
-#	include <sys/types.h>
-#	ifdef max
-#		undef max
+#	ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
+#		include <memory>
+#		include <io.h>
+#		include <windows.h>
+#		include <sys/types.h>
+#		ifdef max
+#			undef max
+#		endif
+#		ifdef min
+#			undef min
+#		endif
 #	endif
-#	ifdef min
-#		undef min
-#	endif
-#endif
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
-#	include <stdio.h>
-#	include <sys/mman.h>
-#	include <stdlib.h>
-#	include <sys/stat.h>
-#	include <fcntl.h>
-#	include <unistd.h>
-#endif
+#	ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
+#		include <stdio.h>
+#		include <sys/mman.h>
+#		include <stdlib.h>
+#		include <sys/stat.h>
+#		include <fcntl.h>
+#		include <unistd.h>
+#	endif
 
 namespace cllio
 {
 
-#ifdef CLLIO_CPP17
+#	ifdef CLLIO_CPP17
 	file_read_mapview::file_read_mapview(const std::filesystem::path& p)
 		: file_read_mapview(p.string().c_str())
 	{
 	}
-#endif
+#	endif
 
 	void file_read_mapview::swap(file_read_mapview& other)
 	{
-#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
+#	ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		byte_t tmp[sizeof(void*) * 2];
 		std::memcpy(tmp, this->m_handles, sizeof(tmp));
 		std::memcpy(this->m_handles, other.m_handles, sizeof(tmp));
 		std::memcpy(other.m_handles, tmp, sizeof(tmp));
-#endif
-#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
+#	endif
+#	ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
 		std::swap(m_file_handle, other.m_file_handle);
-#endif
+#	endif
 		std::swap(m_data, other.m_data);
 		std::swap(m_size, other.m_size);
 	}
@@ -63,12 +63,12 @@ namespace cllio
 		return (*this);
 	}
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
+#	ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 	file_read_mapview_platform_impl::file_read_mapview_platform_impl()
 	{
 		std::memset(m_handles, 0, sizeof(m_handles));
 	}
-#	define HAS_IMPLEMENTATION
+#		define HAS_IMPLEMENTATION
 	struct file_read_mapview_handle_impl
 	{
 		HANDLE file_handle;
@@ -97,7 +97,7 @@ namespace cllio
 			return;
 
 		std::size_t sz = (std::size_t)GetFileSize(fh, NULL);
-		if(sz == 0)
+		if (sz == 0)
 		{
 			CloseHandle(fh);
 			return;
@@ -131,10 +131,10 @@ namespace cllio
 		if (h.file_handle != NULL)
 			CloseHandle(h.file_handle);
 	}
-#endif
+#	endif
 
-#ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
-#	define HAS_IMPLEMENTATION
+#	ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
+#		define HAS_IMPLEMENTATION
 	file_read_mapview::file_read_mapview(const char* abs_file_path)
 	{
 		m_file_handle = -1;
@@ -147,7 +147,7 @@ namespace cllio
 		int			err = fstat(fh, &statbuf);
 		if (err < 0 || statbuf.st_size <= 0)
 		{
-			//stat failed close file also
+			// stat failed close file also
 			close(fh);
 			return;
 		}
@@ -179,14 +179,14 @@ namespace cllio
 		if (m_file_handle >= 0)
 			close(m_file_handle);
 	}
-#endif
+#	endif
 
 }
 
-#ifdef HAS_IMPLEMENTATION
-#	undef HAS_IMPLEMENTATION
-#else
-#	error "No implementation for file_read_mapview, check platform"
-#endif
+#	ifdef HAS_IMPLEMENTATION
+#		undef HAS_IMPLEMENTATION
+#	else
+#		error "No implementation for file_read_mapview, check platform"
+#	endif
 
 #endif

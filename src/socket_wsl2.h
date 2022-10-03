@@ -2,7 +2,7 @@
 #pragma once
 
 #ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN 1
+#	define WIN32_LEAN_AND_MEAN 1
 #endif
 #include <atomic>
 #include <Windows.h>
@@ -11,7 +11,7 @@
 #include <iostream>
 #pragma comment(lib, "Ws2_32.lib")
 #ifdef max
-	#undef max
+#	undef max
 #endif
 
 namespace cllio
@@ -19,8 +19,8 @@ namespace cllio
 
 	struct wsa_status
 	{
-		std::atomic<bool> spinlock{false};
-		uint32_t share = 0;
+		std::atomic<bool> spinlock { false };
+		uint32_t		  share = 0;
 
 		inline void lock()
 		{
@@ -56,7 +56,7 @@ namespace cllio
 		inline void remove()
 		{
 			lock();
-			if(share == 0)
+			if (share == 0)
 			{
 				std::cerr << "WSACleanup internal error!" << std::endl;
 				CLLIO_ASSERT_FALSE("wsa failed to stop");
@@ -86,7 +86,6 @@ namespace cllio
 		_get_wsa_status_singleton().remove();
 	}
 
-
 	struct socket_handle_impl
 	{
 		SOCKET sock;
@@ -106,7 +105,7 @@ namespace cllio
 			_get_wsa_status_singleton().remove();
 		}
 
-		inline bool connect_to(const char * ip, const char * port)
+		inline bool connect_to(const char* ip, const char* port)
 		{
 			CLLIO_ASSERT(sock == INVALID_SOCKET);
 			struct addrinfo hints;
@@ -117,7 +116,7 @@ namespace cllio
 			hints.ai_protocol = IPPROTO_TCP;
 
 			struct addrinfo* result = nullptr;
-			int iResult = getaddrinfo(ip, port, &hints, &result);
+			int				 iResult = getaddrinfo(ip, port, &hints, &result);
 			if (iResult != 0)
 				return false;
 
@@ -134,7 +133,8 @@ namespace cllio
 
 				// Connect to server.
 				iResult = ::connect(s, ptr->ai_addr, (int)ptr->ai_addrlen);
-				if (iResult == SOCKET_ERROR) {
+				if (iResult == SOCKET_ERROR)
+				{
 					closesocket(s);
 					s = INVALID_SOCKET;
 					continue;
@@ -162,7 +162,7 @@ namespace cllio
 			hints.ai_flags = AI_PASSIVE;
 
 			struct addrinfo* result = nullptr;
-			int iResult = getaddrinfo(NULL, port, &hints, &result);
+			int				 iResult = getaddrinfo(NULL, port, &hints, &result);
 			if (iResult != 0)
 				return false;
 
@@ -182,7 +182,7 @@ namespace cllio
 
 			freeaddrinfo(result);
 
-			iResult = ::listen(ls, int(max_queue) );
+			iResult = ::listen(ls, int(max_queue));
 			if (iResult == SOCKET_ERROR)
 			{
 				closesocket(ls);

@@ -3,13 +3,13 @@
 
 #ifdef CLLIO_SOCKET_IMPL
 
-#ifdef CLLIO_SOCKET_WIN32
-	#include "socket_wsl2.h"
-#endif
+#	ifdef CLLIO_SOCKET_WIN32
+#		include "socket_wsl2.h"
+#	endif
 
-#ifdef CLLIO_SOCKET_POSIX
-	#include "socket_posix.h"
-#endif
+#	ifdef CLLIO_SOCKET_POSIX
+#		include "socket_posix.h"
+#	endif
 
 namespace cllio
 {
@@ -26,7 +26,7 @@ namespace cllio
 	}
 
 	tcpsocket::tcpsocket(tcpsocket&& other) noexcept
-		:tcpsocket()
+		: tcpsocket()
 	{
 		swap(other);
 	}
@@ -78,7 +78,7 @@ namespace cllio
 	tcpsocket tcpsocket::wait_for_connection()
 	{
 		tcpsocket result;
-		auto& t = socket_handle_impl::get(*this);
+		auto&	  t = socket_handle_impl::get(*this);
 		t.wait_for_connection(socket_handle_impl::get(result));
 		return result;
 	}
