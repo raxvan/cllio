@@ -1,10 +1,15 @@
 
+def configure(cfg):
+	cfg.link_if_enabled("public: ../../ttf/testing.pak.py")
+
 def construct(ctx):
 	
-	ctx.prop("type","lib")
+	ctx.config("type","lib")
 
-	ctx.path("public include: ../incl")
+	ctx.folder("public include: ../incl")
 
 	ctx.fscan("src: ../incl")
 	ctx.fscan("src: ../src")
 
+	if ctx.module_enabled("testing"):
+		ctx.assign("public define:CLLIO_TESTING")	
