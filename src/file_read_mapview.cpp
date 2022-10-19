@@ -92,7 +92,7 @@ namespace cllio
 			return;
 
 		std::size_t sz = (std::size_t)GetFileSize(fh, NULL);
-		if(sz == 0)
+		if (sz == 0)
 		{
 			CloseHandle(fh);
 			return;
@@ -142,7 +142,7 @@ namespace cllio
 		int			err = fstat(fh, &statbuf);
 		if (err < 0 || statbuf.st_size <= 0)
 		{
-			//stat failed close file also
+			// stat failed close file also
 			close(fh);
 			return;
 		}

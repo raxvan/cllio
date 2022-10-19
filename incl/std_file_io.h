@@ -60,7 +60,7 @@ namespace cllio
 	public: // binary writers, no error check
 		void write_raw_buffer(const void* data, const std::size_t byte_count);
 		bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
-		
+
 	public:
 		void push_int8_t(const int8_t value);
 		void push_int16_t(const int16_t value);
@@ -118,6 +118,7 @@ namespace cllio
 	public: // binary
 		void read_raw_buffer(void* dest, const std::size_t ammount);
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount);
+
 	public: // bool 	pop_T(T & out);
 		bool pop_uint8_t(uint8_t& out);
 		bool pop_uint16_t(uint16_t& out);
@@ -211,7 +212,7 @@ namespace cllio
 			auto current_size = out.size();
 			auto remaining = get_remaining_size();
 			auto elements_to_read = remaining / sizeof(typename T::value_type);
-			
+
 			if (remaining % sizeof(typename T::value_type) != 0)
 			{
 				out.resize(current_size + elements_to_read + 1, 0);

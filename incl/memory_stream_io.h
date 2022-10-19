@@ -41,7 +41,7 @@ namespace cllio
 		}
 
 	public:
-		//void read_raw_buffer(void* dest, const std::size_t ammount);
+		// void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public:
 		uint8_t	 pop_uint8_t();

@@ -345,8 +345,8 @@ namespace cllio
 		errno_t err = fopen_s(&m_file_ptr, abs_path, "r");
 		if (err == 0)
 			return true; // ok
-		
-		m_file_ptr = nullptr; //TODO: check if this assignment is needed
+
+		m_file_ptr = nullptr; // TODO: check if this assignment is needed
 		return false;
 #else
 		m_file_ptr = std::fopen(abs_path, "r");
@@ -361,8 +361,8 @@ namespace cllio
 		errno_t err = fopen_s(&m_file_ptr, abs_path, "rb");
 		if (err == 0)
 			return true; // ok
-		
-		m_file_ptr = nullptr; //TODO: check if this assignment is needed
+
+		m_file_ptr = nullptr; // TODO: check if this assignment is needed
 		return false;
 #else
 		m_file_ptr = std::fopen(abs_path, "rb");
@@ -385,7 +385,6 @@ namespace cllio
 		std::size_t sz = std::fread(dest, 1, ammount, m_file_ptr);
 		return (sz == ammount);
 	}
-	
 
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------

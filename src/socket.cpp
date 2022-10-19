@@ -2,19 +2,19 @@
 #include <socket.h>
 
 #ifdef CLLIO_SOCKET_WIN32
-	#include "socket_wsl2.h"
+#	include "socket_wsl2.h"
 #endif
 
 #ifdef CLLIO_SOCKET_POSIX
-	#include "socket_posix.h"
+#	include "socket_posix.h"
 #endif
 
 namespace cllio
 {
 
 #ifdef CLLIO_SOCKET_WIN32
-	uint32_t socket_platform_impl::wsa_share{ 0 };
-	std::atomic<bool> socket_platform_impl::wsa_lock{ false };
+	uint32_t		  socket_platform_impl::wsa_share { 0 };
+	std::atomic<bool> socket_platform_impl::wsa_lock { false };
 	template <bool ADD_OR_REMOVE>
 	inline void _sock_sync()
 	{
@@ -54,7 +54,9 @@ namespace cllio
 	}
 #else
 	template <bool ADD_OR_REMOVE>
-	inline void _sock_sync() {}
+	inline void _sock_sync()
+	{
+	}
 #endif
 
 	socket_platform_impl::socket_platform_impl()
@@ -62,7 +64,6 @@ namespace cllio
 		auto& t = socket_handle_impl::get(*this);
 		t.construct();
 	}
-	
 
 	tcpsocket::~tcpsocket()
 	{
@@ -126,9 +127,8 @@ namespace cllio
 	tcpsocket tcpsocket::wait_for_connection()
 	{
 		tcpsocket result;
-		auto& t = socket_handle_impl::get(*this);
+		auto&	  t = socket_handle_impl::get(*this);
 		t.wait_for_connection(socket_handle_impl::get(result));
 		return result;
 	}
 }
-

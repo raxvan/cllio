@@ -5,13 +5,12 @@
 #include <filesystem>
 
 #ifndef CLLIO_FILE_READ_MAPVIEW
-	#ifdef _WIN32
-		#define CLLIO_FILE_READ_MAPVIEW_WIN32
-	#else
-		#define CLLIO_FILE_READ_MAPVIEW_MMAP
-	#endif
+#	ifdef _WIN32
+#		define CLLIO_FILE_READ_MAPVIEW_WIN32
+#	else
+#		define CLLIO_FILE_READ_MAPVIEW_MMAP
+#	endif
 #endif
-
 
 namespace cllio
 {
@@ -25,7 +24,7 @@ namespace cllio
 #endif
 
 #ifdef CLLIO_FILE_READ_MAPVIEW_MMAP
-		int	  m_file_handle = 0;
+		int m_file_handle = 0;
 #endif
 	};
 
@@ -57,7 +56,6 @@ namespace cllio
 		}
 
 	protected:
-
 #ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 		const void* m_data = nullptr;
 #endif
