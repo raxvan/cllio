@@ -34,7 +34,7 @@ profiler_timer::~profiler_timer()
 	std::cout << std::endl;
 }
 
-bool read_validator::validate(const uint32_t value, const char* reader)
+bool read_validator::validate(const uint32_t value,const char * reader)
 {
 	if (value != refvalue)
 	{
@@ -60,11 +60,11 @@ std::size_t disk_access_test::generate_sample_file(const char* path)
 
 	{
 		cllio::std_file_write f;
-
+		
 		if (f.create(path, true, false) == false)
 			return 0; // failed to write file
-
-		uint32_t index = 0;
+		
+		uint32_t	   index = 0;
 		for (std::size_t i = 0; i < num_of_ints; i++)
 		{
 			if (f.trypush_uint32_t(index) == false)
@@ -168,7 +168,7 @@ public:
 		if (handle.open(abs_file_path, true) == false)
 			return 0;
 		if (handle.read_into_container(data) == false)
-			data.pop_back(); // last element was not complete
+			data.pop_back();// last element was not complete
 		return data.size();
 	}
 
@@ -204,7 +204,7 @@ public:
 		start = index;
 		end = std::min(index + SZ, uint32_t_count());
 		if (std::fread(buffer, sizeof(uint32_t), end - start, handle.get_handle()) == 0)
-			return 0; // err?
+			return 0; //err?
 		return buffer[index - start];
 	}
 	const char* get_name() const
@@ -277,8 +277,8 @@ bool test_rnd_chunk_reader(read_validator& validator, T& reader, const std::size
 bool disk_access_test::run(const char* path_to_test_file)
 {
 	const char* final_file = path_to_test_file;
-	uint32_t	sz = 0;
-	bool		known_content = false;
+	uint32_t sz = 0;
+	bool known_content = false;
 	if (final_file == nullptr)
 	{
 		final_file = "iosample.bin";
@@ -339,7 +339,7 @@ bool disk_access_test::run_internal(const char* path_to_test_file, const bool kn
 			virtual_memory_reader r;
 			{
 				profiler_timer _("mmap [open]");
-				if (size_validator.validate(r.open(path_to_test_file), r.get_name()) == false)
+				if (size_validator.validate(r.open(path_to_test_file),r.get_name()) == false)
 					return false;
 			}
 			{

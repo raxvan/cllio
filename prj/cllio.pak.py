@@ -1,7 +1,8 @@
 
+
 def configure(cfg):
-	cfg.link_if_enabled("public: ../../ttf/testing.pak.py")
-	cfg.link_if_present("public: ../../dev-platform/prj/dev-platform.pak.py")
+	cfg.link_if_enabled("../../ttf/testing.pak.py")
+	cfg.link_if_present("../../dev-platform/dev-platform.pak.py")
 
 def construct(ctx):
 	
@@ -16,4 +17,5 @@ def construct(ctx):
 		ctx.assign("public define:CLLIO_TESTING")
 
 	if ctx.module_enabled("dev-platform"):
-		ctx.assign("public define:CLLIO_USE_DEV_PLATFORM")	
+		ctx.assign("public define:CLLIO_WITH_DEV_PLATFORM")
+

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cllio_utils.h"
+#include "../cllio_internal_utils.h"
 
 namespace cllio
 {
@@ -21,7 +21,7 @@ namespace cllio
 	using trace_function_t = void(const std::size_t, const std::size_t, const static_string& s);
 
 	template <class F>
-	struct call_trace_info : public F
+	struct write_call_trace : public F
 	{
 	protected:
 		std::size_t m_size = 0;
@@ -41,11 +41,11 @@ namespace cllio
 		}
 
 	public:
-		call_trace_info() = default;
-		call_trace_info(const call_trace_info<F>&) = default;
-		call_trace_info<F>& operator=(const call_trace_info<F>&) = default;
+		write_call_trace() = default;
+		write_call_trace(const write_call_trace<F>&) = default;
+		write_call_trace<F>& operator=(const write_call_trace<F>&) = default;
 
-		call_trace_info(const F& _func)
+		write_call_trace(const F& _func)
 			: F(_func)
 		{
 		}
@@ -166,8 +166,8 @@ namespace cllio
 	};
 
 	template <class F>
-	call_trace_info<F> make_call_tracer(const F& _func)
+	write_call_trace<F> make_call_tracer(const F& _func)
 	{
-		return call_trace_info<F>(_func);
+		return write_call_trace<F>(_func);
 	}
 }

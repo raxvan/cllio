@@ -2,19 +2,91 @@
 #pragma once
 
 #ifndef WIN32_LEAN_AND_MEAN
-#	define WIN32_LEAN_AND_MEAN 1
+	#define WIN32_LEAN_AND_MEAN 1
 #endif
+#include <atomic>
 #include <Windows.h>
 #include <WinSock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
 #pragma comment(lib, "Ws2_32.lib")
 #ifdef max
-#	undef max
+	#undef max
 #endif
 
 namespace cllio
 {
+
+	struct wsa_status
+	{
+		std::atomic<bool> spinlock{false};
+		uint32_t share = 0;
+
+		inline void lock()
+		{
+			while (true)
+			{
+				if (spinlock.exchange(true, std::memory_order_acquire) == false)
+					break;
+
+				while (spinlock.load(std::memory_order_relaxed))
+				{
+				}
+			}
+		}
+		inline void unlock()
+		{
+			spinlock.store(false, std::memory_order_release);
+		}
+		inline void add()
+		{
+			lock();
+			uint32_t s = share++;
+			if (s == 0)
+			{
+				WSADATA init;
+				if (WSAStartup(MAKEWORD(2, 2), &init) != 0)
+				{
+					std::cerr << "WSAStartup(2,2) failed [" << WSAGetLastError() << "], crash imminent!" << std::endl;
+					CLLIO_ASSERT_FALSE("wsa failed to init");
+				}
+			}
+			unlock();
+		}
+		inline void remove()
+		{
+			lock();
+			if(share == 0)
+			{
+				std::cerr << "WSACleanup internal error!" << std::endl;
+				CLLIO_ASSERT_FALSE("wsa failed to stop");
+			}
+
+			uint32_t s = --share;
+			if (s == 0)
+			{
+				WSACleanup();
+			}
+			unlock();
+		}
+	};
+
+	static wsa_status& _get_wsa_status_singleton()
+	{
+		static wsa_status s;
+		return s;
+	}
+
+	void socket_platform_impl::initialize()
+	{
+		_get_wsa_status_singleton().add();
+	}
+	void socket_platform_impl::destroy()
+	{
+		_get_wsa_status_singleton().remove();
+	}
+
+
 	struct socket_handle_impl
 	{
 		SOCKET sock;
@@ -23,6 +95,7 @@ namespace cllio
 
 		inline void construct()
 		{
+			_get_wsa_status_singleton().add();
 			sock = INVALID_SOCKET;
 		}
 
@@ -30,9 +103,10 @@ namespace cllio
 		{
 			if (sock != INVALID_SOCKET)
 				closesocket(sock);
+			_get_wsa_status_singleton().remove();
 		}
 
-		inline bool connect_to(const char* ip, const char* port)
+		inline bool connect_to(const char * ip, const char * port)
 		{
 			CLLIO_ASSERT(sock == INVALID_SOCKET);
 			struct addrinfo hints;
@@ -43,7 +117,7 @@ namespace cllio
 			hints.ai_protocol = IPPROTO_TCP;
 
 			struct addrinfo* result = nullptr;
-			int				 iResult = getaddrinfo(ip, port, &hints, &result);
+			int iResult = getaddrinfo(ip, port, &hints, &result);
 			if (iResult != 0)
 				return false;
 
@@ -60,8 +134,7 @@ namespace cllio
 
 				// Connect to server.
 				iResult = ::connect(s, ptr->ai_addr, (int)ptr->ai_addrlen);
-				if (iResult == SOCKET_ERROR)
-				{
+				if (iResult == SOCKET_ERROR) {
 					closesocket(s);
 					s = INVALID_SOCKET;
 					continue;
@@ -89,7 +162,7 @@ namespace cllio
 			hints.ai_flags = AI_PASSIVE;
 
 			struct addrinfo* result = nullptr;
-			int				 iResult = getaddrinfo(NULL, port, &hints, &result);
+			int iResult = getaddrinfo(NULL, port, &hints, &result);
 			if (iResult != 0)
 				return false;
 
@@ -109,7 +182,7 @@ namespace cllio
 
 			freeaddrinfo(result);
 
-			iResult = ::listen(ls, int(max_queue));
+			iResult = ::listen(ls, int(max_queue) );
 			if (iResult == SOCKET_ERROR)
 			{
 				closesocket(ls);

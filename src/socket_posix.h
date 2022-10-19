@@ -1,6 +1,7 @@
 
 #pragma once
 
+
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -11,7 +12,7 @@ namespace cllio
 	struct socket_handle_impl
 	{
 		int sock;
-		// see https://man7.org/linux/man-pages/man2/socket.2.html
+		//see https://man7.org/linux/man-pages/man2/socket.2.html
 
 		inline void construct()
 		{
@@ -24,7 +25,7 @@ namespace cllio
 				close(sock);
 		}
 
-		inline bool connect_to(const char* ip, const char* port)
+		inline bool connect_to(const char * ip, const char * port)
 		{
 			CLLIO_ASSERT(sock == -1);
 			int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -78,8 +79,8 @@ namespace cllio
 		{
 			CLLIO_ASSERT(sock != -1);
 			struct sockaddr_in addr;
-			socklen_t		   len = sizeof(addr);
-			auto			   s = ::accept(sock, (struct sockaddr*)&addr, &len);
+			socklen_t len = sizeof(addr);
+			auto s = ::accept(sock, (struct sockaddr*)&addr, &len);
 			if (s == -1)
 			{
 				close(sock);

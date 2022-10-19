@@ -1,37 +1,42 @@
 #pragma once
-#include "cllio_utils.h"
+#include "cllio_internal_utils.h"
 
 namespace cllio
 {
 	// fwd declare:
 
-	struct mem_stream_read;
-	struct mem_stream_read_unchecked;
+	struct memory_rstream;
+	struct memory_rstream_unchecked;
 
-	struct mem_stream_write;
-	struct mem_stream_write_unchecked;
+	struct memory_wstream;
+	struct memory_wstream_unchecked;
 
 	template <class F>
-	struct memory_functor_write;
-	//^ F is required to have `cllio::byte_t* operator()(const std::size_t sz); `
+	struct memory_wfunc;
+	//^ F is required to have `cllio::byte_t* operator()(const std::size_t size_in_bytes); `
+
+	template <class F>
+	struct memory_rfunc;
+	//^ F is required to have `const cllio::byte_t* operator()(const std::size_t size_in_bytes); `
+	//                   and  `bool operator()(cllio::byte_t* out, const std::size_t size_in_bytes); `
 
 	//-----------------------------------------------------------------------------------------------------------
 
 	// read from raw pointer
-	struct mem_stream_read_unchecked
+	struct memory_rstream_unchecked
 	{
 	protected:
 		const byte_t* m_px = nullptr;
 
 	public:
-		mem_stream_read_unchecked(const void* px);
+		memory_rstream_unchecked(const void* px);
 
-		mem_stream_read_unchecked() = default;
-		mem_stream_read_unchecked(const mem_stream_read_unchecked&) = default;
-		mem_stream_read_unchecked& operator=(const mem_stream_read_unchecked&) = default;
+		memory_rstream_unchecked() = default;
+		memory_rstream_unchecked(const memory_rstream_unchecked&) = default;
+		memory_rstream_unchecked& operator=(const memory_rstream_unchecked&) = default;
 
 	public:
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -39,9 +44,6 @@ namespace cllio
 		{
 			return m_px;
 		}
-
-	public:
-		// void read_raw_buffer(void* dest, const std::size_t ammount);
 
 	public:
 		uint8_t	 pop_uint8_t();
@@ -61,7 +63,7 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 
 	// read from raw memory range (given as raw pointer)
-	struct mem_stream_read
+	struct memory_rstream
 	{
 	protected:
 		// remaining size in bytes
@@ -69,11 +71,11 @@ namespace cllio
 		const byte_t* m_px_end = nullptr;
 
 	public:
-		mem_stream_read(const void* px, const std::size_t size_in_bytes);
+		memory_rstream(const void* px, const std::size_t size_in_bytes);
 
-		mem_stream_read() = default;
-		mem_stream_read(const mem_stream_read&) = default;
-		mem_stream_read& operator=(const mem_stream_read&) = default;
+		memory_rstream() = default;
+		memory_rstream(const memory_rstream&) = default;
+		memory_rstream& operator=(const memory_rstream&) = default;
 
 		// no size_t because of implementatin defined https://en.cppreference.com/w/cpp/types/ptrdiff_t
 		std::ptrdiff_t size() const;
@@ -87,7 +89,7 @@ namespace cllio
 		{
 			return (m_px + expected_bytes) <= m_px_end;
 		}
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
@@ -110,6 +112,11 @@ namespace cllio
 			return m_px;
 		}
 
+		template <class T>
+		inline bool _can_read() const
+		{
+			return (m_px + sizeof(T)) <= m_px_end;
+		}
 	public: // binary
 		void read_raw_buffer(void* dest, const std::size_t ammount);
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
@@ -142,87 +149,45 @@ namespace cllio
 		float  pop_float();
 		double pop_double();
 
-	public: // T 	popdefault_T(const T & default);
-		uint8_t	 popdefault_uint8_t(const uint8_t _default);
-		uint16_t popdefault_uint16_t(const uint16_t _default);
-		uint32_t popdefault_uint32_t(const uint32_t _default);
-		uint64_t popdefault_uint64_t(const uint64_t _default);
+	#include "cllio_pop_variants.h"
 
-		int8_t	popdefault_int8_t(const int8_t _default);
-		int16_t popdefault_int16_t(const int16_t _default);
-		int32_t popdefault_int32_t(const int32_t _default);
-		int64_t popdefault_int64_t(const int64_t _default);
-
-		float  popdefault_float(const float _default);
-		double popdefault_double(const double _default);
-
-	public: // T 	popdefault_T(T& out, const T & default);
-		bool popdefault_uint8_t(uint8_t& out, const uint8_t _default);
-		bool popdefault_uint16_t(uint16_t& out, const uint16_t _default);
-		bool popdefault_uint32_t(uint32_t& out, const uint32_t _default);
-		bool popdefault_uint64_t(uint64_t& out, const uint64_t _default);
-
-		bool popdefault_int8_t(int8_t& out, const int8_t _default);
-		bool popdefault_int16_t(int16_t& out, const int16_t _default);
-		bool popdefault_int32_t(int32_t& out, const int32_t _default);
-		bool popdefault_int64_t(int64_t& out, const int64_t _default);
-
-		bool popdefault_float(float& out, const float _default);
-		bool popdefault_double(double& out, const double _default);
-
-	public: // void 	 pop_T(T & out, bool& error);
-		void pop_uint8_t(uint8_t& out, bool& error);
-		void pop_uint16_t(uint16_t& out, bool& error);
-		void pop_uint32_t(uint32_t& out, bool& error);
-		void pop_uint64_t(uint64_t& out, bool& error);
-
-		void pop_int8_t(int8_t& out, bool& error);
-		void pop_int16_t(int16_t& out, bool& error);
-		void pop_int32_t(int32_t& out, bool& error);
-		void pop_int64_t(int64_t& out, bool& error);
-
-		void pop_float(float& out, bool& error);
-		void pop_double(double& out, bool& error);
-
-	public: // T 	 pop_T(bool& error);
-		uint8_t	 pop_uint8_t(bool& error);
-		uint16_t pop_uint16_t(bool& error);
-		uint32_t pop_uint32_t(bool& error);
-		uint64_t pop_uint64_t(bool& error);
-
-		int8_t	pop_int8_t(bool& error);
-		int16_t pop_int16_t(bool& error);
-		int32_t pop_int32_t(bool& error);
-		int64_t pop_int64_t(bool& error);
-
-		float  pop_float(bool& error);
-		double pop_double(bool& error);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
 
-	// write to raw pointer
-	struct mem_stream_write_unchecked
+	struct memory_wstream_iterator
 	{
 	protected:
 		byte_t* m_px = nullptr;
-
-	public:
-		mem_stream_write_unchecked(void* px);
-
-		mem_stream_write_unchecked() = default;
-		mem_stream_write_unchecked(const mem_stream_write_unchecked&) = default;
-		mem_stream_write_unchecked& operator=(const mem_stream_write_unchecked&) = default;
 
 	public:
 		inline byte_t* data() const
 		{
 			return m_px;
 		}
-		inline bool isValid() const
+		inline bool valid() const
 		{
 			return m_px != nullptr;
 		}
+		inline const byte_t* begin() const
+		{
+			return m_px;
+		}
+	public:
+		memory_wstream_iterator() = default;
+		memory_wstream_iterator(void* px);
+	};
+
+
+	// write to raw pointer
+	struct memory_wstream_unchecked : public memory_wstream_iterator
+	{
+	public:
+		using memory_wstream_iterator::memory_wstream_iterator;
+
+		memory_wstream_unchecked() = default;
+		memory_wstream_unchecked(const memory_wstream_unchecked&) = default;
+		memory_wstream_unchecked& operator=(const memory_wstream_unchecked&) = default;
 
 	public:
 		void push_int8_t(const int8_t value);
@@ -242,37 +207,29 @@ namespace cllio
 	//-----------------------------------------------------------------------------------------------------------
 
 	// write to raw memory range
-	struct mem_stream_write
+	struct memory_wstream : public memory_wstream_iterator
 	{
 	protected:
-		byte_t*		  m_px = nullptr;
 		const byte_t* m_px_end = nullptr;
 
 	public:
-		mem_stream_write(void* px, const std::size_t size_in_bytes);
+		memory_wstream(void* px, const std::size_t size_in_bytes);
 
-		mem_stream_write() = default;
-		mem_stream_write(const mem_stream_write&) = default;
-		mem_stream_write& operator=(const mem_stream_write&) = default;
+		memory_wstream() = default;
+		memory_wstream(const memory_wstream&) = default;
+		memory_wstream& operator=(const memory_wstream&) = default;
 
 	public:
-		inline bool isValid() const
-		{
-			return m_px != nullptr;
-		}
-		inline const uint8_t* begin() const
-		{
-			return m_px;
-		}
-		inline const uint8_t* end() const
+		inline const byte_t* end() const
 		{
 			return m_px_end;
 		}
 
+	protected:
 		template <class T>
 		inline bool _can_write() const
 		{
-			return (m_px != nullptr && (m_px + sizeof(T)) <= m_px_end);
+			return (m_px + sizeof(T)) <= m_px_end;
 		}
 
 	public:
@@ -306,36 +263,27 @@ namespace cllio
 		bool trypush_ptr(const void* px);
 
 	public:
+		void write_raw_buffer(const void* data, const std::size_t byte_count);
 		bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
-	};
-
-	//-----------------------------------------------------------------------------------------------------------
-
-	struct _memory_functor_write_details
-	{
-		static void _write_bynary_uint16_t(byte_t* out, const uint16_t value);
-		static void _write_bynary_uint32_t(byte_t* out, const uint32_t value);
-		static void _write_bynary_uint64_t(byte_t* out, const uint64_t value);
-		static void _copy_memory(void* _dst, const void* _src, const std::size_t byte_count);
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
 
 	// write to raw memory given by a functor
 	template <class F>
-	struct memory_functor_write : public F
+	struct memory_wfunc : protected F
 	{
 	public:
-		using class_t = memory_functor_write<F>;
+		using class_t = memory_wfunc<F>;
 
 	public:
-		memory_functor_write() = default;
-		memory_functor_write(const class_t&) = default;
+		memory_wfunc() = default;
+		memory_wfunc(const class_t&) = default;
 		class_t& operator=(const class_t&) = default;
 
-		inline memory_functor_write(F&& _func);
-		inline memory_functor_write(const F& _func);
-		inline memory_functor_write(class_t&& other);
+		inline memory_wfunc(F&& _func);
+		inline memory_wfunc(const F& _func);
+		inline memory_wfunc(class_t&& other);
 		inline class_t& operator=(class_t&& other);
 
 	protected:
@@ -393,106 +341,110 @@ namespace cllio
 	template <class V>
 	struct vector_append_utility
 	{
+		using buffer_ptr_t = cllio::byte_t*;
 		V					  buffer;
-		inline cllio::byte_t* operator()(const std::size_t sz)
+		inline buffer_ptr_t operator()(const std::size_t sz)
 		{
 			auto index = buffer.size();
 			buffer.resize(buffer.size() + sz);
-			return &buffer[index];
+			return buffer_ptr_t(&buffer[index]);
 		}
 	};
 
 	template <class V>
-	using memory_vector_serializer = memory_functor_write<vector_append_utility<V>>;
+	using memory_vector_serializer = memory_wfunc<vector_append_utility<V>>;
 
 	//--------------------------------------------------------------------------------------------------------------------------------
+
+	// read from raw memory range (given as raw pointer)
+	template <class F>
+	struct memory_rfunc : protected F
+	{
+	protected:
+		using class_t = memory_rfunc<F>;
+
+	public:
+		memory_rfunc() = default;
+		memory_rfunc(const memory_rfunc&) = default;
+		memory_rfunc& operator=(const memory_rfunc&) = default;
+
+		inline memory_rfunc(F&& _func);
+		inline memory_rfunc(const F& _func);
+		inline memory_rfunc(class_t&& other);
+		inline class_t& operator=(class_t&& other);
+
+	protected:
+		template <class T>
+		inline const byte_t* _get()
+		{
+			const byte_t* out = (*static_cast<F*>(this))(sizeof(T));
+			CLLIO_ASSERT(out != nullptr);
+			return out;
+		}
+		template <class T>
+		inline const byte_t* _tryget()
+		{
+			const byte_t* out = (*static_cast<F*>(this))(sizeof(T));
+			return out;
+		}
+	public: // binary
+		inline void read_raw_buffer(void* dest, const std::size_t ammount);
+		inline bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
+
+	public: // bool 	pop_T(T & out);
+		inline bool pop_uint8_t(uint8_t& out);
+		inline bool pop_uint16_t(uint16_t& out);
+		inline bool pop_uint32_t(uint32_t& out);
+		inline bool pop_uint64_t(uint64_t& out);
+
+		inline bool pop_int8_t(int8_t& out);
+		inline bool pop_int16_t(int16_t& out);
+		inline bool pop_int32_t(int32_t& out);
+		inline bool pop_int64_t(int64_t& out);
+
+		inline bool pop_float(float& out);
+		inline bool pop_double(double& out);
+
+	public: // T 	pop_T();
+		inline uint8_t	pop_uint8_t();
+		inline uint16_t pop_uint16_t();
+		inline uint32_t pop_uint32_t();
+		inline uint64_t pop_uint64_t();
+
+		inline int8_t  pop_int8_t();
+		inline int16_t pop_int16_t();
+		inline int32_t pop_int32_t();
+		inline int64_t pop_int64_t();
+
+		inline float  pop_float();
+		inline double pop_double();
+
+	#include "cllio_pop_variants.h"
+
+	};
+
 	//--------------------------------------------------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------------------------------------------------
-
-	inline void mem_stream_read::pop_uint8_t(uint8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint8_t(out) == false;
-	}
-	inline void mem_stream_read::pop_uint16_t(uint16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint16_t(out) == false;
-	}
-	inline void mem_stream_read::pop_uint32_t(uint32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint32_t(out) == false;
-	}
-	inline void mem_stream_read::pop_uint64_t(uint64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_uint64_t(out) == false;
-	}
-
-	inline void mem_stream_read::pop_int8_t(int8_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int8_t(out) == false;
-	}
-	inline void mem_stream_read::pop_int16_t(int16_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int16_t(out) == false;
-	}
-	inline void mem_stream_read::pop_int32_t(int32_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int32_t(out) == false;
-	}
-	inline void mem_stream_read::pop_int64_t(int64_t& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_int64_t(out) == false;
-	}
-
-	inline void mem_stream_read::pop_float(float& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_float(out) == false;
-	}
-	inline void mem_stream_read::pop_double(double& out, bool& error)
-	{
-		if (error)
-			return;
-		error = pop_double(out) == false;
-	}
-
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
-	inline memory_functor_write<F>::memory_functor_write(F&& _func)
+	inline memory_wfunc<F>::memory_wfunc(F&& _func)
 		: F { std::forward<F>(_func) }
 	{
 	}
 	template <class F>
-	inline memory_functor_write<F>::memory_functor_write(const F& _func)
+	inline memory_wfunc<F>::memory_wfunc(const F& _func)
 		: F { _func }
 	{
 	}
 
 	template <class F>
-	inline memory_functor_write<F>::memory_functor_write(class_t&& other)
+	inline memory_wfunc<F>::memory_wfunc(class_t&& other)
 		: F { std::forward<F>(other) }
 	{
 	}
 	template <class F>
-	inline typename memory_functor_write<F>::class_t& memory_functor_write<F>::operator=(typename memory_functor_write<F>::class_t&& other)
+	inline typename memory_wfunc<F>::class_t& memory_wfunc<F>::operator=(typename memory_wfunc<F>::class_t&& other)
 	{
 		*static_cast<F*>(this) = std::move(static_cast<F&>(other));
 		return (*this);
@@ -501,94 +453,120 @@ namespace cllio
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
-	inline void memory_functor_write<F>::push_uint8_t(const uint8_t value)
+	inline memory_rfunc<F>::memory_rfunc(F&& _func)
+		: F { std::forward<F>(_func) }
+	{
+
+	}
+	template <class F>
+	inline memory_rfunc<F>::memory_rfunc(const F& _func)
+		: F { _func }
+	{
+
+	}
+	template <class F>
+	inline memory_rfunc<F>::memory_rfunc(class_t&& other)
+		: F { std::forward<F>(other) }
+	{
+
+	}
+	template <class F>
+	inline memory_rfunc<F>& memory_rfunc<F>::operator=(class_t&& other)
+	{
+		*static_cast<F*>(this) = std::move(static_cast<F&>(other));
+		return (*this);
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+	template <class F>
+	inline void memory_wfunc<F>::push_uint8_t(const uint8_t value)
 	{
 		byte_t* out = _get<uint8_t>();
 		*out = value;
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_uint16_t(const uint16_t value)
+	inline void memory_wfunc<F>::push_uint16_t(const uint16_t value)
 	{
 		byte_t* out = _get<uint16_t>();
-		_memory_functor_write_details::_write_bynary_uint16_t(out, value);
+		_serializer_utils::_write_bynary_uint16_t(out, value);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_uint32_t(const uint32_t value)
+	inline void memory_wfunc<F>::push_uint32_t(const uint32_t value)
 	{
 		byte_t* out = _get<uint32_t>();
-		_memory_functor_write_details::_write_bynary_uint32_t(out, value);
+		_serializer_utils::_write_bynary_uint32_t(out, value);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_uint64_t(const uint64_t value)
+	inline void memory_wfunc<F>::push_uint64_t(const uint64_t value)
 	{
 		byte_t* out = _get<uint64_t>();
-		_memory_functor_write_details::_write_bynary_uint64_t(out, value);
+		_serializer_utils::_write_bynary_uint64_t(out, value);
 	}
 
 	template <class F>
-	inline void memory_functor_write<F>::push_int8_t(const int8_t value)
+	inline void memory_wfunc<F>::push_int8_t(const int8_t value)
 	{
-		byte_t*					   out = _get<int8_t>();
+		byte_t*					   out = _get<uint8_t>();
 		UnionCast<int8_t, uint8_t> tmp;
 		tmp.first = value;
 		*out = tmp.second;
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_int16_t(const int16_t value)
+	inline void memory_wfunc<F>::push_int16_t(const int16_t value)
 	{
-		byte_t*						 out = _get<int16_t>();
+		byte_t*						 out = _get<uint16_t>();
 		UnionCast<int16_t, uint16_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint16_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_int32_t(const int32_t value)
+	inline void memory_wfunc<F>::push_int32_t(const int32_t value)
 	{
-		byte_t*						 out = _get<int32_t>();
+		byte_t*						 out = _get<uint32_t>();
 		UnionCast<int32_t, uint32_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_int64_t(const int64_t value)
+	inline void memory_wfunc<F>::push_int64_t(const int64_t value)
 	{
-		byte_t*						 out = _get<int64_t>();
+		byte_t*						 out = _get<uint64_t>();
 		UnionCast<int64_t, uint64_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 	}
 
 	template <class F>
-	inline void memory_functor_write<F>::push_float(const float value)
+	inline void memory_wfunc<F>::push_float(const float value)
 	{
 		byte_t*					   out = _get<float>();
 		UnionCast<float, uint32_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_double(const double value)
+	inline void memory_wfunc<F>::push_double(const double value)
 	{
 		byte_t*						out = _get<double>();
 		UnionCast<double, uint64_t> tmp;
 		tmp.first = value;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 	}
 	template <class F>
-	inline void memory_functor_write<F>::push_ptr(const void* px)
+	inline void memory_wfunc<F>::push_ptr(const void* px)
 	{
 		byte_t*							 out = _get<uint64_t>();
 		UnionCast<uint64_t, const void*> tmp;
 		tmp.first = 0;
 		tmp.second = px;
-		_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
+		_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
 	}
 
-	inline void push_ptr();
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_uint8_t(const uint8_t value)
+	inline bool memory_wfunc<F>::trypush_uint8_t(const uint8_t value)
 	{
 		byte_t* out = _tryget<uint8_t>();
 		if (out != nullptr)
@@ -596,34 +574,34 @@ namespace cllio
 		return out != nullptr;
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_uint16_t(const uint16_t value)
+	inline bool memory_wfunc<F>::trypush_uint16_t(const uint16_t value)
 	{
 		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint16_t(out, value);
+			_serializer_utils::_write_bynary_uint16_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_uint32_t(const uint32_t value)
+	inline bool memory_wfunc<F>::trypush_uint32_t(const uint32_t value)
 	{
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint32_t(out, value);
+			_serializer_utils::_write_bynary_uint32_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_uint64_t(const uint64_t value)
+	inline bool memory_wfunc<F>::trypush_uint64_t(const uint64_t value)
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
-			_memory_functor_write_details::_write_bynary_uint64_t(out, value);
+			_serializer_utils::_write_bynary_uint64_t(out, value);
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_int8_t(const int8_t value)
+	inline bool memory_wfunc<F>::trypush_int8_t(const int8_t value)
 	{
-		byte_t* out = _tryget<int8_t>();
+		byte_t* out = _tryget<uint8_t>();
 		if (out != nullptr)
 		{
 			UnionCast<int8_t, uint8_t> tmp;
@@ -633,68 +611,71 @@ namespace cllio
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_int16_t(const int16_t value)
+	inline bool memory_wfunc<F>::trypush_int16_t(const int16_t value)
 	{
-		byte_t* out = _tryget<int16_t>();
+		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
 		{
 			UnionCast<int16_t, uint16_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint16_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_int32_t(const int32_t value)
+	inline bool memory_wfunc<F>::trypush_int32_t(const int32_t value)
 	{
-		byte_t* out = _tryget<int32_t>();
+		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
 			UnionCast<int32_t, uint32_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
-		}
-		return (out != nullptr);
-	}
-	template <class F>
-	inline bool memory_functor_write<F>::trypush_int64_t(const int64_t value)
-	{
-		byte_t* out = _tryget<int64_t>();
-		if (out != nullptr)
-		{
-			UnionCast<int64_t, uint64_t> tmp;
-			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_float(const float value)
+	inline bool memory_wfunc<F>::trypush_int64_t(const int64_t value)
 	{
-		byte_t* out = _tryget<float>();
+		byte_t* out = _tryget<uint64_t>();
+		if (out != nullptr)
+		{
+			UnionCast<int64_t, uint64_t> tmp;
+			tmp.first = value;
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
+		}
+		return (out != nullptr);
+	}
+
+	template <class F>
+	inline bool memory_wfunc<F>::trypush_float(const float value)
+	{
+		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
 			UnionCast<float, uint32_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint32_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
+
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_double(const double value)
+	inline bool memory_wfunc<F>::trypush_double(const double value)
 	{
-		byte_t* out = _tryget<double>();
+		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
 			UnionCast<double, uint64_t> tmp;
 			tmp.first = value;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
 		}
 		return (out != nullptr);
 	}
+
 	template <class F>
-	inline bool memory_functor_write<F>::trypush_ptr(const void* px)
+	inline bool memory_wfunc<F>::trypush_ptr(const void* px)
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
@@ -702,38 +683,219 @@ namespace cllio
 			UnionCast<uint64_t, const void*> tmp;
 			tmp.first = 0;
 			tmp.second = px;
-			_memory_functor_write_details::_write_bynary_uint64_t(out, tmp.first);
+			_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline void memory_functor_write<F>::write_raw_buffer(const void* data, const std::size_t byte_count)
+	inline void memory_wfunc<F>::write_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
-		_memory_functor_write_details::_copy_memory(out, data, byte_count);
+		_serializer_utils::_copy_memory(out, data, byte_count);
 	}
 	template <class F>
-	inline bool memory_functor_write<F>::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
+	inline bool memory_wfunc<F>::trywrite_raw_buffer(const void* data, const std::size_t byte_count)
 	{
 		byte_t* out = (*static_cast<F*>(this))(byte_count);
 		if (out != nullptr)
-			_memory_functor_write_details::_copy_memory(out, data, byte_count);
+			_serializer_utils::_copy_memory(out, data, byte_count);
 		return (out != nullptr);
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------
+
+	template<class F> inline void memory_rfunc<F>::read_raw_buffer(void* dest, const std::size_t ammount)
+	{
+		bool r = (*static_cast<F*>(this))(dest, ammount);
+		CLLIO_ASSERT(r == true);
+	}
+	template<class F> inline bool memory_rfunc<F>::tryread_raw_buffer(void* dest, const std::size_t ammount)
+	{
+		return (*static_cast<F*>(this))(dest, ammount);
+	}
+
+	template<class F> inline bool memory_rfunc<F>::pop_uint8_t(uint8_t& out)
+	{
+		const auto* p = _tryget<uint8_t>();
+		if(p != nullptr)
+			out = *p;
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_uint16_t(uint16_t& out)
+	{
+		const auto* p = _tryget<uint16_t>();
+		if(p != nullptr)
+			out = _serializer_utils::_read_uint16_t();
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_uint32_t(uint32_t& out)
+	{
+		const auto* p = _tryget<uint32_t>();
+		if(p != nullptr)
+			out = _serializer_utils::_read_uint32_t();
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_uint64_t(uint64_t& out)
+	{
+		const auto* p = _tryget<uint64_t>();
+		if(p != nullptr)
+			out = _serializer_utils::_read_uint64_t();
+		else
+			out = 0;
+		return p != nullptr;
+	}
+
+	template<class F> inline bool memory_rfunc<F>::pop_int8_t(int8_t& out)
+	{
+		const auto* p = _tryget<uint8_t>();
+		if (p != nullptr)
+		{
+			UnionCast<uint8_t, int8_t> tmp;
+			tmp.first = *p;
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_int16_t(int16_t& out)
+	{
+		const auto* p = _tryget<uint16_t>();
+		if(p != nullptr)
+		{
+			UnionCast<uint16_t, int16_t> tmp;
+			tmp.first = _serializer_utils::_read_uint16_t(p);
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_int32_t(int32_t& out)
+	{
+		const auto* p = _tryget<uint32_t>();
+		if(p != nullptr)
+		{
+			UnionCast<uint32_t, int32_t> tmp;
+			tmp.first = _serializer_utils::_read_uint32_t(p);
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_int64_t(int64_t& out)
+	{
+		const auto* p = _tryget<uint64_t>();
+		if(p != nullptr)
+		{
+			UnionCast<uint64_t, int64_t> tmp;
+			tmp.first = _serializer_utils::_read_uint64_t(p);
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_float(float& out)
+	{
+		const auto* p = _tryget<uint32_t>();
+		if(p != nullptr)
+		{
+			UnionCast<uint32_t, float> tmp;
+			tmp.first = _serializer_utils::_read_uint32_t(p);
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+	template<class F> inline bool memory_rfunc<F>::pop_double(double& out)
+	{
+		const auto* p = _tryget<uint64_t>();
+		if(p != nullptr)
+		{
+			UnionCast<uint64_t, double> tmp;
+			tmp.first = _serializer_utils::_read_uint64_t(p);
+			out = tmp.second;
+		}
+		else
+			out = 0;
+		return p != nullptr;
+	}
+
+
+	template<class F> inline uint8_t memory_rfunc<F>::pop_uint8_t()
+	{
+		return *_get<uint8_t>();
+	}
+	template<class F> inline uint16_t memory_rfunc<F>::pop_uint16_t()
+	{
+		return _serializer_utils::_read_uint16_t(_get<uint16_t>());
+	}
+	template<class F> inline uint32_t memory_rfunc<F>::pop_uint32_t()
+	{
+		return _serializer_utils::_read_uint32_t(_get<uint32_t>());
+	}
+	template<class F> inline uint64_t memory_rfunc<F>::pop_uint64_t()
+	{
+		return _serializer_utils::_read_uint64_t(_get<uint64_t>());
+	}
+	template<class F> inline int8_t	memory_rfunc<F>::pop_int8_t()
+	{
+		UnionCast<uint8_t,int8_t> tmp;
+		tmp.first = *_get<uint8_t>();
+		return tmp.second;
+	}
+	template<class F> inline int16_t memory_rfunc<F>::pop_int16_t()
+	{
+		UnionCast<uint16_t,int16_t> tmp;
+		tmp.first = _serializer_utils::_read_uint16_t(_get<uint16_t>());
+		return tmp.second;
+	}
+	template<class F> inline int32_t memory_rfunc<F>::pop_int32_t()
+	{
+		UnionCast<uint32_t,int32_t> tmp;
+		tmp.first = _serializer_utils::_read_uint32_t(_get<uint32_t>());
+		return tmp.second;
+	}
+	template<class F> inline int64_t memory_rfunc<F>::pop_int64_t()
+	{
+		UnionCast<uint64_t,int64_t> tmp;
+		tmp.first = _serializer_utils::_read_uint64_t(_get<uint64_t>());
+		return tmp.second;
+	}
+	template<class F> inline float  memory_rfunc<F>::pop_float()
+	{
+		UnionCast<uint32_t,float> tmp;
+		tmp.first = _serializer_utils::_read_uint32_t(_get<uint32_t>());
+		return tmp.second;
+	}
+	template<class F> inline double memory_rfunc<F>::pop_double()
+	{
+		UnionCast<uint64_t,double> tmp;
+		tmp.first = _serializer_utils::_read_uint64_t(_get<uint64_t>());
+		return tmp.second;
+	}
+
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 	template <class F>
-	inline memory_functor_write<F> make_memory_writer(const F& func)
+	inline memory_wfunc<F> make_memory_writer(const F& func)
 	{
-		return memory_functor_write<F> { func };
+		return memory_wfunc<F> { func };
 	}
 	template <class F>
-	inline memory_functor_write<F> make_memory_writer(F&& func)
+	inline memory_wfunc<F> make_memory_writer(F&& func)
 	{
-		return memory_functor_write<F> { std::forward<F>(func) };
+		return memory_wfunc<F> { std::forward<F>(func) };
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------
 

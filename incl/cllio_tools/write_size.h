@@ -1,12 +1,12 @@
 #pragma once
 
-#include "cllio_utils.h"
+#include "../cllio_internal_utils.h"
 
 namespace cllio
 {
 	// can measure sized used by writers
 
-	struct size_info
+	struct write_size
 	{
 	protected:
 		std::size_t m_size = 0;

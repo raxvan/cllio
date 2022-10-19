@@ -1,5 +1,7 @@
 
-#include <file_read_mapview.h>
+#include <cllio_tools/file_read_mapview.h>
+
+#ifdef CLLIO_FILE_READ_MAPVIEW
 
 #ifdef CLLIO_FILE_READ_MAPVIEW_WIN32
 #	include <memory>
@@ -25,10 +27,13 @@
 
 namespace cllio
 {
+
+#ifdef CLLIO_CPP17
 	file_read_mapview::file_read_mapview(const std::filesystem::path& p)
 		: file_read_mapview(p.string().c_str())
 	{
 	}
+#endif
 
 	void file_read_mapview::swap(file_read_mapview& other)
 	{
@@ -92,7 +97,7 @@ namespace cllio
 			return;
 
 		std::size_t sz = (std::size_t)GetFileSize(fh, NULL);
-		if (sz == 0)
+		if(sz == 0)
 		{
 			CloseHandle(fh);
 			return;
@@ -142,7 +147,7 @@ namespace cllio
 		int			err = fstat(fh, &statbuf);
 		if (err < 0 || statbuf.st_size <= 0)
 		{
-			// stat failed close file also
+			//stat failed close file also
 			close(fh);
 			return;
 		}
@@ -182,4 +187,6 @@ namespace cllio
 #	undef HAS_IMPLEMENTATION
 #else
 #	error "No implementation for file_read_mapview, check platform"
+#endif
+
 #endif
