@@ -349,6 +349,11 @@ namespace cllio
 			buffer.resize(buffer.size() + sz);
 			return buffer_ptr_t(&buffer[index]);
 		}
+
+		inline void clear()
+		{
+			buffer.clear();
+		}
 	};
 
 	template <class V>
