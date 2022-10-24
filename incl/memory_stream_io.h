@@ -271,7 +271,7 @@ namespace cllio
 
 	// write to raw memory given by a functor
 	template <class F>
-	struct memory_wfunc : protected F
+	struct memory_wfunc : public F
 	{
 	public:
 		using class_t = memory_wfunc<F>;
@@ -354,6 +354,14 @@ namespace cllio
 		{
 			buffer.clear();
 		}
+
+		template <class T>
+		inline T& alloc()
+		{
+			auto index = buffer.size();
+			buffer.resize(buffer.size() + sizeof(T));
+			return *static_cast<T*>(&buffer[index]);	
+		}
 	};
 
 	template <class V>
@@ -363,7 +371,7 @@ namespace cllio
 
 	// read from raw memory range (given as raw pointer)
 	template <class F>
-	struct memory_rfunc : protected F
+	struct memory_rfunc : public F
 	{
 	protected:
 		using class_t = memory_rfunc<F>;

@@ -33,7 +33,7 @@ namespace cllio
 
 	tcpsocket& tcpsocket::operator=(tcpsocket&& other) noexcept
 	{
-		tcpsocket tmp;
+		tcpsocket tmp; 
 		swap(tmp);
 		swap(other);
 		return (*this);
@@ -55,9 +55,11 @@ namespace cllio
 		auto& t = socket_handle_impl::get(*this);
 		return t.raw_send_buffered(buffer, size);
 	}
+
 	bool tcpsocket::connect(const char* ip, const char* port)
 	{
 		socket_handle_impl tmp;
+		tmp.construct();
 		if (tmp.connect_to(ip, port))
 		{
 			tmp.swap(socket_handle_impl::get(*this));
@@ -68,6 +70,7 @@ namespace cllio
 	bool tcpsocket::accept(const char* port, const std::size_t max_queue)
 	{
 		socket_handle_impl tmp;
+		tmp.construct();
 		if (tmp.accept_on(port, max_queue))
 		{
 			tmp.swap(socket_handle_impl::get(*this));
@@ -81,6 +84,16 @@ namespace cllio
 		auto& t = socket_handle_impl::get(*this);
 		t.wait_for_connection(socket_handle_impl::get(result));
 		return result;
+	}
+	bool tcpsocket::valid() const
+	{
+		const auto& t = socket_handle_impl::get(*this);
+		return t.valid();
+	}
+	void tcpsocket::close()
+	{
+		auto& t = socket_handle_impl::get(*this);
+		return t.close();
 	}
 }
 

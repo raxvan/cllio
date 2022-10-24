@@ -77,16 +77,6 @@ namespace cllio
 		return s;
 	}
 
-	void socket_platform_impl::initialize()
-	{
-		_get_wsa_status_singleton().add();
-	}
-	void socket_platform_impl::destroy()
-	{
-		_get_wsa_status_singleton().remove();
-	}
-
-
 	struct socket_handle_impl
 	{
 		SOCKET sock;
@@ -215,7 +205,7 @@ namespace cllio
 			do
 			{
 				int iResult = ::send(sock, (const char*)buffer, (int)size, 0);
-				if (iResult == SOCKET_ERROR)
+				if (iResult == SOCKET_ERROR || iResult < 0)
 				{
 					closesocket(sock);
 					sock = INVALID_SOCKET;
@@ -236,7 +226,7 @@ namespace cllio
 			{
 				CLLIO_ASSERT(max_size < std::size_t(std::numeric_limits<int32_t>::max()));
 				int iResult = ::recv(sock, (char*)(buffer), int(max_size), 0);
-				if (iResult == SOCKET_ERROR)
+				if (iResult == SOCKET_ERROR || iResult < 0)
 				{
 					closesocket(sock);
 					sock = INVALID_SOCKET;
@@ -255,6 +245,16 @@ namespace cllio
 		{
 			return sock != INVALID_SOCKET;
 		}
+
+		inline void close()
+		{
+			if (sock != INVALID_SOCKET)
+			{
+				closesocket(sock);
+				sock = INVALID_SOCKET;
+			}
+		}
+
 
 		static inline socket_handle_impl& get(socket_platform_impl& pi)
 		{
