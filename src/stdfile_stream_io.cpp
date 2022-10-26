@@ -172,9 +172,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t,sizeof(uint8_t)> buffer;
-		UnionCast<int8_t, uint8_t> tmp;
-		tmp.first = value;
-		buffer[0] = tmp.second;
+		buffer[0] = _serializer_utils::_stu8(value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -183,9 +181,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t,sizeof(uint16_t)> buffer;
-		UnionCast<int16_t, uint16_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -194,9 +190,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t,sizeof(uint32_t)> buffer;
-		UnionCast<int32_t, uint32_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -205,9 +199,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t,sizeof(uint64_t)> buffer;
-		UnionCast<int64_t, uint64_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -256,9 +248,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
-		UnionCast<int8_t, uint8_t> tmp;
-		tmp.first = value;
-		buffer[0] = tmp.second;
+		buffer[0] = _serializer_utils::_stu8(value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -266,9 +256,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
-		UnionCast<int16_t, uint16_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -276,9 +264,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
-		UnionCast<int32_t, uint32_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -286,9 +272,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
-		UnionCast<int64_t, uint64_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -332,44 +316,30 @@ namespace cllio
 	void stdfile_wstream_impl::push_float(const float value)
 	{
 		static_assert(sizeof(float) <= sizeof(uint32_t), "sizeof(float) > 4 bytes?");
-		UnionCast<float, uint32_t> data;
-		data.first = value;
-		push_uint32_t(data.second);
+		push_uint32_t(_serializer_utils::_ftu(value));
 	}
 	void stdfile_wstream_impl::push_double(const double value)
 	{
 		static_assert(sizeof(double) <= sizeof(uint64_t), "sizeof(double) > 8 bytes?");
-		UnionCast<double, uint64_t> data;
-		data.first = value;
-		push_uint64_t(data.second);
+		push_uint64_t(_serializer_utils::_dtu(value));
 	}
 	void stdfile_wstream_impl::push_ptr(const void* px)
 	{
-		UnionCast<uint64_t, const void*> data;
-		data.first = 0;
-		data.second = px;
-		push_uint64_t(data.first);
+		push_uint64_t(_serializer_utils::_ptu(px));
 	}
 	bool stdfile_wstream_impl::trypush_float(const float value)
 	{
 		static_assert(sizeof(float) <= sizeof(uint32_t), "sizeof(float) > 4 bytes?");
-		UnionCast<float, uint32_t> data;
-		data.first = value;
-		return trypush_uint32_t(data.second);
+		return trypush_uint32_t(_serializer_utils::_ftu(value));
 	}
 	bool stdfile_wstream_impl::trypush_double(const double value)
 	{
 		static_assert(sizeof(double) <= sizeof(uint64_t), "sizeof(double) > 8 bytes?");
-		UnionCast<double, uint64_t> data;
-		data.first = value;
-		return trypush_uint64_t(data.second);
+		return trypush_uint64_t(_serializer_utils::_dtu(value));
 	}
 	bool stdfile_wstream_impl::trypush_ptr(const void* px)
 	{
-		UnionCast<uint64_t, const void*> data;
-		data.first = 0;
-		data.second = px;
-		return trypush_uint64_t(data.first);
+		return trypush_uint64_t(_serializer_utils::_ptu(px));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------
@@ -506,9 +476,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint8_t, int8_t> tmp;
-			tmp.first = buffer[0];
-			out = tmp.second;
+			out = _serializer_utils::_uts8(buffer[0]);
 			return true;
 		}
 		return false;
@@ -520,9 +488,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint16_t, int16_t> tmp;
-			tmp.first = _serializer_utils::_read_uint16_t(buffer.data());
-			out = tmp.second;
+			out = _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(buffer.data()));
 			return true;
 		}
 		return false;
@@ -534,9 +500,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint32_t, int32_t> tmp;
-			tmp.first = _serializer_utils::_read_uint32_t(buffer.data());
-			out = tmp.second;
+			out = _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(buffer.data()));
 			return true;
 		}
 		return false;
@@ -548,9 +512,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint64_t, int64_t> tmp;
-			tmp.first = _serializer_utils::_read_uint64_t(buffer.data());
-			out = tmp.second;
+			out = _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(buffer.data()));
 			return true;
 		}
 		return false;
@@ -565,9 +527,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint32_t, float> tmp;
-			tmp.first = _serializer_utils::_read_uint32_t(buffer.data());
-			out = tmp.second;
+			out = _serializer_utils::_utf(_serializer_utils::_read_uint32_t(buffer.data()));
 			return true;
 		}
 		return false;
@@ -580,9 +540,7 @@ namespace cllio
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		if (sz == buffer.size())
 		{
-			UnionCast<uint64_t, double> tmp;
-			tmp.first = _serializer_utils::_read_uint64_t(buffer.data());
-			out = tmp.second;
+			out = _serializer_utils::_utd(_serializer_utils::_read_uint64_t(buffer.data()));
 			return true;
 		}
 		return false;
@@ -628,9 +586,7 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint8_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint8_t, int8_t> tmp;
-		tmp.first = buffer[0];
-		return tmp.second;
+		return _serializer_utils::_uts8(buffer[0]);
 	}
 	int16_t stdfile_rstream_impl::pop_int16_t()
 	{
@@ -638,9 +594,7 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint16_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint16_t, int16_t> tmp;
-		tmp.first = _serializer_utils::_read_uint16_t(buffer.data());
-		return tmp.second;
+		return _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(buffer.data()));
 	}
 	int32_t stdfile_rstream_impl::pop_int32_t()
 	{
@@ -648,9 +602,7 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint32_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint32_t, int32_t> tmp;
-		tmp.first = _serializer_utils::_read_uint32_t(buffer.data());
-		return tmp.second;
+		return _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(buffer.data()));
 	}
 	int64_t stdfile_rstream_impl::pop_int64_t()
 	{
@@ -658,9 +610,7 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint64_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint64_t, int64_t> tmp;
-		tmp.first = _serializer_utils::_read_uint64_t(buffer.data());
-		return tmp.second;
+		return _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(buffer.data()));
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	float stdfile_rstream_impl::pop_float()
@@ -670,9 +620,8 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint32_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint32_t, float> tmp;
-		tmp.first = _serializer_utils::_read_uint32_t(buffer.data());
-		return tmp.second;
+		return _serializer_utils::_utf(_serializer_utils::_read_uint32_t(buffer.data()));
+		
 	}
 	double stdfile_rstream_impl::pop_double()
 	{
@@ -681,9 +630,8 @@ namespace cllio
 		std::array < cllio::byte_t, sizeof(uint64_t) > buffer;
 		std::size_t sz = std::fread(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
-		UnionCast<uint64_t, double> tmp;
-		tmp.first = _serializer_utils::_read_uint64_t(buffer.data());
-		return tmp.second;
+		return _serializer_utils::_utd(_serializer_utils::_read_uint64_t(buffer.data()));
+		
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 }

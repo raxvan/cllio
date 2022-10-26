@@ -41,9 +41,7 @@ namespace cllio
 	int8_t memory_rstream_unchecked::pop_int8_t()
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<uint8_t, int8_t> tmp;
-		tmp.first = *m_px++;
-		return tmp.second;
+		return _serializer_utils::_uts8(*m_px++);
 	}
 	int16_t memory_rstream_unchecked::pop_int16_t()
 	{
@@ -158,9 +156,7 @@ namespace cllio
 		if (_can_read<uint8_t>())
 		{
 			CLLIO_ASSERT(m_px != nullptr);
-			UnionCast<uint8_t, int8_t> tmp;
-			tmp.first = *m_px++;
-			out = tmp.second;
+			out = _serializer_utils::_uts8(*m_px++);
 		}
 		return true;
 	}
@@ -242,9 +238,7 @@ namespace cllio
 	int8_t memory_rstream::pop_int8_t()
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_read<uint8_t>());
-		UnionCast<uint8_t, int8_t> tmp;
-		tmp.first = *m_px++;
-		return tmp.second;
+		return _serializer_utils::_uts8(*m_px++);
 	}
 	int16_t memory_rstream::pop_int16_t()
 	{
@@ -284,30 +278,22 @@ namespace cllio
 	void memory_wstream_unchecked::push_int8_t(const int8_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<int8_t, uint8_t> tmp;
-		tmp.first = value;
-		*m_px++ = tmp.second;
+		*m_px++ = _serializer_utils::_stu8(value);
 	}
 	void memory_wstream_unchecked::push_int16_t(const int16_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<int16_t, uint16_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint16_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint16_t(m_px, _serializer_utils::_stu16(value));
 	}
 	void memory_wstream_unchecked::push_int32_t(const int32_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<int32_t, uint32_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_stu32(value));
 	}
 	void memory_wstream_unchecked::push_int64_t(const int64_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<int64_t, uint64_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_stu64(value));
 	}
 
 	void memory_wstream_unchecked::push_uint8_t(const uint8_t value)
@@ -334,16 +320,12 @@ namespace cllio
 	void memory_wstream_unchecked::push_float(const float value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<float, uint32_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_ftu(value));
 	}
 	void memory_wstream_unchecked::push_double(const double value)
 	{
 		CLLIO_ASSERT(m_px != nullptr);
-		UnionCast<double, uint64_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_dtu(value));
 	}
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -360,30 +342,22 @@ namespace cllio
 	void memory_wstream::push_int8_t(const int8_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint8_t>());
-		UnionCast<int8_t, uint8_t> tmp;
-		tmp.first = value;
-		*m_px++ = tmp.second;
+		*m_px++ = _serializer_utils::_stu8(value);
 	}
 	void memory_wstream::push_int16_t(const int16_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint16_t>());
-		UnionCast<int16_t, uint16_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint16_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint16_t(m_px, _serializer_utils::_stu16(value));
 	}
 	void memory_wstream::push_int32_t(const int32_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint32_t>());
-		UnionCast<int32_t, uint32_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_stu32(value));
 	}
 	void memory_wstream::push_int64_t(const int64_t value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint64_t>());
-		UnionCast<int64_t, uint64_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_stu64(value));
 	}
 
 	void memory_wstream::push_uint8_t(const uint8_t value)
@@ -410,24 +384,17 @@ namespace cllio
 	void memory_wstream::push_float(const float value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint32_t>());
-		UnionCast<float, uint32_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_ftu(value));
 	}
 	void memory_wstream::push_double(const double value)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint64_t>());
-		UnionCast<double, uint64_t> tmp;
-		tmp.first = value;
-		_inline_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+		_inline_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_dtu(value));
 	}
 	void memory_wstream::push_ptr(const void* px)
 	{
 		CLLIO_ASSERT(m_px != nullptr && _can_write<uint64_t>());
-		UnionCast<uint64_t, const void*> tmp;
-		tmp.first = 0;
-		tmp.second = px;
-		_inline_serializer_utils::_write_bynary_uint64_t(m_px, tmp.first);
+		_inline_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_ptu(px));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -439,9 +406,7 @@ namespace cllio
 	{
 		if (_can_write<uint8_t>())
 		{
-			UnionCast<int8_t, uint8_t> tmp;
-			tmp.first = value;
-			*m_px++ = tmp.second;
+			*m_px++ = _serializer_utils::_stu8(value);
 			return true;
 		}
 		return false;
@@ -450,9 +415,7 @@ namespace cllio
 	{
 		if (_can_write<uint16_t>())
 		{
-			UnionCast<int16_t, uint16_t> tmp;
-			tmp.first = value;
-			_inline_serializer_utils::_write_bynary_uint16_t(m_px, tmp.second);
+			_inline_serializer_utils::_write_bynary_uint16_t(m_px, _serializer_utils::_stu16(value));
 			return true;
 		}
 		return false;
@@ -461,9 +424,7 @@ namespace cllio
 	{
 		if (_can_write<uint32_t>())
 		{
-			UnionCast<int32_t, uint32_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_stu32(value));
 			return true;
 		}
 		return false;
@@ -472,9 +433,7 @@ namespace cllio
 	{
 		if (_can_write<uint64_t>())
 		{
-			UnionCast<int64_t, uint64_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_stu64(value));
 			return true;
 		}
 		return false;
@@ -521,9 +480,7 @@ namespace cllio
 	{
 		if (_can_write<uint32_t>())
 		{
-			UnionCast<float, uint32_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint32_t(m_px, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(m_px, _serializer_utils::_ftu(value));
 			return true;
 		}
 		return false;
@@ -532,9 +489,7 @@ namespace cllio
 	{
 		if (_can_write<uint64_t>())
 		{
-			UnionCast<double, uint64_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint64_t(m_px, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_dtu(value));
 			return true;
 		}
 		return false;
@@ -543,10 +498,7 @@ namespace cllio
 	{
 		if (_can_write<uint64_t>())
 		{
-			UnionCast<uint64_t, const void*> tmp;
-			tmp.first = 0;
-			tmp.second = px;
-			_serializer_utils::_write_bynary_uint64_t(m_px, tmp.first);
+			_serializer_utils::_write_bynary_uint64_t(m_px, _serializer_utils::_ptu(px));
 			return true;
 		}
 		return false;

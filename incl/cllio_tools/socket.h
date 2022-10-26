@@ -51,44 +51,70 @@ namespace cllio
 		tcpsocket(tcpsocket&&) noexcept;
 		tcpsocket& operator=(tcpsocket&&) noexcept;
 	public:
-
 		void swap(tcpsocket& other);
 
 		bool connect(const char* ip, const char* port);
 	    bool accept(const char* port, const std::size_t max_queue);
 
-		tcpsocket wait_for_connection();
+		tcpsocket wait_for_connection(); //in combination with accept()
 
-		bool valid() const;
 		void close();
 
-	public:
-		//inline bool connected() const;
-	public:
-		bool raw_read(void* buffer, const std::size_t max_size);
-		bool raw_write(const void* buffer, const std::size_t size);
+		bool connected() const;
 
 	public:
-		inline bool write_buffer_with_size(const void* buffer, const std::size_t sz);
+		bool tryread_raw_buffer(void* buffer, const std::size_t max_size);
+		bool trywrite_raw_buffer(const void* buffer, const std::size_t size);
+
+	public:
+		bool pop_uint8_t(uint8_t& out);
+		bool pop_uint16_t(uint16_t& out);
+		bool pop_uint32_t(uint32_t& out);
+		bool pop_uint64_t(uint64_t& out);
+
+		bool pop_int8_t(int8_t& out);
+		bool pop_int16_t(int16_t& out);
+		bool pop_int32_t(int32_t& out);
+		bool pop_int64_t(int64_t& out);
+
+		bool pop_float(float& out);
+		bool pop_double(double& out);
+
+	public:
+		bool trypush_int8_t(const int8_t value);
+		bool trypush_int16_t(const int16_t value);
+		bool trypush_int32_t(const int32_t value);
+		bool trypush_int64_t(const int64_t value);
+
+		bool trypush_uint8_t(const uint8_t value);
+		bool trypush_uint16_t(const uint16_t value);
+		bool trypush_uint32_t(const uint32_t value);
+		bool trypush_uint64_t(const uint64_t value);
+
+		bool trypush_float(const float value);
+		bool trypush_double(const double value);
+
+	public:
+		inline bool write_with_header(const uint64_t header, const void* buffer, const std::size_t size)
 		{
-			uint64_t wsz = sz;
-			if(raw_write(&wsz, sizeof(uint64_t)) == false)
-				return false;
-			raw_write(buffer,sz);
+			if(trypush_uint64_t(header))
+				return trywrite_raw_buffer(buffer, size);
+			return false;
 		}
+
 		template <class F>
-		inline bool read_buffer_with_size(const F& _allc_func)
+		//std::pair<void* buffer, std::size_t> T(uint64_t header);
+		inline bool read_with_header(const F& _func)
 		{
-			uint64_t sz = 0;
-			if(raw_read(&sz, sizeof(uint64_t)) == false)
-				return false;
-			void* data = _allc_func(sz);
-			if(raw_read(data, sz) == false)
-				return false;
-
-			return true;
+			uint64_t header;
+			if(pop_uint64_t(header))
+			{
+				auto tr = _func(header);
+				if(tr.first)
+					return tryread_raw_buffer(tr.first, tr.second);
+			}
+			return false;
 		}
-
 	};
 
 }

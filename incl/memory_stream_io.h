@@ -521,59 +521,44 @@ namespace cllio
 	inline void memory_wfunc<F>::push_int8_t(const int8_t value)
 	{
 		byte_t*					   out = _get<uint8_t>();
-		UnionCast<int8_t, uint8_t> tmp;
-		tmp.first = value;
-		*out = tmp.second;
+		*out = _serializer_utils::_stu8(value);
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_int16_t(const int16_t value)
 	{
 		byte_t*						 out = _get<uint16_t>();
-		UnionCast<int16_t, uint16_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint16_t(out, _serializer_utils::_stu16(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_int32_t(const int32_t value)
 	{
 		byte_t*						 out = _get<uint32_t>();
-		UnionCast<int32_t, uint32_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_stu32(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_int64_t(const int64_t value)
 	{
 		byte_t*						 out = _get<uint64_t>();
-		UnionCast<int64_t, uint64_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_stu64(value));
 	}
 
 	template <class F>
 	inline void memory_wfunc<F>::push_float(const float value)
 	{
 		byte_t*					   out = _get<float>();
-		UnionCast<float, uint32_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_ftu(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_double(const double value)
 	{
 		byte_t*						out = _get<double>();
-		UnionCast<double, uint64_t> tmp;
-		tmp.first = value;
-		_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
+		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_dtu(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_ptr(const void* px)
 	{
 		byte_t*							 out = _get<uint64_t>();
-		UnionCast<uint64_t, const void*> tmp;
-		tmp.first = 0;
-		tmp.second = px;
-		_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
+		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_ptu(px));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -617,9 +602,7 @@ namespace cllio
 		byte_t* out = _tryget<uint8_t>();
 		if (out != nullptr)
 		{
-			UnionCast<int8_t, uint8_t> tmp;
-			tmp.first = value;
-			*out = tmp.second;
+			*out = _serializer_utils::_stu8(value);
 		}
 		return (out != nullptr);
 	}
@@ -629,9 +612,7 @@ namespace cllio
 		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
 		{
-			UnionCast<int16_t, uint16_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint16_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint16_t(out, _serializer_utils::_stu16(value));
 		}
 		return (out != nullptr);
 	}
@@ -641,9 +622,7 @@ namespace cllio
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			UnionCast<int32_t, uint32_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_stu32(value));
 		}
 		return (out != nullptr);
 	}
@@ -654,9 +633,7 @@ namespace cllio
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
 		{
-			UnionCast<int64_t, uint64_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_stu64(value));
 		}
 		return (out != nullptr);
 	}
@@ -667,9 +644,7 @@ namespace cllio
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			UnionCast<float, uint32_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint32_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_ftu(value));
 		}
 		return (out != nullptr);
 	}
@@ -680,9 +655,7 @@ namespace cllio
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			UnionCast<double, uint64_t> tmp;
-			tmp.first = value;
-			_serializer_utils::_write_bynary_uint64_t(out, tmp.second);
+			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_dtu(value));
 		}
 		return (out != nullptr);
 	}
@@ -693,10 +666,7 @@ namespace cllio
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
 		{
-			UnionCast<uint64_t, const void*> tmp;
-			tmp.first = 0;
-			tmp.second = px;
-			_serializer_utils::_write_bynary_uint64_t(out, tmp.first);
+			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_ptu(px));
 		}
 		return (out != nullptr);
 	}
@@ -732,35 +702,27 @@ namespace cllio
 		const auto* p = _tryget<uint8_t>();
 		if(p != nullptr)
 			out = *p;
-		else
-			out = 0;
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_uint16_t(uint16_t& out)
 	{
 		const auto* p = _tryget<uint16_t>();
 		if(p != nullptr)
-			out = _serializer_utils::_read_uint16_t();
-		else
-			out = 0;
+			out = _serializer_utils::_read_uint16_t(p);
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_uint32_t(uint32_t& out)
 	{
 		const auto* p = _tryget<uint32_t>();
 		if(p != nullptr)
-			out = _serializer_utils::_read_uint32_t();
-		else
-			out = 0;
+			out = _serializer_utils::_read_uint32_t(p);
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_uint64_t(uint64_t& out)
 	{
 		const auto* p = _tryget<uint64_t>();
 		if(p != nullptr)
-			out = _serializer_utils::_read_uint64_t();
-		else
-			out = 0;
+			out = _serializer_utils::_read_uint64_t(p);
 		return p != nullptr;
 	}
 
@@ -768,78 +730,42 @@ namespace cllio
 	{
 		const auto* p = _tryget<uint8_t>();
 		if (p != nullptr)
-		{
-			UnionCast<uint8_t, int8_t> tmp;
-			tmp.first = *p;
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_uts8(*p);
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_int16_t(int16_t& out)
 	{
 		const auto* p = _tryget<uint16_t>();
 		if(p != nullptr)
-		{
-			UnionCast<uint16_t, int16_t> tmp;
-			tmp.first = _serializer_utils::_read_uint16_t(p);
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(p));
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_int32_t(int32_t& out)
 	{
 		const auto* p = _tryget<uint32_t>();
 		if(p != nullptr)
-		{
-			UnionCast<uint32_t, int32_t> tmp;
-			tmp.first = _serializer_utils::_read_uint32_t(p);
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(p));
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_int64_t(int64_t& out)
 	{
 		const auto* p = _tryget<uint64_t>();
 		if(p != nullptr)
-		{
-			UnionCast<uint64_t, int64_t> tmp;
-			tmp.first = _serializer_utils::_read_uint64_t(p);
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(p));
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_float(float& out)
 	{
 		const auto* p = _tryget<uint32_t>();
 		if(p != nullptr)
-		{
-			UnionCast<uint32_t, float> tmp;
-			tmp.first = _serializer_utils::_read_uint32_t(p);
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_utf(_serializer_utils::_read_uint32_t(p));
 		return p != nullptr;
 	}
 	template<class F> inline bool memory_rfunc<F>::pop_double(double& out)
 	{
 		const auto* p = _tryget<uint64_t>();
 		if(p != nullptr)
-		{
-			UnionCast<uint64_t, double> tmp;
-			tmp.first = _serializer_utils::_read_uint64_t(p);
-			out = tmp.second;
-		}
-		else
-			out = 0;
+			out = _serializer_utils::_utd(_serializer_utils::_read_uint64_t(p));
 		return p != nullptr;
 	}
 
@@ -862,39 +788,27 @@ namespace cllio
 	}
 	template<class F> inline int8_t	memory_rfunc<F>::pop_int8_t()
 	{
-		UnionCast<uint8_t,int8_t> tmp;
-		tmp.first = *_get<uint8_t>();
-		return tmp.second;
+		return _serializer_utils::_uts8(*_get<uint8_t>());
 	}
 	template<class F> inline int16_t memory_rfunc<F>::pop_int16_t()
 	{
-		UnionCast<uint16_t,int16_t> tmp;
-		tmp.first = _serializer_utils::_read_uint16_t(_get<uint16_t>());
-		return tmp.second;
+		return _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(_get<uint16_t>()));
 	}
 	template<class F> inline int32_t memory_rfunc<F>::pop_int32_t()
 	{
-		UnionCast<uint32_t,int32_t> tmp;
-		tmp.first = _serializer_utils::_read_uint32_t(_get<uint32_t>());
-		return tmp.second;
+		return _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(_get<uint32_t>()));
 	}
 	template<class F> inline int64_t memory_rfunc<F>::pop_int64_t()
 	{
-		UnionCast<uint64_t,int64_t> tmp;
-		tmp.first = _serializer_utils::_read_uint64_t(_get<uint64_t>());
-		return tmp.second;
+		return _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(_get<uint64_t>()));
 	}
 	template<class F> inline float  memory_rfunc<F>::pop_float()
 	{
-		UnionCast<uint32_t,float> tmp;
-		tmp.first = _serializer_utils::_read_uint32_t(_get<uint32_t>());
-		return tmp.second;
+		return _serializer_utils::_utf(_serializer_utils::_read_uint32_t(_get<uint32_t>()));
 	}
 	template<class F> inline double memory_rfunc<F>::pop_double()
 	{
-		UnionCast<uint64_t,double> tmp;
-		tmp.first = _serializer_utils::_read_uint64_t(_get<uint64_t>());
-		return tmp.second;
+		return _serializer_utils::_utd(_serializer_utils::_read_uint64_t(_get<uint64_t>()));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
