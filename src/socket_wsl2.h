@@ -205,7 +205,7 @@ namespace cllio
 			do
 			{
 				int iResult = ::send(sock, (const char*)buffer, (int)size, 0);
-				if (iResult == SOCKET_ERROR || iResult < 0)
+				if (iResult == SOCKET_ERROR || iResult <= 0)
 				{
 					closesocket(sock);
 					sock = INVALID_SOCKET;
@@ -226,13 +226,12 @@ namespace cllio
 			{
 				CLLIO_ASSERT(max_size < std::size_t(std::numeric_limits<int32_t>::max()));
 				int iResult = ::recv(sock, (char*)(buffer), int(max_size), 0);
-				if (iResult == SOCKET_ERROR || iResult < 0)
+				if (iResult == SOCKET_ERROR || iResult <= 0)
 				{
 					closesocket(sock);
 					sock = INVALID_SOCKET;
 					return false;
 				}
-				CLLIO_ASSERT(iResult > 0);
 				itr += iResult;
 			} while (itr < end);
 			return true;
