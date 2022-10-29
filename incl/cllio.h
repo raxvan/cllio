@@ -9,6 +9,8 @@ namespace cllio
 	struct utils
 	{
 	public:
+		static byte_t fromhex(char first, char second);
+
 		template <class W>
 		//61 bits max precision
 		static inline bool write_packed_uint64_t(W& writer, const uint64_t value)

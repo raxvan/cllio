@@ -1,5 +1,5 @@
 
-#include <cllio_internal_utils.h>
+#include <cllio.h>
 
 #ifdef CLLIO_ASSERT_ENABLED
 #	include <iostream>
@@ -9,6 +9,7 @@
 
 namespace cllio
 {
+
 #ifdef CLLIO_ASSERT_ENABLED
 	void cllio_assert_failed(const char* file, const int line, const char* cond)
 	{
@@ -16,6 +17,28 @@ namespace cllio
 		assert(false);
 	}
 #endif
+
+	inline byte_t base16ToBase10(const char c)
+	{
+		if (c >= '0' && c <= '9')
+			return byte_t(c - '0');
+		else if (c >= 'a' && c <= 'f')
+			return byte_t(c - 'a') + 10;
+		else if (c >= 'A' && c <= 'F')
+			return byte_t(c - 'F') + 10;
+		else
+		{
+			CLLIO_ASSERT(false);
+			return 0;
+		}
+	}
+
+	byte_t utils::fromhex(char first, char second)
+	{
+		byte_t f = base16ToBase10(first);
+		byte_t s = base16ToBase10(second);
+		return f << 4 | s;
+	}
 
 	void _serializer_utils::_write_bynary_uint16_t(byte_t* out, const uint16_t value)
 	{
