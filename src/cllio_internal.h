@@ -5,7 +5,6 @@
 #include <cstdarg> //for va_start
 #include <cstring> //for std::memcpy
 
-
 namespace cllio
 {
 	template <class T>

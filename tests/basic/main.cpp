@@ -45,7 +45,6 @@ void check_buffers_equal(const std::vector<cllio::byte_t>& a, const std::vector<
 	}
 }
 
-
 template <class T>
 void test_writer(T& stream)
 {
@@ -59,10 +58,10 @@ void test_writer(T& stream)
 template <class T>
 void run_read_functions_f0(T& stream)
 {
-#define TEST_ITEM(TYPE, VALUE)                                                              \
-	{                                                                                       \
-		TYPE v = stream.pop_##TYPE();                                                       \
-		TEST_ASSERT (VALUE == v);                                                           \
+#define TEST_ITEM(TYPE, VALUE)        \
+	{                                 \
+		TYPE v = stream.pop_##TYPE(); \
+		TEST_ASSERT(VALUE == v);      \
 	}
 
 #include "test_set.h"
@@ -73,11 +72,11 @@ void run_read_functions_f0(T& stream)
 template <class T>
 void run_read_functions_f1(T& stream)
 {
-#define TEST_ITEM(TYPE, VALUE)                                                                    \
-	{                                                                                             \
-		TYPE value = not_value(VALUE);                                                            \
-		bool f = stream.pop_##TYPE(value);                                                        \
-		TEST_ASSERT (VALUE == value && f == true);                                                \
+#define TEST_ITEM(TYPE, VALUE)                    \
+	{                                             \
+		TYPE value = not_value(VALUE);            \
+		bool f = stream.pop_##TYPE(value);        \
+		TEST_ASSERT(VALUE == value && f == true); \
 	}
 
 #include "test_set.h"
@@ -87,11 +86,11 @@ void run_read_functions_f1(T& stream)
 template <class T>
 void run_read_functions_f2(T& stream)
 {
-#define TEST_ITEM(TYPE, VALUE)                                                                    \
-	{                                                                                             \
-		bool r = false;                                                                           \
-		TYPE value = stream.pop_##TYPE(r);                                                        \
-		TEST_ASSERT(VALUE == value && r == false);                                                        \
+#define TEST_ITEM(TYPE, VALUE)                     \
+	{                                              \
+		bool r = false;                            \
+		TYPE value = stream.pop_##TYPE(r);         \
+		TEST_ASSERT(VALUE == value && r == false); \
 	}
 
 #include "test_set.h"
@@ -102,11 +101,11 @@ void run_read_functions_f2(T& stream)
 template <class T>
 void run_read_functions_f3(T& stream)
 {
-#define TEST_ITEM(TYPE, VALUE)                                                                                             \
-	{                                                                                                                      \
-		TYPE value = not_value(VALUE);                                                                                     \
-		bool f = stream.popdefault_##TYPE(value, not_value(VALUE));                                                        \
-		TEST_ASSERT (VALUE == value && f == true); \
+#define TEST_ITEM(TYPE, VALUE)                                      \
+	{                                                               \
+		TYPE value = not_value(VALUE);                              \
+		bool f = stream.popdefault_##TYPE(value, not_value(VALUE)); \
+		TEST_ASSERT(VALUE == value && f == true);                   \
 	}
 
 #include "test_set.h"
@@ -117,10 +116,10 @@ void run_read_functions_f3(T& stream)
 template <class T>
 void run_read_functions_f4(T& stream)
 {
-#define TEST_ITEM(TYPE, VALUE)                                                                                      \
-	{                                                                                                               \
-		TYPE value = stream.popdefault_##TYPE(not_value(VALUE));                                                    \
-		TEST_ASSERT (VALUE == value);                                                                                       \
+#define TEST_ITEM(TYPE, VALUE)                                   \
+	{                                                            \
+		TYPE value = stream.popdefault_##TYPE(not_value(VALUE)); \
+		TEST_ASSERT(VALUE == value);                             \
 	}
 
 #include "test_set.h"
@@ -254,9 +253,7 @@ void run_main_tests()
 			}*/
 		}
 
-		TEST_INLINE() = [&]() {
-			test_memory_readers(buffer);
-		};
+		TEST_INLINE() = [&]() { test_memory_readers(buffer); };
 
 		{
 			// since there is no normal way to check memory_wstream_unchecked UB we reserve a double sized buffer for this
@@ -307,7 +304,6 @@ void run_main_tests()
 			}*/
 		}
 	}
-
 }
 
 void test_utils()
@@ -316,12 +312,12 @@ void test_utils()
 		char buffer[16];
 		std::memset(&buffer[0], 0, 16);
 
-		uint64_t ref = i;
+		uint64_t			  ref = i;
 		cllio::memory_wstream w(&buffer[4], 8);
 		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
 			return false;
 
-		uint64_t check = std::numeric_limits<uint64_t>::max();
+		uint64_t			  check = std::numeric_limits<uint64_t>::max();
 		cllio::memory_rstream r(&buffer[4], 8);
 		if (cllio::utils::read_packed_uint64_t(r, check) == false)
 			return false;
@@ -342,7 +338,7 @@ void test_utils()
 			std::cerr << "packed uint64 read/write failed with value " << value << std::endl;
 		return r;
 	};
-	for (uint64_t i = 0; i < 2048;i++)
+	for (uint64_t i = 0; i < 2048; i++)
 	{
 		check_and_print(i);
 		check_and_print(i + std::numeric_limits<uint16_t>::max() - 1024);
@@ -351,7 +347,6 @@ void test_utils()
 		check_and_print((i + std::numeric_limits<uint16_t>::max() - 1024) * 104729);
 		check_and_print((i + std::numeric_limits<uint32_t>::max() - 1024) * 104729);
 	}
-
 }
 
 void test_main()

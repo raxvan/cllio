@@ -12,12 +12,12 @@ namespace cllio
 		static byte_t fromhex(char first, char second);
 
 		template <class W>
-		//61 bits max precision
+		// 61 bits max precision
 		static inline bool write_packed_uint64_t(W& writer, const uint64_t value)
 		{
 			const uint8_t low_mask = (1 << 5) - 1;
 
-			if (value <= low_mask) //first 5 bits
+			if (value <= low_mask) // first 5 bits
 				return writer.trypush_uint8_t(char(value));
 
 			uint8_t buffer[9];
@@ -31,7 +31,7 @@ namespace cllio
 					tmp = tmp >> 8;
 				}
 				if (itr == 8 && buffer[8] > low_mask)
-					return false;//can't fit
+					return false; // can't fit
 
 				buffer[0] = uint8_t(itr << 5);
 
@@ -49,7 +49,7 @@ namespace cllio
 			return writer.trywrite_raw_buffer(&buffer[0], itr);
 		}
 		template <class W>
-		//61 bits max precision
+		// 61 bits max precision
 		static inline bool write_packed_int64_t(W& writer, const int64_t value)
 		{
 			uint64_t v;
@@ -60,18 +60,19 @@ namespace cllio
 			return write_packed_uint64_t(writer, v);
 		}
 		template <class W>
-		//7 bytes max precision
+		// 7 bytes max precision
 		static inline bool write_packed_size(W& writer, const std::size_t v)
 		{
 			return write_packed_uint64_t(writer, v);
 		}
+
 	public:
 		template <class R>
-		//61 bits max precision
+		// 61 bits max precision
 		static inline bool read_packed_uint64_t(R& reader, uint64_t& value)
 		{
 			const uint8_t low_mask = (1 << 5) - 1;
-			uint8_t p;
+			uint8_t		  p;
 			if (reader.pop_uint8_t(p) == false)
 				return false;
 
@@ -94,7 +95,7 @@ namespace cllio
 			return true;
 		}
 		template <class R>
-		//61 bits max precision
+		// 61 bits max precision
 		static inline bool read_packed_int64_t(R& reader, int64_t& value)
 		{
 			uint64_t v;
@@ -107,7 +108,7 @@ namespace cllio
 			return true;
 		}
 		template <class R>
-		//7 bytes max precision
+		// 7 bytes max precision
 		static inline bool read_packed_size(R& reader, std::size_t& out)
 		{
 			uint64_t tmp;
@@ -118,7 +119,7 @@ namespace cllio
 			return true;
 		}
 		template <class R, class F>
-		//void F(std::size_t)
+		// void F(std::size_t)
 		static inline bool read_packed_size_callback(R& reader, const F& _callback)
 		{
 			uint64_t tmp;

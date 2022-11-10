@@ -338,12 +338,12 @@ bool test_utils()
 		char buffer[16];
 		std::memset(&buffer[0], 0, 16);
 
-		uint64_t ref = i;
+		uint64_t			  ref = i;
 		cllio::memory_wstream w(&buffer[4], 8);
 		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
 			return false;
 
-		uint64_t check = std::numeric_limits<uint64_t>::max();
+		uint64_t			  check = std::numeric_limits<uint64_t>::max();
 		cllio::memory_rstream r(&buffer[4], 8);
 		if (cllio::utils::read_packed_uint64_t(r, check) == false)
 			return false;
@@ -364,7 +364,7 @@ bool test_utils()
 			std::cerr << "packed uint64 read/write failed with value " << value << std::endl;
 		return r;
 	};
-	for (uint64_t i = 0; i < 2048;i++)
+	for (uint64_t i = 0; i < 2048; i++)
 	{
 		check_and_print(i);
 		check_and_print(i + std::numeric_limits<uint16_t>::max() - 1024);

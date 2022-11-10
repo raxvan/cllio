@@ -515,7 +515,7 @@ namespace cllio
 	}
 	void memory_wstream::write_raw_buffer(const void* data, const std::size_t byte_count)
 	{
-		CLLIO_ASSERT( ((m_px != nullptr && (m_px + byte_count) <= m_px_end)) );
+		CLLIO_ASSERT(((m_px != nullptr && (m_px + byte_count) <= m_px_end)));
 		std::memcpy(m_px, data, byte_count);
 		m_px += byte_count;
 	}

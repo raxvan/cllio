@@ -5,13 +5,13 @@
 
 #ifdef CLLIO_SOCKET_IMPL
 
-#include <array>
+#	include <array>
 
-#ifdef _WIN32
-	#define CLLIO_SOCKET_WIN32
-#else
-	#define CLLIO_SOCKET_POSIX
-#endif
+#	ifdef _WIN32
+#		define CLLIO_SOCKET_WIN32
+#	else
+#		define CLLIO_SOCKET_POSIX
+#	endif
 
 namespace cllio
 {
@@ -20,17 +20,19 @@ namespace cllio
 	{
 		friend struct socket_handle_impl;
 
-#ifdef CLLIO_SOCKET_WIN32
-		enum {
+#	ifdef CLLIO_SOCKET_WIN32
+		enum
+		{
 			kDataSize = sizeof(void*)
 		};
-#endif
+#	endif
 
-#ifdef CLLIO_SOCKET_POSIX
-		enum {
+#	ifdef CLLIO_SOCKET_POSIX
+		enum
+		{
 			kDataSize = sizeof(int)
 		};
-#endif
+#	endif
 
 		std::array<byte_t, kDataSize> m_handle_data = {};
 
@@ -50,13 +52,14 @@ namespace cllio
 
 		tcpsocket(tcpsocket&&) noexcept;
 		tcpsocket& operator=(tcpsocket&&) noexcept;
+
 	public:
 		void swap(tcpsocket& other);
 
 		bool connect(const char* ip, const char* port);
-	    bool accept(const char* port, const std::size_t max_queue);
+		bool accept(const char* port, const std::size_t max_queue);
 
-		tcpsocket wait_for_connection(); //in combination with accept()
+		tcpsocket wait_for_connection(); // in combination with accept()
 
 		void close();
 
@@ -97,20 +100,20 @@ namespace cllio
 	public:
 		inline bool write_with_header(const uint64_t header, const void* buffer, const std::size_t size)
 		{
-			if(trypush_uint64_t(header))
+			if (trypush_uint64_t(header))
 				return trywrite_raw_buffer(buffer, size);
 			return false;
 		}
 
 		template <class F>
-		//std::pair<void* buffer, std::size_t> T(uint64_t header);
+		// std::pair<void* buffer, std::size_t> T(uint64_t header);
 		inline bool read_with_header(const F& _func)
 		{
 			uint64_t header;
-			if(pop_uint64_t(header))
+			if (pop_uint64_t(header))
 			{
 				auto tr = _func(header);
-				if(tr.first)
+				if (tr.first)
 					return tryread_raw_buffer(tr.first, tr.second);
 			}
 			return false;

@@ -3,13 +3,13 @@
 
 #ifdef CLLIO_SOCKET_IMPL
 
-#ifdef CLLIO_SOCKET_WIN32
-	#include "socket_wsl2.h"
-#endif
+#	ifdef CLLIO_SOCKET_WIN32
+#		include "socket_wsl2.h"
+#	endif
 
-#ifdef CLLIO_SOCKET_POSIX
-	#include "socket_posix.h"
-#endif
+#	ifdef CLLIO_SOCKET_POSIX
+#		include "socket_posix.h"
+#	endif
 
 namespace cllio
 {
@@ -26,14 +26,14 @@ namespace cllio
 	}
 
 	tcpsocket::tcpsocket(tcpsocket&& other) noexcept
-		:tcpsocket()
+		: tcpsocket()
 	{
 		swap(other);
 	}
 
 	tcpsocket& tcpsocket::operator=(tcpsocket&& other) noexcept
 	{
-		tcpsocket tmp; 
+		tcpsocket tmp;
 		swap(tmp);
 		swap(other);
 		return (*this);
@@ -81,7 +81,7 @@ namespace cllio
 	tcpsocket tcpsocket::wait_for_connection()
 	{
 		tcpsocket result;
-		auto& t = socket_handle_impl::get(*this);
+		auto&	  t = socket_handle_impl::get(*this);
 		t.wait_for_connection(socket_handle_impl::get(result));
 		return result;
 	}
@@ -99,7 +99,7 @@ namespace cllio
 	bool tcpsocket::pop_uint8_t(uint8_t& out)
 	{
 		byte_t buffer;
-		if(tryread_raw_buffer(&buffer,sizeof(uint8_t) * 1))
+		if (tryread_raw_buffer(&buffer, sizeof(uint8_t) * 1))
 		{
 			out = buffer;
 			return true;
@@ -109,7 +109,7 @@ namespace cllio
 	bool tcpsocket::pop_uint16_t(uint16_t& out)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint16_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint16_t)))
 		{
 			out = _serializer_utils::_read_uint16_t(&buffer[0]);
 			return true;
@@ -119,7 +119,7 @@ namespace cllio
 	bool tcpsocket::pop_uint32_t(uint32_t& out)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint32_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint32_t)))
 		{
 			out = _serializer_utils::_read_uint32_t(&buffer[0]);
 			return true;
@@ -129,7 +129,7 @@ namespace cllio
 	bool tcpsocket::pop_uint64_t(uint64_t& out)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint64_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint64_t)))
 		{
 			out = _serializer_utils::_read_uint64_t(&buffer[0]);
 			return true;
@@ -137,9 +137,10 @@ namespace cllio
 		return false;
 	}
 
-	bool tcpsocket::pop_int8_t(int8_t& out){
+	bool tcpsocket::pop_int8_t(int8_t& out)
+	{
 		byte_t buffer;
-		if(tryread_raw_buffer(&buffer,sizeof(uint8_t) * 1))
+		if (tryread_raw_buffer(&buffer, sizeof(uint8_t) * 1))
 		{
 			out = _serializer_utils::_uts8(buffer);
 			return true;
@@ -149,7 +150,7 @@ namespace cllio
 	bool tcpsocket::pop_int16_t(int16_t& out)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint16_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint16_t)))
 		{
 			out = _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(&buffer[0]));
 			return true;
@@ -159,7 +160,7 @@ namespace cllio
 	bool tcpsocket::pop_int32_t(int32_t& out)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint32_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint32_t)))
 		{
 			out = _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(&buffer[0]));
 			return true;
@@ -169,7 +170,7 @@ namespace cllio
 	bool tcpsocket::pop_int64_t(int64_t& out)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint64_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint64_t)))
 		{
 			out = _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(&buffer[0]));
 			return true;
@@ -180,7 +181,7 @@ namespace cllio
 	bool tcpsocket::pop_float(float& out)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint32_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint32_t)))
 		{
 			out = _serializer_utils::_utf(_serializer_utils::_read_uint32_t(&buffer[0]));
 			return true;
@@ -190,7 +191,7 @@ namespace cllio
 	bool tcpsocket::pop_double(double& out)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		if(tryread_raw_buffer(&buffer[0],sizeof(uint64_t)))
+		if (tryread_raw_buffer(&buffer[0], sizeof(uint64_t)))
 		{
 			out = _serializer_utils::_utd(_serializer_utils::_read_uint64_t(&buffer[0]));
 			return true;
@@ -198,69 +199,68 @@ namespace cllio
 		return false;
 	}
 
-	
 	bool tcpsocket::trypush_int8_t(const int8_t value)
 	{
 		byte_t buffer;
 		buffer = _serializer_utils::_stu8(value);
-		return trywrite_raw_buffer(&buffer,sizeof(uint8_t));
+		return trywrite_raw_buffer(&buffer, sizeof(uint8_t));
 	}
 	bool tcpsocket::trypush_int16_t(const int16_t value)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		_serializer_utils::_write_bynary_uint16_t(&buffer[0],_serializer_utils::_stu16(value));
-		return trywrite_raw_buffer(&buffer,sizeof(uint16_t));
+		_serializer_utils::_write_bynary_uint16_t(&buffer[0], _serializer_utils::_stu16(value));
+		return trywrite_raw_buffer(&buffer, sizeof(uint16_t));
 	}
 	bool tcpsocket::trypush_int32_t(const int32_t value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint32_t(&buffer[0],_serializer_utils::_stu32(value));
-		return trywrite_raw_buffer(&buffer,sizeof(uint32_t));
+		_serializer_utils::_write_bynary_uint32_t(&buffer[0], _serializer_utils::_stu32(value));
+		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_int64_t(const int64_t value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0],_serializer_utils::_stu64(value));
-		return trywrite_raw_buffer(&buffer,sizeof(uint64_t));
+		_serializer_utils::_write_bynary_uint64_t(&buffer[0], _serializer_utils::_stu64(value));
+		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 
 	bool tcpsocket::trypush_uint8_t(const uint8_t value)
 	{
 		byte_t buffer;
 		buffer = value;
-		return trywrite_raw_buffer(&buffer,sizeof(uint8_t));
+		return trywrite_raw_buffer(&buffer, sizeof(uint8_t));
 	}
 
 	bool tcpsocket::trypush_uint16_t(const uint16_t value)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0],value);
-		return trywrite_raw_buffer(&buffer,sizeof(uint16_t));
+		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		return trywrite_raw_buffer(&buffer, sizeof(uint16_t));
 	}
 	bool tcpsocket::trypush_uint32_t(const uint32_t value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0],value);
-		return trywrite_raw_buffer(&buffer,sizeof(uint32_t));
+		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_uint64_t(const uint64_t value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0],value);
-		return trywrite_raw_buffer(&buffer,sizeof(uint64_t));
+		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 
 	bool tcpsocket::trypush_float(const float value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint32_t(&buffer[0],_serializer_utils::_ftu(value));
-		return trywrite_raw_buffer(&buffer,sizeof(uint32_t));
+		_serializer_utils::_write_bynary_uint32_t(&buffer[0], _serializer_utils::_ftu(value));
+		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_double(const double value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0],_serializer_utils::_dtu(value));
-		return trywrite_raw_buffer(&buffer,sizeof(uint64_t));
+		_serializer_utils::_write_bynary_uint64_t(&buffer[0], _serializer_utils::_dtu(value));
+		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 }
 
