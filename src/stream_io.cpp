@@ -1,4 +1,5 @@
 #include <cllio_tools/stream_io.h>
+#include "cllio_internal.h"
 
 namespace cllio
 {
@@ -39,12 +40,21 @@ namespace cllio
 		else if (m_raw_file_handle != nullptr)
 		{
 			auto pos = std::ftell(m_raw_file_handle);
-			/*EXPECTED_RETURN(0)*/ std::fseek(m_raw_file_handle, 0, SEEK_END);
+			int icheck;
+			std::size_t scheck;
+			icheck = std::fseek(m_raw_file_handle, 0, SEEK_END);
+			CLLIO_ASSERT(icheck == 0);
 			std::size_t filesize = std::ftell(m_raw_file_handle);
-			/*EXPECTED_RETURN(0)*/ std::fseek(m_raw_file_handle, pos, SEEK_SET);
+			icheck = std::fseek(m_raw_file_handle, pos, SEEK_SET);
+			CLLIO_ASSERT(icheck == 0);
 			std::size_t sz = std::size_t(filesize) - std::size_t(pos);
 			buffer.resize(start + sz);
-			/*EXPECTED_RETURN(sz)*/ std::fread(buffer.data() + start, 1, sz, m_raw_file_handle);
+			scheck = std::fread(buffer.data() + start, 1, sz, m_raw_file_handle);
+			CLLIO_ASSERT(scheck == sz);
+
+			consider_it_used(icheck);
+			consider_it_used(scheck);
+			
 		}
 		else if (m_istream_handle != nullptr)
 		{
