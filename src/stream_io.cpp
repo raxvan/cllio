@@ -39,8 +39,8 @@ namespace cllio
 		}
 		else if (m_raw_file_handle != nullptr)
 		{
-			auto pos = std::ftell(m_raw_file_handle);
-			int icheck;
+			auto		pos = std::ftell(m_raw_file_handle);
+			int			icheck;
 			std::size_t scheck;
 			icheck = std::fseek(m_raw_file_handle, 0, SEEK_END);
 			CLLIO_ASSERT(icheck == 0);
@@ -54,7 +54,6 @@ namespace cllio
 
 			consider_it_used(icheck);
 			consider_it_used(scheck);
-			
 		}
 		else if (m_istream_handle != nullptr)
 		{
@@ -74,7 +73,7 @@ namespace cllio
 		{
 			return stream_data_view { m_memory_handle->data(), std::size_t(m_memory_handle->size()) };
 		}
-		return stream_data_view{};
+		return stream_data_view {};
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------

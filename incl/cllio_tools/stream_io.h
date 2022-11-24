@@ -10,7 +10,7 @@ namespace cllio
 	struct stream_data_view
 	{
 		const cllio::byte_t* data = nullptr;
-		const std::size_t    size = 0;
+		const std::size_t	 size = 0;
 	};
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -30,10 +30,10 @@ namespace cllio
 		stream_reader(std::FILE*);
 		stream_reader(std::istream&);
 
-		//TODO: stream_reader(cllio::memory_rstream&);
+		// TODO: stream_reader(cllio::memory_rstream&);
 	public:
 		stream_data_view read(std::vector<cllio::byte_t>& buffer); // append to buffer
-		stream_data_view read();									// can fail if used reader can't get direct memory
+		stream_data_view read();								   // can fail if used reader can't get direct memory
 
 	protected:
 		const cllio::file_read_mapview* m_map_file_handle = nullptr;
@@ -57,7 +57,7 @@ namespace cllio
 		stream_writer(std::ostream&);
 		stream_writer(cllio::stdfile_wstream_impl&);
 
-		//TODO: stream_writer(cllio::memory_wstream&);
+		// TODO: stream_writer(cllio::memory_wstream&);
 
 	public:
 		void write(const void* data, const std::size_t sz);
