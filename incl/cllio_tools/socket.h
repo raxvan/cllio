@@ -59,6 +59,7 @@ namespace cllio
 		bool connect(const char* ip, const char* port);
 		bool accept(const char* port, const std::size_t max_queue);
 
+		bool wait_for_read(const uint32_t time_ms); //returns true if there is data to read
 		tcpsocket wait_for_connection(); // in combination with accept()
 
 		void close();

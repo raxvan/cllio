@@ -89,6 +89,34 @@ namespace cllio
 			return true;
 		}
 
+		inline bool wait_for_read(const uint32_t timeout_ms)
+		{
+			CLLIO_ASSERT(sock != -1);
+
+			fd_set fds;
+			FD_ZERO(&fds);
+			FD_SET(sock, &fds);
+
+			timeval timeout;
+			timeout.tv_sec = 0;
+			timeout.tv_usec = timeout_ms * 1000; //microseconds
+
+			int result = ::select(sock + 1, &fds, NULL, NULL, &timeout);
+			if (result == 0)
+			{
+				return false;
+			}
+			else if (result == -1)
+			{
+				//close(sock);
+				//sock = -1;
+				std::cerr << "Socker error: " << strerror(errno) << std::endl;
+				return false;
+			}
+
+			return true;
+		}
+
 		inline bool raw_send_buffered(const void* buffer, const std::size_t size)
 		{
 			CLLIO_ASSERT(sock != -1);

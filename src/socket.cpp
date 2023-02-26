@@ -85,6 +85,11 @@ namespace cllio
 		t.wait_for_connection(socket_handle_impl::get(result));
 		return result;
 	}
+	bool tcpsocket::wait_for_read(const uint32_t time_ms)
+	{
+		auto&	  t = socket_handle_impl::get(*this);
+		return t.wait_for_read(time_ms);
+	}
 	bool tcpsocket::connected() const
 	{
 		const auto& t = socket_handle_impl::get(*this);
