@@ -116,16 +116,17 @@ namespace cllio
 
 			return true;
 		}
-
-		inline bool raw_send_buffered(const void* buffer, const std::size_t size)
+		inline bool raw_send_buffered(const void* buffer, const std::size_t total_size)
 		{
 			CLLIO_ASSERT(sock != -1);
-			const char* itr = (const char*)buffer;
-			const char* end = itr + size;
+			const char* itr = (char*)buffer;
+			const char* end = itr + total_size;
+			int size = int(total_size);
+			CLLIO_ASSERT(total_size < std::size_t(std::numeric_limits<int32_t>::max()));
 			do
 			{
-				ssize_t iResult = ::send(sock, (const char*)buffer, (int)size, 0);
-				if (iResult == -1)
+				ssize_t iResult = ::send(sock, itr, size, 0);
+				if (iResult <= 0)
 				{
 					close(sock);
 					sock = -1;
@@ -133,29 +134,34 @@ namespace cllio
 				}
 				CLLIO_ASSERT(iResult > 0);
 				itr += iResult;
+				size -= iResult;
 			} while (itr < end);
 			return true;
 		}
-
-		inline bool raw_recv_buffered(void* buffer, const std::size_t max_size)
+		inline bool raw_recv_buffered(void* buffer, const std::size_t total_size)
 		{
 			CLLIO_ASSERT(sock != -1);
-			const char* itr = (const char*)buffer;
-			const char* end = itr + max_size;
+			char* itr = (char*)buffer;
+			const char* end = itr + total_size;
+			int size = int(total_size);
+			CLLIO_ASSERT(total_size < std::size_t(std::numeric_limits<int32_t>::max()));
 			do
 			{
-				ssize_t iResult = ::recv(sock, (char*)(buffer), max_size, 0);
-				if (iResult == -1)
+				CLLIO_ASSERT(size > 0);
+				ssize_t iResult = ::recv(sock, itr, size, 0);
+				if (iResult <= 0)
 				{
 					close(sock);
 					sock = -1;
 					return false;
 				}
-				CLLIO_ASSERT(iResult > 0);
 				itr += iResult;
+				size -= iResult;
 			} while (itr < end);
+
 			return true;
 		}
+		
 		inline void swap(socket_handle_impl& other)
 		{
 			std::swap(sock, other.sock);
