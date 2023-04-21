@@ -280,7 +280,7 @@ namespace cllio
 			return sock != INVALID_SOCKET;
 		}
 
-		inline void close()
+		inline void close_socket()
 		{
 			if (sock != INVALID_SOCKET)
 			{

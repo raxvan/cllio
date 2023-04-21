@@ -98,7 +98,7 @@ namespace cllio
 	void tcpsocket::close()
 	{
 		auto& t = socket_handle_impl::get(*this);
-		return t.close();
+		return t.close_socket();
 	}
 
 	bool tcpsocket::pop_uint8_t(uint8_t& out)

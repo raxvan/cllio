@@ -80,3 +80,4 @@ namespace cllio
 #include <cstdint> //for uint8_t, etc
 #include <cstddef> //for std::ptrdiff_t, i should optimize out the include and use std::size_t
 #include <utility> //for std::forward
+#include <vector>

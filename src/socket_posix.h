@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
+#include <string.h>
 namespace cllio
 {
 	struct socket_handle_impl
@@ -161,7 +161,16 @@ namespace cllio
 
 			return true;
 		}
-		
+
+		inline void close_socket()
+		{
+			if (sock != -1)
+			{
+				close(sock);
+				sock = -1;
+			}
+		}
+
 		inline void swap(socket_handle_impl& other)
 		{
 			std::swap(sock, other.sock);
