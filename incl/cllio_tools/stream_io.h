@@ -11,6 +11,13 @@ namespace cllio
 	{
 		const cllio::byte_t* data = nullptr;
 		const std::size_t	 size = 0;
+
+		stream_data_view() = default;
+		stream_data_view(const cllio::byte_t* d, const std::size_t s)
+			:data(d)
+			,size(s)
+		{
+		}
 	};
 
 	//--------------------------------------------------------------------------------------------------------------------------------
