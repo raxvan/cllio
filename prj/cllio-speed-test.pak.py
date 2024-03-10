@@ -1,10 +1,12 @@
 
 import os
 
+def configure(cfg):
+	cfg.link("cllio.pak.py")
+	cfg.type("exe")
+
 def construct(ctx):
 	
-	ctx.prop("type","exe")
-
 	ctx.fscan("src: ../tests/perftest/")
 
-	ctx.dependency("cllio.pak.py")
+	
