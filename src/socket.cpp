@@ -213,19 +213,19 @@ namespace cllio
 	bool tcpsocket::trypush_int16_t(const int16_t value)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		_serializer_utils::_write_bynary_uint16_t(&buffer[0], _serializer_utils::_stu16(value));
+		_serializer_utils::_write_binary_uint16_t(&buffer[0], _serializer_utils::_stu16(value));
 		return trywrite_raw_buffer(&buffer, sizeof(uint16_t));
 	}
 	bool tcpsocket::trypush_int32_t(const int32_t value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint32_t(&buffer[0], _serializer_utils::_stu32(value));
+		_serializer_utils::_write_binary_uint32_t(&buffer[0], _serializer_utils::_stu32(value));
 		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_int64_t(const int64_t value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0], _serializer_utils::_stu64(value));
+		_serializer_utils::_write_binary_uint64_t(&buffer[0], _serializer_utils::_stu64(value));
 		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 
@@ -239,32 +239,32 @@ namespace cllio
 	bool tcpsocket::trypush_uint16_t(const uint16_t value)
 	{
 		byte_t buffer[sizeof(uint16_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		_serializer_utils::_write_binary_uint16_t(&buffer[0], value);
 		return trywrite_raw_buffer(&buffer, sizeof(uint16_t));
 	}
 	bool tcpsocket::trypush_uint32_t(const uint32_t value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		_serializer_utils::_write_binary_uint32_t(&buffer[0], value);
 		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_uint64_t(const uint64_t value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0], value);
+		_serializer_utils::_write_binary_uint64_t(&buffer[0], value);
 		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 
 	bool tcpsocket::trypush_float(const float value)
 	{
 		byte_t buffer[sizeof(uint32_t)];
-		_serializer_utils::_write_bynary_uint32_t(&buffer[0], _serializer_utils::_ftu(value));
+		_serializer_utils::_write_binary_uint32_t(&buffer[0], _serializer_utils::_ftu(value));
 		return trywrite_raw_buffer(&buffer, sizeof(uint32_t));
 	}
 	bool tcpsocket::trypush_double(const double value)
 	{
 		byte_t buffer[sizeof(uint64_t)];
-		_serializer_utils::_write_bynary_uint64_t(&buffer[0], _serializer_utils::_dtu(value));
+		_serializer_utils::_write_binary_uint64_t(&buffer[0], _serializer_utils::_dtu(value));
 		return trywrite_raw_buffer(&buffer, sizeof(uint64_t));
 	}
 }

@@ -33,6 +33,7 @@ namespace cllio
 				return false;
 
 			struct sockaddr_in addr;
+			std::memset(&addr, 0, sizeof(addr));
 			addr.sin_family = AF_INET;
 			addr.sin_port = (unsigned short)atoi(port);
 			inet_pton(AF_INET, ip, &(addr.sin_addr.s_addr));
@@ -54,6 +55,7 @@ namespace cllio
 				return false;
 
 			struct sockaddr_in addr;
+			std::memset(&addr, 0, sizeof(addr));
 			addr.sin_family = AF_INET;
 			addr.sin_port = (unsigned short)atoi(port);
 			addr.sin_addr.s_addr = INADDR_ANY;
@@ -78,6 +80,7 @@ namespace cllio
 		{
 			CLLIO_ASSERT(sock != -1);
 			struct sockaddr_in addr;
+			std::memset(&addr, 0, sizeof(addr));
 			socklen_t		   len = sizeof(addr);
 			auto			   s = ::accept(sock, (struct sockaddr*)&addr, &len);
 			if (s == -1)
@@ -98,6 +101,7 @@ namespace cllio
 			FD_SET(sock, &fds);
 
 			timeval timeout;
+			std::memset(&timeout, 0, sizeof(timeout));
 			timeout.tv_sec = 0;
 			timeout.tv_usec = timeout_ms * 1000; //microseconds
 
@@ -110,7 +114,7 @@ namespace cllio
 			{
 				//close(sock);
 				//sock = -1;
-				std::cerr << "Socker error: " << strerror(errno) << std::endl;
+				std::cerr << "Socket error: " << strerror(errno) << std::endl;
 				return false;
 			}
 

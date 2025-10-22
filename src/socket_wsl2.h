@@ -34,10 +34,12 @@ namespace cllio
 				}
 			}
 		}
+
 		inline void unlock()
 		{
 			spinlock.store(false, std::memory_order_release);
 		}
+
 		inline void add()
 		{
 			lock();
@@ -53,6 +55,7 @@ namespace cllio
 			}
 			unlock();
 		}
+		
 		inline void remove()
 		{
 			lock();
@@ -219,7 +222,7 @@ namespace cllio
 			{
 				//closesocket(sock);
 				//sock = INVALID_SOCKET;
-				std::cerr << "Socker error: " << WSAGetLastError() << std::endl;
+				std::cerr << "Socket Error: " << WSAGetLastError() << std::endl;
 				return false;
 			}
 

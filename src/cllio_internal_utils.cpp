@@ -25,7 +25,7 @@ namespace cllio
 		else if (c >= 'a' && c <= 'f')
 			return byte_t(c - 'a') + 10;
 		else if (c >= 'A' && c <= 'F')
-			return byte_t(c - 'F') + 10;
+			return byte_t(c - 'A') + 10;
 		else
 		{
 			CLLIO_ASSERT(false);
@@ -40,19 +40,19 @@ namespace cllio
 		return f << 4 | s;
 	}
 
-	void _serializer_utils::_write_bynary_uint16_t(byte_t* out, const uint16_t value)
+	void _serializer_utils::_write_binary_uint16_t(byte_t* out, const uint16_t value)
 	{
 		*out++ = static_cast<uint8_t>(value & 0xFF);
 		*out = static_cast<uint8_t>((value >> 8) & 0xFF);
 	}
-	void _serializer_utils::_write_bynary_uint32_t(byte_t* out, const uint32_t value)
+	void _serializer_utils::_write_binary_uint32_t(byte_t* out, const uint32_t value)
 	{
 		*out++ = static_cast<uint8_t>(value & 0xFF);
 		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);
 		*out++ = static_cast<uint8_t>((value >> 16) & 0xFF);
 		*out = static_cast<uint8_t>((value >> 24) & 0xFF);
 	}
-	void _serializer_utils::_write_bynary_uint64_t(byte_t* out, const uint64_t value)
+	void _serializer_utils::_write_binary_uint64_t(byte_t* out, const uint64_t value)
 	{
 		*out++ = static_cast<uint8_t>(value & 0xFF);
 		*out++ = static_cast<uint8_t>((value >> 8) & 0xFF);

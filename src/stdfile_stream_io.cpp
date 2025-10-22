@@ -12,6 +12,7 @@ namespace cllio
 		if (m_file_ptr != nullptr)
 			std::fclose(m_file_ptr);
 	}
+
 	bool std_file_handle::close()
 	{
 		if (m_file_ptr != nullptr)
@@ -22,18 +23,22 @@ namespace cllio
 		}
 		return false;
 	}
+
 	void std_file_handle::swap(std_file_handle& other)
 	{
 		std::swap(m_file_ptr, other.m_file_ptr);
 	}
+
 	std_file_handle::std_file_handle(std::FILE* handle)
 		: m_file_ptr(handle)
 	{
 	}
+
 	bool std_file_handle::isOpen() const
 	{
 		return m_file_ptr != nullptr;
 	}
+
 	std::size_t std_file_handle::get_file_size()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
@@ -44,6 +49,7 @@ namespace cllio
 		std::fseek(m_file_ptr, (long)cursor, SEEK_SET);
 		return filesize;
 	}
+
 	std::size_t std_file_handle::get_remaining_size()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
@@ -55,19 +61,23 @@ namespace cllio
 		CLLIO_ASSERT(filesize >= cursor);
 		return filesize - cursor;
 	}
+
 	std::FILE* std_file_handle::get_handle()
 	{
 		return m_file_ptr;
 	}
+
 	//--------------------------------------------------------------------------------------------------------------------
 	stdfile_wstream_impl::stdfile_wstream_impl(std::FILE* handle)
 		: std_file_handle(handle)
 	{
 	}
+
 	stdfile_rstream_impl::stdfile_rstream_impl(std::FILE* handle)
 		: std_file_handle(handle)
 	{
 	}
+	
 	//--------------------------------------------------------------------------------------------------------------------
 	bool stdfile_wstream_impl::create(const char* abs_path, const bool binary, const bool append)
 	{
@@ -179,7 +189,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
+		_serializer_utils::_write_binary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -188,7 +198,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
+		_serializer_utils::_write_binary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -197,7 +207,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
+		_serializer_utils::_write_binary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -216,7 +226,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint16_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -225,7 +235,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint32_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -234,7 +244,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint64_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
@@ -254,7 +264,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
+		_serializer_utils::_write_binary_uint16_t(buffer.data(), _serializer_utils::_stu16(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -262,7 +272,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
+		_serializer_utils::_write_binary_uint32_t(buffer.data(), _serializer_utils::_stu32(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -270,7 +280,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
+		_serializer_utils::_write_binary_uint64_t(buffer.data(), _serializer_utils::_stu64(value));
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -287,7 +297,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
-		_serializer_utils::_write_bynary_uint16_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint16_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -295,7 +305,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
-		_serializer_utils::_write_bynary_uint32_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint32_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
@@ -303,7 +313,7 @@ namespace cllio
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
-		_serializer_utils::_write_bynary_uint64_t(buffer.data(), value);
+		_serializer_utils::_write_binary_uint64_t(buffer.data(), value);
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
