@@ -102,9 +102,10 @@ namespace cllio
 			if (read_packed_uint64_t(reader, v) == false)
 				return false;
 
-			value = -int64_t(v >> 1);
-			if ((value & 1) != 0)
-				value = -value;
+			if ((v & 1) != 0)
+				value = -int64_t(v >> 1);
+			else
+				value = int64_t(v >> 1);
 			return true;
 		}
 		template <class R>

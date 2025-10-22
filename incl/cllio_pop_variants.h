@@ -162,43 +162,43 @@ inline bool popdefault_double(double& out, const double _default)
 
 inline void pop_uint8_t(uint8_t& out, bool& error)
 {
-	error = error || pop_uint8_t(out);
+	error = error || !pop_uint8_t(out);
 }
 inline void pop_uint16_t(uint16_t& out, bool& error)
 {
-	error = error || pop_uint16_t(out);
+	error = error || !pop_uint16_t(out);
 }
 inline void pop_uint32_t(uint32_t& out, bool& error)
 {
-	error = error || pop_uint32_t(out);
+	error = error || !pop_uint32_t(out);
 }
 inline void pop_uint64_t(uint64_t& out, bool& error)
 {
-	error = error || pop_uint64_t(out);
+	error = error || !pop_uint64_t(out);
 }
 inline void pop_int8_t(int8_t& out, bool& error)
 {
-	error = error || pop_int8_t(out);
+	error = error || !pop_int8_t(out);
 }
 inline void pop_int16_t(int16_t& out, bool& error)
 {
-	error = error || pop_int16_t(out);
+	error = error || !pop_int16_t(out);
 }
 inline void pop_int32_t(int32_t& out, bool& error)
 {
-	error = error || pop_int32_t(out);
+	error = error || !pop_int32_t(out);
 }
 inline void pop_int64_t(int64_t& out, bool& error)
 {
-	error = error || pop_int64_t(out);
+	error = error || !pop_int64_t(out);
 }
 inline void pop_float(float& out, bool& error)
 {
-	error = error || pop_float(out);
+	error = error || !pop_float(out);
 }
 inline void pop_double(double& out, bool& error)
 {
-	error = error || pop_double(out);
+	error = error || !pop_double(out);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------

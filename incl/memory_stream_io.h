@@ -649,7 +649,7 @@ namespace cllio
 	template <class F>
 	inline bool memory_wfunc<F>::trypush_double(const double value)
 	{
-		byte_t* out = _tryget<uint32_t>();
+		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
 		{
 			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_dtu(value));
