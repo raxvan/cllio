@@ -71,37 +71,37 @@ namespace cllio
 		bool trywrite_raw_buffer(const void* buffer, const std::size_t size);
 
 	public:
-		bool pop_uint8_t(uint8_t& out);
-		bool pop_uint16_t(uint16_t& out);
-		bool pop_uint32_t(uint32_t& out);
-		bool pop_uint64_t(uint64_t& out);
+		bool pop_uint8(uint8_t& out);
+		bool pop_uint16(uint16_t& out);
+		bool pop_uint32(uint32_t& out);
+		bool pop_uint64(uint64_t& out);
 
-		bool pop_int8_t(int8_t& out);
-		bool pop_int16_t(int16_t& out);
-		bool pop_int32_t(int32_t& out);
-		bool pop_int64_t(int64_t& out);
+		bool pop_int8(int8_t& out);
+		bool pop_int16(int16_t& out);
+		bool pop_int32(int32_t& out);
+		bool pop_int64(int64_t& out);
 
 		bool pop_float(float& out);
 		bool pop_double(double& out);
 
 	public:
-		bool trypush_int8_t(const int8_t value);
-		bool trypush_int16_t(const int16_t value);
-		bool trypush_int32_t(const int32_t value);
-		bool trypush_int64_t(const int64_t value);
+		bool try_push_int8(const int8_t value);
+		bool try_push_int16(const int16_t value);
+		bool try_push_int32(const int32_t value);
+		bool try_push_int64(const int64_t value);
 
-		bool trypush_uint8_t(const uint8_t value);
-		bool trypush_uint16_t(const uint16_t value);
-		bool trypush_uint32_t(const uint32_t value);
-		bool trypush_uint64_t(const uint64_t value);
+		bool try_push_uint8(const uint8_t value);
+		bool try_push_uint16(const uint16_t value);
+		bool try_push_uint32(const uint32_t value);
+		bool try_push_uint64(const uint64_t value);
 
-		bool trypush_float(const float value);
-		bool trypush_double(const double value);
+		bool try_push_float(const float value);
+		bool try_push_double(const double value);
 
 	public:
 		inline bool write_with_header(const uint64_t header, const void* buffer, const std::size_t size)
 		{
-			if (trypush_uint64_t(header))
+			if (try_push_uint64(header))
 				return trywrite_raw_buffer(buffer, size);
 			return false;
 		}
@@ -111,7 +111,7 @@ namespace cllio
 		inline bool read_with_header(const F& _func)
 		{
 			uint64_t header;
-			if (pop_uint64_t(header))
+			if (pop_uint64(header))
 			{
 				auto tr = _func(header);
 				if (tr.first)

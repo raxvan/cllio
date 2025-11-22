@@ -46,15 +46,15 @@ namespace cllio
 		}
 
 	public:
-		uint8_t	 pop_uint8_t();
-		uint16_t pop_uint16_t();
-		uint32_t pop_uint32_t();
-		uint64_t pop_uint64_t();
+		uint8_t	 pop_uint8();
+		uint16_t pop_uint16();
+		uint32_t pop_uint32();
+		uint64_t pop_uint64();
 
-		int8_t	pop_int8_t();
-		int16_t pop_int16_t();
-		int32_t pop_int32_t();
-		int64_t pop_int64_t();
+		int8_t	pop_int8();
+		int16_t pop_int16();
+		int32_t pop_int32();
+		int64_t pop_int64();
 
 		float  pop_float();
 		double pop_double();
@@ -123,34 +123,34 @@ namespace cllio
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
 
 	public: // bool 	pop_T(T & out);
-		bool pop_uint8_t(uint8_t& out);
-		bool pop_uint16_t(uint16_t& out);
-		bool pop_uint32_t(uint32_t& out);
-		bool pop_uint64_t(uint64_t& out);
+		bool pop_uint8(uint8_t& out);
+		bool pop_uint16(uint16_t& out);
+		bool pop_uint32(uint32_t& out);
+		bool pop_uint64(uint64_t& out);
 
-		bool pop_int8_t(int8_t& out);
-		bool pop_int16_t(int16_t& out);
-		bool pop_int32_t(int32_t& out);
-		bool pop_int64_t(int64_t& out);
+		bool pop_int8(int8_t& out);
+		bool pop_int16(int16_t& out);
+		bool pop_int32(int32_t& out);
+		bool pop_int64(int64_t& out);
 
 		bool pop_float(float& out);
 		bool pop_double(double& out);
 
 	public: // T 	pop_T();
-		uint8_t	 pop_uint8_t();
-		uint16_t pop_uint16_t();
-		uint32_t pop_uint32_t();
-		uint64_t pop_uint64_t();
+		uint8_t	 pop_uint8();
+		uint16_t pop_uint16();
+		uint32_t pop_uint32();
+		uint64_t pop_uint64();
 
-		int8_t	pop_int8_t();
-		int16_t pop_int16_t();
-		int32_t pop_int32_t();
-		int64_t pop_int64_t();
+		int8_t	pop_int8();
+		int16_t pop_int16();
+		int32_t pop_int32();
+		int64_t pop_int64();
 
 		float  pop_float();
 		double pop_double();
 
-#include "cllio_pop_variants.h"
+#include "_cllio_read_variants.h"
 	};
 
 	//-----------------------------------------------------------------------------------------------------------
@@ -190,15 +190,15 @@ namespace cllio
 		memory_wstream_unchecked& operator=(const memory_wstream_unchecked&) = default;
 
 	public:
-		void push_int8_t(const int8_t value);
-		void push_int16_t(const int16_t value);
-		void push_int32_t(const int32_t value);
-		void push_int64_t(const int64_t value);
+		void push_int8(const int8_t value);
+		void push_int16(const int16_t value);
+		void push_int32(const int32_t value);
+		void push_int64(const int64_t value);
 
-		void push_uint8_t(const uint8_t value);
-		void push_uint16_t(const uint16_t value);
-		void push_uint32_t(const uint32_t value);
-		void push_uint64_t(const uint64_t value);
+		void push_uint8(const uint8_t value);
+		void push_uint16(const uint16_t value);
+		void push_uint32(const uint32_t value);
+		void push_uint64(const uint64_t value);
 
 		void push_float(const float value);
 		void push_double(const double value);
@@ -233,34 +233,34 @@ namespace cllio
 		}
 
 	public:
-		void push_int8_t(const int8_t value);
-		void push_int16_t(const int16_t value);
-		void push_int32_t(const int32_t value);
-		void push_int64_t(const int64_t value);
+		void push_int8(const int8_t value);
+		void push_int16(const int16_t value);
+		void push_int32(const int32_t value);
+		void push_int64(const int64_t value);
 
-		void push_uint8_t(const uint8_t value);
-		void push_uint16_t(const uint16_t value);
-		void push_uint32_t(const uint32_t value);
-		void push_uint64_t(const uint64_t value);
+		void push_uint8(const uint8_t value);
+		void push_uint16(const uint16_t value);
+		void push_uint32(const uint32_t value);
+		void push_uint64(const uint64_t value);
 
 		void push_float(const float value);
 		void push_double(const double value);
 		void push_ptr(const void* px);
 
 	public:
-		bool trypush_int8_t(const int8_t value);
-		bool trypush_int16_t(const int16_t value);
-		bool trypush_int32_t(const int32_t value);
-		bool trypush_int64_t(const int64_t value);
+		bool try_push_int8(const int8_t value);
+		bool try_push_int16(const int16_t value);
+		bool try_push_int32(const int32_t value);
+		bool try_push_int64(const int64_t value);
 
-		bool trypush_uint8_t(const uint8_t value);
-		bool trypush_uint16_t(const uint16_t value);
-		bool trypush_uint32_t(const uint32_t value);
-		bool trypush_uint64_t(const uint64_t value);
+		bool try_push_uint8(const uint8_t value);
+		bool try_push_uint16(const uint16_t value);
+		bool try_push_uint32(const uint32_t value);
+		bool try_push_uint64(const uint64_t value);
 
-		bool trypush_float(const float value);
-		bool trypush_double(const double value);
-		bool trypush_ptr(const void* px);
+		bool try_push_float(const float value);
+		bool try_push_double(const double value);
+		bool try_push_ptr(const void* px);
 
 	public:
 		void write_raw_buffer(const void* data, const std::size_t byte_count);
@@ -302,15 +302,15 @@ namespace cllio
 		}
 
 	public:
-		inline void push_uint8_t(const uint8_t value);
-		inline void push_uint16_t(const uint16_t value);
-		inline void push_uint32_t(const uint32_t value);
-		inline void push_uint64_t(const uint64_t value);
+		inline void push_uint8(const uint8_t value);
+		inline void push_uint16(const uint16_t value);
+		inline void push_uint32(const uint32_t value);
+		inline void push_uint64(const uint64_t value);
 
-		inline void push_int8_t(const int8_t value);
-		inline void push_int16_t(const int16_t value);
-		inline void push_int32_t(const int32_t value);
-		inline void push_int64_t(const int64_t value);
+		inline void push_int8(const int8_t value);
+		inline void push_int16(const int16_t value);
+		inline void push_int32(const int32_t value);
+		inline void push_int64(const int64_t value);
 
 		inline void push_float(const float value);
 		inline void push_double(const double value);
@@ -318,19 +318,19 @@ namespace cllio
 		inline void push_ptr(const void* px);
 
 	public: // special flavor of push that can fail
-		inline bool trypush_uint8_t(const uint8_t value);
-		inline bool trypush_uint16_t(const uint16_t value);
-		inline bool trypush_uint32_t(const uint32_t value);
-		inline bool trypush_uint64_t(const uint64_t value);
+		inline bool try_push_uint8(const uint8_t value);
+		inline bool try_push_uint16(const uint16_t value);
+		inline bool try_push_uint32(const uint32_t value);
+		inline bool try_push_uint64(const uint64_t value);
 
-		inline bool trypush_int8_t(const int8_t value);
-		inline bool trypush_int16_t(const int16_t value);
-		inline bool trypush_int32_t(const int32_t value);
-		inline bool trypush_int64_t(const int64_t value);
+		inline bool try_push_int8(const int8_t value);
+		inline bool try_push_int16(const int16_t value);
+		inline bool try_push_int32(const int32_t value);
+		inline bool try_push_int64(const int64_t value);
 
-		inline bool trypush_float(const float value);
-		inline bool trypush_double(const double value);
-		inline bool trypush_ptr(const void* px);
+		inline bool try_push_float(const float value);
+		inline bool try_push_double(const double value);
+		inline bool try_push_ptr(const void* px);
 
 	public: // raw buffer functions
 		inline void write_raw_buffer(const void* data, const std::size_t byte_count);
@@ -406,34 +406,34 @@ namespace cllio
 		inline bool tryread_raw_buffer(void* dest, const std::size_t ammount); // returns true if read is successfull
 
 	public: // bool 	pop_T(T & out);
-		inline bool pop_uint8_t(uint8_t& out);
-		inline bool pop_uint16_t(uint16_t& out);
-		inline bool pop_uint32_t(uint32_t& out);
-		inline bool pop_uint64_t(uint64_t& out);
+		inline bool pop_uint8(uint8_t& out);
+		inline bool pop_uint16(uint16_t& out);
+		inline bool pop_uint32(uint32_t& out);
+		inline bool pop_uint64(uint64_t& out);
 
-		inline bool pop_int8_t(int8_t& out);
-		inline bool pop_int16_t(int16_t& out);
-		inline bool pop_int32_t(int32_t& out);
-		inline bool pop_int64_t(int64_t& out);
+		inline bool pop_int8(int8_t& out);
+		inline bool pop_int16(int16_t& out);
+		inline bool pop_int32(int32_t& out);
+		inline bool pop_int64(int64_t& out);
 
 		inline bool pop_float(float& out);
 		inline bool pop_double(double& out);
 
 	public: // T 	pop_T();
-		inline uint8_t	pop_uint8_t();
-		inline uint16_t pop_uint16_t();
-		inline uint32_t pop_uint32_t();
-		inline uint64_t pop_uint64_t();
+		inline uint8_t	pop_uint8();
+		inline uint16_t pop_uint16();
+		inline uint32_t pop_uint32();
+		inline uint64_t pop_uint64();
 
-		inline int8_t  pop_int8_t();
-		inline int16_t pop_int16_t();
-		inline int32_t pop_int32_t();
-		inline int64_t pop_int64_t();
+		inline int8_t  pop_int8();
+		inline int16_t pop_int16();
+		inline int32_t pop_int32();
+		inline int64_t pop_int64();
 
 		inline float  pop_float();
 		inline double pop_double();
 
-#include "cllio_pop_variants.h"
+#include "_cllio_read_variants.h"
 	};
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -490,78 +490,78 @@ namespace cllio
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
-	inline void memory_wfunc<F>::push_uint8_t(const uint8_t value)
+	inline void memory_wfunc<F>::push_uint8(const uint8_t value)
 	{
 		byte_t* out = _get<uint8_t>();
 		*out = value;
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_uint16_t(const uint16_t value)
+	inline void memory_wfunc<F>::push_uint16(const uint16_t value)
 	{
 		byte_t* out = _get<uint16_t>();
-		_serializer_utils::_write_bynary_uint16_t(out, value);
+		_serializer_utils::_write_binary_uint16_t(out, value);
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_uint32_t(const uint32_t value)
+	inline void memory_wfunc<F>::push_uint32(const uint32_t value)
 	{
 		byte_t* out = _get<uint32_t>();
-		_serializer_utils::_write_bynary_uint32_t(out, value);
+		_serializer_utils::_write_binary_uint32_t(out, value);
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_uint64_t(const uint64_t value)
+	inline void memory_wfunc<F>::push_uint64(const uint64_t value)
 	{
 		byte_t* out = _get<uint64_t>();
-		_serializer_utils::_write_bynary_uint64_t(out, value);
+		_serializer_utils::_write_binary_uint64_t(out, value);
 	}
 
 	template <class F>
-	inline void memory_wfunc<F>::push_int8_t(const int8_t value)
+	inline void memory_wfunc<F>::push_int8(const int8_t value)
 	{
 		byte_t* out = _get<uint8_t>();
 		*out = _serializer_utils::_stu8(value);
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_int16_t(const int16_t value)
+	inline void memory_wfunc<F>::push_int16(const int16_t value)
 	{
 		byte_t* out = _get<uint16_t>();
-		_serializer_utils::_write_bynary_uint16_t(out, _serializer_utils::_stu16(value));
+		_serializer_utils::_write_binary_uint16_t(out, _serializer_utils::_stu16(value));
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_int32_t(const int32_t value)
+	inline void memory_wfunc<F>::push_int32(const int32_t value)
 	{
 		byte_t* out = _get<uint32_t>();
-		_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_stu32(value));
+		_serializer_utils::_write_binary_uint32_t(out, _serializer_utils::_stu32(value));
 	}
 	template <class F>
-	inline void memory_wfunc<F>::push_int64_t(const int64_t value)
+	inline void memory_wfunc<F>::push_int64(const int64_t value)
 	{
 		byte_t* out = _get<uint64_t>();
-		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_stu64(value));
+		_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_stu64(value));
 	}
 
 	template <class F>
 	inline void memory_wfunc<F>::push_float(const float value)
 	{
 		byte_t* out = _get<float>();
-		_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_ftu(value));
+		_serializer_utils::_write_binary_uint32_t(out, _serializer_utils::_ftu(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_double(const double value)
 	{
 		byte_t* out = _get<double>();
-		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_dtu(value));
+		_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_dtu(value));
 	}
 	template <class F>
 	inline void memory_wfunc<F>::push_ptr(const void* px)
 	{
 		byte_t* out = _get<uint64_t>();
-		_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_ptu(px));
+		_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_ptu(px));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_uint8_t(const uint8_t value)
+	inline bool memory_wfunc<F>::try_push_uint8(const uint8_t value)
 	{
 		byte_t* out = _tryget<uint8_t>();
 		if (out != nullptr)
@@ -569,32 +569,32 @@ namespace cllio
 		return out != nullptr;
 	}
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_uint16_t(const uint16_t value)
+	inline bool memory_wfunc<F>::try_push_uint16(const uint16_t value)
 	{
 		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
-			_serializer_utils::_write_bynary_uint16_t(out, value);
+			_serializer_utils::_write_binary_uint16_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_uint32_t(const uint32_t value)
+	inline bool memory_wfunc<F>::try_push_uint32(const uint32_t value)
 	{
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
-			_serializer_utils::_write_bynary_uint32_t(out, value);
+			_serializer_utils::_write_binary_uint32_t(out, value);
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_uint64_t(const uint64_t value)
+	inline bool memory_wfunc<F>::try_push_uint64(const uint64_t value)
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
-			_serializer_utils::_write_bynary_uint64_t(out, value);
+			_serializer_utils::_write_binary_uint64_t(out, value);
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_int8_t(const int8_t value)
+	inline bool memory_wfunc<F>::try_push_int8(const int8_t value)
 	{
 		byte_t* out = _tryget<uint8_t>();
 		if (out != nullptr)
@@ -604,66 +604,66 @@ namespace cllio
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_int16_t(const int16_t value)
+	inline bool memory_wfunc<F>::try_push_int16(const int16_t value)
 	{
 		byte_t* out = _tryget<uint16_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint16_t(out, _serializer_utils::_stu16(value));
+			_serializer_utils::_write_binary_uint16_t(out, _serializer_utils::_stu16(value));
 		}
 		return (out != nullptr);
 	}
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_int32_t(const int32_t value)
+	inline bool memory_wfunc<F>::try_push_int32(const int32_t value)
 	{
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_stu32(value));
+			_serializer_utils::_write_binary_uint32_t(out, _serializer_utils::_stu32(value));
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_int64_t(const int64_t value)
+	inline bool memory_wfunc<F>::try_push_int64(const int64_t value)
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_stu64(value));
+			_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_stu64(value));
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_float(const float value)
+	inline bool memory_wfunc<F>::try_push_float(const float value)
 	{
 		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint32_t(out, _serializer_utils::_ftu(value));
+			_serializer_utils::_write_binary_uint32_t(out, _serializer_utils::_ftu(value));
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_double(const double value)
+	inline bool memory_wfunc<F>::try_push_double(const double value)
 	{
-		byte_t* out = _tryget<uint64_t>();
+		byte_t* out = _tryget<uint32_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_dtu(value));
+			_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_dtu(value));
 		}
 		return (out != nullptr);
 	}
 
 	template <class F>
-	inline bool memory_wfunc<F>::trypush_ptr(const void* px)
+	inline bool memory_wfunc<F>::try_push_ptr(const void* px)
 	{
 		byte_t* out = _tryget<uint64_t>();
 		if (out != nullptr)
 		{
-			_serializer_utils::_write_bynary_uint64_t(out, _serializer_utils::_ptu(px));
+			_serializer_utils::_write_binary_uint64_t(out, _serializer_utils::_ptu(px));
 		}
 		return (out != nullptr);
 	}
@@ -697,7 +697,7 @@ namespace cllio
 	}
 
 	template <class F>
-	inline bool memory_rfunc<F>::pop_uint8_t(uint8_t& out)
+	inline bool memory_rfunc<F>::pop_uint8(uint8_t& out)
 	{
 		const auto* p = _tryget<uint8_t>();
 		if (p != nullptr)
@@ -705,7 +705,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_uint16_t(uint16_t& out)
+	inline bool memory_rfunc<F>::pop_uint16(uint16_t& out)
 	{
 		const auto* p = _tryget<uint16_t>();
 		if (p != nullptr)
@@ -713,7 +713,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_uint32_t(uint32_t& out)
+	inline bool memory_rfunc<F>::pop_uint32(uint32_t& out)
 	{
 		const auto* p = _tryget<uint32_t>();
 		if (p != nullptr)
@@ -721,7 +721,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_uint64_t(uint64_t& out)
+	inline bool memory_rfunc<F>::pop_uint64(uint64_t& out)
 	{
 		const auto* p = _tryget<uint64_t>();
 		if (p != nullptr)
@@ -730,7 +730,7 @@ namespace cllio
 	}
 
 	template <class F>
-	inline bool memory_rfunc<F>::pop_int8_t(int8_t& out)
+	inline bool memory_rfunc<F>::pop_int8(int8_t& out)
 	{
 		const auto* p = _tryget<uint8_t>();
 		if (p != nullptr)
@@ -738,7 +738,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_int16_t(int16_t& out)
+	inline bool memory_rfunc<F>::pop_int16(int16_t& out)
 	{
 		const auto* p = _tryget<uint16_t>();
 		if (p != nullptr)
@@ -746,7 +746,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_int32_t(int32_t& out)
+	inline bool memory_rfunc<F>::pop_int32(int32_t& out)
 	{
 		const auto* p = _tryget<uint32_t>();
 		if (p != nullptr)
@@ -754,7 +754,7 @@ namespace cllio
 		return p != nullptr;
 	}
 	template <class F>
-	inline bool memory_rfunc<F>::pop_int64_t(int64_t& out)
+	inline bool memory_rfunc<F>::pop_int64(int64_t& out)
 	{
 		const auto* p = _tryget<uint64_t>();
 		if (p != nullptr)
@@ -779,42 +779,42 @@ namespace cllio
 	}
 
 	template <class F>
-	inline uint8_t memory_rfunc<F>::pop_uint8_t()
+	inline uint8_t memory_rfunc<F>::pop_uint8()
 	{
 		return *_get<uint8_t>();
 	}
 	template <class F>
-	inline uint16_t memory_rfunc<F>::pop_uint16_t()
+	inline uint16_t memory_rfunc<F>::pop_uint16()
 	{
 		return _serializer_utils::_read_uint16_t(_get<uint16_t>());
 	}
 	template <class F>
-	inline uint32_t memory_rfunc<F>::pop_uint32_t()
+	inline uint32_t memory_rfunc<F>::pop_uint32()
 	{
 		return _serializer_utils::_read_uint32_t(_get<uint32_t>());
 	}
 	template <class F>
-	inline uint64_t memory_rfunc<F>::pop_uint64_t()
+	inline uint64_t memory_rfunc<F>::pop_uint64()
 	{
 		return _serializer_utils::_read_uint64_t(_get<uint64_t>());
 	}
 	template <class F>
-	inline int8_t memory_rfunc<F>::pop_int8_t()
+	inline int8_t memory_rfunc<F>::pop_int8()
 	{
 		return _serializer_utils::_uts8(*_get<uint8_t>());
 	}
 	template <class F>
-	inline int16_t memory_rfunc<F>::pop_int16_t()
+	inline int16_t memory_rfunc<F>::pop_int16()
 	{
 		return _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(_get<uint16_t>()));
 	}
 	template <class F>
-	inline int32_t memory_rfunc<F>::pop_int32_t()
+	inline int32_t memory_rfunc<F>::pop_int32()
 	{
 		return _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(_get<uint32_t>()));
 	}
 	template <class F>
-	inline int64_t memory_rfunc<F>::pop_int64_t()
+	inline int64_t memory_rfunc<F>::pop_int64()
 	{
 		return _serializer_utils::_uts64(_serializer_utils::_read_uint64_t(_get<uint64_t>()));
 	}

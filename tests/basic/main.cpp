@@ -104,7 +104,7 @@ void run_read_functions_f3(T& stream)
 #define TEST_ITEM(TYPE, VALUE)                                      \
 	{                                                               \
 		TYPE value = not_value(VALUE);                              \
-		bool f = stream.popdefault_##TYPE(value, not_value(VALUE)); \
+		bool f = stream.pop_default_##TYPE(value, not_value(VALUE)); \
 		TEST_ASSERT(VALUE == value && f == true);                   \
 	}
 
@@ -118,7 +118,7 @@ void run_read_functions_f4(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                   \
 	{                                                            \
-		TYPE value = stream.popdefault_##TYPE(not_value(VALUE)); \
+		TYPE value = stream.pop_default_##TYPE(not_value(VALUE)); \
 		TEST_ASSERT(VALUE == value);                             \
 	}
 
@@ -314,12 +314,12 @@ void test_utils()
 
 		uint64_t			  ref = i;
 		cllio::memory_wstream w(&buffer[4], 8);
-		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
+		if (cllio::utils::write_packed_uint64(w, ref) == false)
 			return false;
 
 		uint64_t			  check = std::numeric_limits<uint64_t>::max();
 		cllio::memory_rstream r(&buffer[4], 8);
-		if (cllio::utils::read_packed_uint64_t(r, check) == false)
+		if (cllio::utils::read_packed_uint64(r, check) == false)
 			return false;
 
 		if (check != ref)

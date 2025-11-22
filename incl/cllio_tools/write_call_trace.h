@@ -69,38 +69,38 @@ namespace cllio
 		}
 
 	public:
-		inline void push_int8_t(const int8_t)
+		inline void push_int8(const int8_t)
 		{
-			_trace<int8_t>("push_int8_t");
+			_trace<int8_t>("push_int8");
 		}
-		inline void push_int16_t(const int16_t)
+		inline void push_int16(const int16_t)
 		{
-			_trace<int16_t>("push_int16_t");
+			_trace<int16_t>("push_int16");
 		}
-		inline void push_int32_t(const int32_t)
+		inline void push_int32(const int32_t)
 		{
-			_trace<int32_t>("push_int32_t");
+			_trace<int32_t>("push_int32");
 		}
-		inline void push_int64_t(const int64_t)
+		inline void push_int64(const int64_t)
 		{
-			_trace<int64_t>("push_int64_t");
+			_trace<int64_t>("push_int64");
 		}
 
-		inline void push_uint8_t(const uint8_t)
+		inline void push_uint8(const uint8_t)
 		{
-			_trace<uint8_t>("push_uint8_t");
+			_trace<uint8_t>("push_uint8");
 		}
-		inline void push_uint16_t(const uint16_t)
+		inline void push_uint16(const uint16_t)
 		{
-			_trace<uint16_t>("push_uint16_t");
+			_trace<uint16_t>("push_uint16");
 		}
-		inline void push_uint32_t(const uint32_t)
+		inline void push_uint32(const uint32_t)
 		{
-			_trace<uint32_t>("push_uint32_t");
+			_trace<uint32_t>("push_uint32");
 		}
-		inline void push_uint64_t(const uint64_t)
+		inline void push_uint64(const uint64_t)
 		{
-			_trace<uint64_t>("push_uint64_t");
+			_trace<uint64_t>("push_uint64");
 		}
 
 		inline void push_float(const float)
@@ -117,51 +117,51 @@ namespace cllio
 		}
 
 	public:
-		inline void trypush_int8_t(const int8_t)
+		inline void try_push_int8(const int8_t)
 		{
-			_trace<int8_t>("trypush_int8_t");
+			_trace<int8_t>("try_push_int8");
 		}
-		inline void trypush_int16_t(const int16_t)
+		inline void try_push_int16(const int16_t)
 		{
-			_trace<int16_t>("trypush_int16_t");
+			_trace<int16_t>("try_push_int16");
 		}
-		inline void trypush_int32_t(const int32_t)
+		inline void try_push_int32(const int32_t)
 		{
-			_trace<int32_t>("trypush_int32_t");
+			_trace<int32_t>("try_push_int32");
 		}
-		inline void trypush_int64_t(const int64_t)
+		inline void try_push_int64(const int64_t)
 		{
-			_trace<int64_t>("trypush_int64_t");
-		}
-
-		inline void trypush_uint8_t(const uint8_t)
-		{
-			_trace<uint8_t>("trypush_uint8_t");
-		}
-		inline void trypush_uint16_t(const uint16_t)
-		{
-			_trace<uint16_t>("trypush_uint16_t");
-		}
-		inline void trypush_uint32_t(const uint32_t)
-		{
-			_trace<uint32_t>("trypush_uint32_t");
-		}
-		inline void trypush_uint64_t(const uint64_t)
-		{
-			_trace<uint64_t>("trypush_uint64_t");
+			_trace<int64_t>("try_push_int64");
 		}
 
-		inline void trypush_float(const float)
+		inline void try_push_uint8(const uint8_t)
 		{
-			_trace<uint32_t>("trypush_float");
+			_trace<uint8_t>("try_push_uint8");
 		}
-		inline void trypush_double(const double)
+		inline void try_push_uint16(const uint16_t)
 		{
-			_trace<uint64_t>("trypush_double");
+			_trace<uint16_t>("try_push_uint16");
 		}
-		inline void trypush_ptr(const void*)
+		inline void try_push_uint32(const uint32_t)
 		{
-			_trace<uint64_t>("trypush_double");
+			_trace<uint32_t>("try_push_uint32");
+		}
+		inline void try_push_uint64(const uint64_t)
+		{
+			_trace<uint64_t>("try_push_uint64");
+		}
+
+		inline void try_push_float(const float)
+		{
+			_trace<uint32_t>("try_push_float");
+		}
+		inline void try_push_double(const double)
+		{
+			_trace<uint64_t>("try_push_double");
+		}
+		inline void try_push_ptr(const void*)
+		{
+			_trace<uint64_t>("try_push_double");
 		}
 	};
 

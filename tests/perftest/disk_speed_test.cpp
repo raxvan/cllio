@@ -67,7 +67,7 @@ std::size_t disk_access_test::generate_sample_file(const char* path)
 		uint32_t index = 0;
 		for (std::size_t i = 0; i < num_of_ints; i++)
 		{
-			if (f.trypush_uint32_t(index) == false)
+			if (f.try_push_uint32(index) == false)
 			{
 				std::cerr << "Failed to write to " << path << std::endl;
 				return 0;
@@ -134,7 +134,7 @@ public:
 	}
 	inline uint32_t read(const std::size_t)
 	{
-		return handle.pop_uint32_t();
+		return handle.pop_uint32();
 	}
 	const char* get_name() const
 	{
@@ -148,7 +148,7 @@ public:
 	inline uint32_t read(const std::size_t index)
 	{
 		std::fseek(handle.get_handle(), long(index * sizeof(uint32_t)), SEEK_SET);
-		return handle.pop_uint32_t();
+		return handle.pop_uint32();
 	}
 	const char* get_name() const
 	{

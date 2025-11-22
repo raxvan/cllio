@@ -70,8 +70,8 @@ Readers have functions that follow the following format:
 1. `T 	 	 pop_T();` Try to read, runtime assert and UB on failure.
 2. `bool 	 pop_T(T & out);`  Try to read, returns false on failure and `out` is unchanged
 3. `T 	 	 pop_T(bool& error);` Try to read, returns T(0) on error and error = true.
-4. `T 	 	 popdefault_T(const T & default);` Try to read, return `default` on failure.
-5. `bool 	 popdefault_T(T & out, const T & default);` Try to read, `out = default` on failure and returns false.
+4. `T 	 	 pop_default_T(const T & default);` Try to read, return `default` on failure.
+5. `bool 	 pop_default_T(T & out, const T & default);` Try to read, `out = default` on failure and returns false.
 6. `void 	 pop_T(T & out, bool& error);`  Try to read if 'error == false', on filiure 'error = true'
 7. `void	 read_raw_buffer(void * dest, const std::size_t byte_count);` Try to read, UB on failiure
 8. `bool	 tryread_raw_buffer(void * dest, const std::size_t byte_count);` If read is not possible function returns false, otherwise it populates 'dest' buffer
@@ -83,9 +83,9 @@ Note: one some Undefined behaviors there is an assert
 # Binary Write functions
 
 1. `void push_T(const T & value)` will write; UB on failure.
-2. `bool trypush_T(const T & value)` will return false if push failed
+2. `bool try_push_T(const T & value)` will return false if push failed
 3. `void push_ptr(const void *)` will write; UB on failure.
-4. `bool trypush_ptr(const void*)` will return false if push failed
+4. `bool try_push_ptr(const void*)` will return false if push failed
 5. `void write_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, UB on failiure
 6. `bool trywrite_raw_buffer(const void * data, const std::size_t byte_count);` Try to write, Returns false on failiure
 

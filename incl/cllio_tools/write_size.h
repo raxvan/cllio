@@ -41,36 +41,36 @@ namespace cllio
 		}
 
 	public:
-		inline void push_int8_t(const int8_t)
+		inline void push_int8(const int8_t)
 		{
 			_add_size<int8_t>();
 		}
-		inline void push_int16_t(const int16_t)
+		inline void push_int16(const int16_t)
 		{
 			_add_size<int16_t>();
 		}
-		inline void push_int32_t(const int32_t)
+		inline void push_int32(const int32_t)
 		{
 			_add_size<int32_t>();
 		}
-		inline void push_int64_t(const int64_t)
+		inline void push_int64(const int64_t)
 		{
 			_add_size<int64_t>();
 		}
 
-		inline void push_uint8_t(const uint8_t)
+		inline void push_uint8(const uint8_t)
 		{
 			_add_size<uint8_t>();
 		}
-		inline void push_uint16_t(const uint16_t)
+		inline void push_uint16(const uint16_t)
 		{
 			_add_size<uint16_t>();
 		}
-		inline void push_uint32_t(const uint32_t)
+		inline void push_uint32(const uint32_t)
 		{
 			_add_size<uint32_t>();
 		}
-		inline void push_uint64_t(const uint64_t)
+		inline void push_uint64(const uint64_t)
 		{
 			_add_size<uint64_t>();
 		}
@@ -89,49 +89,49 @@ namespace cllio
 		}
 
 	public:
-		inline void trypush_int8_t(const int8_t)
+		inline void try_push_int8(const int8_t)
 		{
 			_add_size<int8_t>();
 		}
-		inline void trypush_int16_t(const int16_t)
+		inline void try_push_int16(const int16_t)
 		{
 			_add_size<int16_t>();
 		}
-		inline void trypush_int32_t(const int32_t)
+		inline void try_push_int32(const int32_t)
 		{
 			_add_size<int32_t>();
 		}
-		inline void trypush_int64_t(const int64_t)
+		inline void try_push_int64(const int64_t)
 		{
 			_add_size<int64_t>();
 		}
 
-		inline void trypush_uint8_t(const uint8_t)
+		inline void try_push_uint8(const uint8_t)
 		{
 			_add_size<uint8_t>();
 		}
-		inline void trypush_uint16_t(const uint16_t)
+		inline void try_push_uint16(const uint16_t)
 		{
 			_add_size<uint16_t>();
 		}
-		inline void trypush_uint32_t(const uint32_t)
+		inline void try_push_uint32(const uint32_t)
 		{
 			_add_size<uint32_t>();
 		}
-		inline void trypush_uint64_t(const uint64_t)
+		inline void try_push_uint64(const uint64_t)
 		{
 			_add_size<uint64_t>();
 		}
 
-		inline void trypush_float(const float)
+		inline void try_push_float(const float)
 		{
 			_add_size<uint32_t>();
 		}
-		inline void trypush_double(const double)
+		inline void try_push_double(const double)
 		{
 			_add_size<uint64_t>();
 		}
-		inline void trypush_ptr(const void*)
+		inline void try_push_ptr(const void*)
 		{
 			_add_size<uint64_t>();
 		}

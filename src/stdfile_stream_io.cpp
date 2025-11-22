@@ -176,7 +176,7 @@ namespace cllio
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------
 
-	void stdfile_wstream_impl::push_int8_t(const int8_t value)
+	void stdfile_wstream_impl::push_int8(const int8_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -185,7 +185,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_int16_t(const int16_t value)
+	void stdfile_wstream_impl::push_int16(const int16_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -194,7 +194,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_int32_t(const int32_t value)
+	void stdfile_wstream_impl::push_int32(const int32_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -203,7 +203,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_int64_t(const int64_t value)
+	void stdfile_wstream_impl::push_int64(const int64_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -213,7 +213,7 @@ namespace cllio
 		consider_it_used(sz);
 	}
 
-	void stdfile_wstream_impl::push_uint8_t(const uint8_t value)
+	void stdfile_wstream_impl::push_uint8(const uint8_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -222,7 +222,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_uint16_t(const uint16_t value)
+	void stdfile_wstream_impl::push_uint16(const uint16_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -231,7 +231,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_uint32_t(const uint32_t value)
+	void stdfile_wstream_impl::push_uint32(const uint32_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -240,7 +240,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		consider_it_used(sz);
 	}
-	void stdfile_wstream_impl::push_uint64_t(const uint64_t value)
+	void stdfile_wstream_impl::push_uint64(const uint64_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -252,7 +252,7 @@ namespace cllio
 
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------
-	bool stdfile_wstream_impl::trypush_int8_t(const int8_t value)
+	bool stdfile_wstream_impl::try_push_int8(const int8_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -260,7 +260,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_int16_t(const int16_t value)
+	bool stdfile_wstream_impl::try_push_int16(const int16_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -268,7 +268,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_int32_t(const int32_t value)
+	bool stdfile_wstream_impl::try_push_int32(const int32_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -276,7 +276,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_int64_t(const int64_t value)
+	bool stdfile_wstream_impl::try_push_int64(const int64_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -285,7 +285,7 @@ namespace cllio
 		return (sz == buffer.size());
 	}
 
-	bool stdfile_wstream_impl::trypush_uint8_t(const uint8_t value)
+	bool stdfile_wstream_impl::try_push_uint8(const uint8_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -293,7 +293,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_uint16_t(const uint16_t value)
+	bool stdfile_wstream_impl::try_push_uint16(const uint16_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -301,7 +301,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_uint32_t(const uint32_t value)
+	bool stdfile_wstream_impl::try_push_uint32(const uint32_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -309,7 +309,7 @@ namespace cllio
 		std::size_t sz = std::fwrite(buffer.data(), 1, buffer.size(), m_file_ptr);
 		return (sz == buffer.size());
 	}
-	bool stdfile_wstream_impl::trypush_uint64_t(const uint64_t value)
+	bool stdfile_wstream_impl::try_push_uint64(const uint64_t value)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -323,30 +323,30 @@ namespace cllio
 	void stdfile_wstream_impl::push_float(const float value)
 	{
 		static_assert(sizeof(float) <= sizeof(uint32_t), "sizeof(float) > 4 bytes?");
-		push_uint32_t(_serializer_utils::_ftu(value));
+		push_uint32(_serializer_utils::_ftu(value));
 	}
 	void stdfile_wstream_impl::push_double(const double value)
 	{
 		static_assert(sizeof(double) <= sizeof(uint64_t), "sizeof(double) > 8 bytes?");
-		push_uint64_t(_serializer_utils::_dtu(value));
+		push_uint64(_serializer_utils::_dtu(value));
 	}
 	void stdfile_wstream_impl::push_ptr(const void* px)
 	{
-		push_uint64_t(_serializer_utils::_ptu(px));
+		push_uint64(_serializer_utils::_ptu(px));
 	}
-	bool stdfile_wstream_impl::trypush_float(const float value)
+	bool stdfile_wstream_impl::try_push_float(const float value)
 	{
 		static_assert(sizeof(float) <= sizeof(uint32_t), "sizeof(float) > 4 bytes?");
-		return trypush_uint32_t(_serializer_utils::_ftu(value));
+		return try_push_uint32(_serializer_utils::_ftu(value));
 	}
-	bool stdfile_wstream_impl::trypush_double(const double value)
+	bool stdfile_wstream_impl::try_push_double(const double value)
 	{
 		static_assert(sizeof(double) <= sizeof(uint64_t), "sizeof(double) > 8 bytes?");
-		return trypush_uint64_t(_serializer_utils::_dtu(value));
+		return try_push_uint64(_serializer_utils::_dtu(value));
 	}
-	bool stdfile_wstream_impl::trypush_ptr(const void* px)
+	bool stdfile_wstream_impl::try_push_ptr(const void* px)
 	{
-		return trypush_uint64_t(_serializer_utils::_ptu(px));
+		return try_push_uint64(_serializer_utils::_ptu(px));
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------
@@ -427,7 +427,7 @@ namespace cllio
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------
-	bool stdfile_rstream_impl::pop_uint8_t(uint8_t& out)
+	bool stdfile_rstream_impl::pop_uint8(uint8_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -439,7 +439,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_uint16_t(uint16_t& out)
+	bool stdfile_rstream_impl::pop_uint16(uint16_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -451,7 +451,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_uint32_t(uint32_t& out)
+	bool stdfile_rstream_impl::pop_uint32(uint32_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -463,7 +463,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_uint64_t(uint64_t& out)
+	bool stdfile_rstream_impl::pop_uint64(uint64_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -476,7 +476,7 @@ namespace cllio
 		return false;
 	}
 
-	bool stdfile_rstream_impl::pop_int8_t(int8_t& out)
+	bool stdfile_rstream_impl::pop_int8(int8_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -488,7 +488,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_int16_t(int16_t& out)
+	bool stdfile_rstream_impl::pop_int16(int16_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -500,7 +500,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_int32_t(int32_t& out)
+	bool stdfile_rstream_impl::pop_int32(int32_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -512,7 +512,7 @@ namespace cllio
 		}
 		return false;
 	}
-	bool stdfile_rstream_impl::pop_int64_t(int64_t& out)
+	bool stdfile_rstream_impl::pop_int64(int64_t& out)
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -554,7 +554,7 @@ namespace cllio
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------
-	uint8_t stdfile_rstream_impl::pop_uint8_t()
+	uint8_t stdfile_rstream_impl::pop_uint8()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -562,7 +562,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return buffer[0];
 	}
-	uint16_t stdfile_rstream_impl::pop_uint16_t()
+	uint16_t stdfile_rstream_impl::pop_uint16()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -570,7 +570,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return _serializer_utils::_read_uint16_t(buffer.data());
 	}
-	uint32_t stdfile_rstream_impl::pop_uint32_t()
+	uint32_t stdfile_rstream_impl::pop_uint32()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -578,7 +578,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return _serializer_utils::_read_uint32_t(buffer.data());
 	}
-	uint64_t stdfile_rstream_impl::pop_uint64_t()
+	uint64_t stdfile_rstream_impl::pop_uint64()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;
@@ -587,7 +587,7 @@ namespace cllio
 		return _serializer_utils::_read_uint64_t(buffer.data());
 	}
 	//--------------------------------------------------------------------------------------------------------------------
-	int8_t stdfile_rstream_impl::pop_int8_t()
+	int8_t stdfile_rstream_impl::pop_int8()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint8_t)> buffer;
@@ -595,7 +595,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return _serializer_utils::_uts8(buffer[0]);
 	}
-	int16_t stdfile_rstream_impl::pop_int16_t()
+	int16_t stdfile_rstream_impl::pop_int16()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint16_t)> buffer;
@@ -603,7 +603,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return _serializer_utils::_uts16(_serializer_utils::_read_uint16_t(buffer.data()));
 	}
-	int32_t stdfile_rstream_impl::pop_int32_t()
+	int32_t stdfile_rstream_impl::pop_int32()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint32_t)> buffer;
@@ -611,7 +611,7 @@ namespace cllio
 		CLLIO_ASSERT(sz == buffer.size());
 		return _serializer_utils::_uts32(_serializer_utils::_read_uint32_t(buffer.data()));
 	}
-	int64_t stdfile_rstream_impl::pop_int64_t()
+	int64_t stdfile_rstream_impl::pop_int64()
 	{
 		CLLIO_ASSERT(m_file_ptr != nullptr);
 		std::array<cllio::byte_t, sizeof(uint64_t)> buffer;

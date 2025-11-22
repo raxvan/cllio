@@ -62,33 +62,33 @@ namespace cllio
 		bool trywrite_raw_buffer(const void* data, const std::size_t byte_count);
 
 	public:
-		void push_int8_t(const int8_t value);
-		void push_int16_t(const int16_t value);
-		void push_int32_t(const int32_t value);
-		void push_int64_t(const int64_t value);
+		void push_int8(const int8_t value);
+		void push_int16(const int16_t value);
+		void push_int32(const int32_t value);
+		void push_int64(const int64_t value);
 
-		void push_uint8_t(const uint8_t value);
-		void push_uint16_t(const uint16_t value);
-		void push_uint32_t(const uint32_t value);
-		void push_uint64_t(const uint64_t value);
+		void push_uint8(const uint8_t value);
+		void push_uint16(const uint16_t value);
+		void push_uint32(const uint32_t value);
+		void push_uint64(const uint64_t value);
 
 		void push_float(const float value);
 		void push_double(const double value);
 		void push_ptr(const void* px);
 
-		bool trypush_int8_t(const int8_t value);
-		bool trypush_int16_t(const int16_t value);
-		bool trypush_int32_t(const int32_t value);
-		bool trypush_int64_t(const int64_t value);
+		bool try_push_int8(const int8_t value);
+		bool try_push_int16(const int16_t value);
+		bool try_push_int32(const int32_t value);
+		bool try_push_int64(const int64_t value);
 
-		bool trypush_uint8_t(const uint8_t value);
-		bool trypush_uint16_t(const uint16_t value);
-		bool trypush_uint32_t(const uint32_t value);
-		bool trypush_uint64_t(const uint64_t value);
+		bool try_push_uint8(const uint8_t value);
+		bool try_push_uint16(const uint16_t value);
+		bool try_push_uint32(const uint32_t value);
+		bool try_push_uint64(const uint64_t value);
 
-		bool trypush_float(const float value);
-		bool trypush_double(const double value);
-		bool trypush_ptr(const void* px);
+		bool try_push_float(const float value);
+		bool try_push_double(const double value);
+		bool try_push_ptr(const void* px);
 
 	public: // text output
 		std::size_t str_printf(const char* format, ...);
@@ -120,34 +120,34 @@ namespace cllio
 		bool tryread_raw_buffer(void* dest, const std::size_t ammount);
 
 	public: // bool 	pop_T(T & out);
-		bool pop_uint8_t(uint8_t& out);
-		bool pop_uint16_t(uint16_t& out);
-		bool pop_uint32_t(uint32_t& out);
-		bool pop_uint64_t(uint64_t& out);
+		bool pop_uint8(uint8_t& out);
+		bool pop_uint16(uint16_t& out);
+		bool pop_uint32(uint32_t& out);
+		bool pop_uint64(uint64_t& out);
 
-		bool pop_int8_t(int8_t& out);
-		bool pop_int16_t(int16_t& out);
-		bool pop_int32_t(int32_t& out);
-		bool pop_int64_t(int64_t& out);
+		bool pop_int8(int8_t& out);
+		bool pop_int16(int16_t& out);
+		bool pop_int32(int32_t& out);
+		bool pop_int64(int64_t& out);
 
 		bool pop_float(float& out);
 		bool pop_double(double& out);
 
 	public: // T 	pop_T();
-		uint8_t	 pop_uint8_t();
-		uint16_t pop_uint16_t();
-		uint32_t pop_uint32_t();
-		uint64_t pop_uint64_t();
+		uint8_t	 pop_uint8();
+		uint16_t pop_uint16();
+		uint32_t pop_uint32();
+		uint64_t pop_uint64();
 
-		int8_t	pop_int8_t();
-		int16_t pop_int16_t();
-		int32_t pop_int32_t();
-		int64_t pop_int64_t();
+		int8_t	pop_int8();
+		int16_t pop_int16();
+		int32_t pop_int32();
+		int64_t pop_int64();
 
 		float  pop_float();
 		double pop_double();
 
-#include "cllio_pop_variants.h"
+#include "_cllio_read_variants.h"
 
 	public: // extra:
 		// read file content int a std::vector like thing of uint8_t

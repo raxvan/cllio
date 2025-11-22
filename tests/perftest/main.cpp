@@ -108,14 +108,14 @@ void run_read_functions_f3(T& stream)
 #define TEST_ITEM(TYPE, VALUE)                                                                                             \
 	{                                                                                                                      \
 		TYPE value = not_value(VALUE);                                                                                     \
-		bool f = stream.popdefault_##TYPE(value, not_value(VALUE));                                                        \
+		bool f = stream.pop_default_##TYPE(value, not_value(VALUE));                                                        \
 		if ((VALUE) != value || f == false)                                                                                \
 		{                                                                                                                  \
 			on_func_failed();                                                                                              \
-			std::cerr << "FAILED bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " #VALUE << std::endl; \
+			std::cerr << "FAILED bool pop_default_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                                  \
 		else                                                                                                               \
-			std::cout << "OK bool popdefault_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " << #VALUE << std::endl;  \
+			std::cout << "OK bool pop_default_" #TYPE "(" #TYPE "&, const " #TYPE "&) with value " << #VALUE << std::endl;  \
 	}
 
 #include "test_set.h"
@@ -128,14 +128,14 @@ void run_read_functions_f4(T& stream)
 {
 #define TEST_ITEM(TYPE, VALUE)                                                                                      \
 	{                                                                                                               \
-		TYPE value = stream.popdefault_##TYPE(not_value(VALUE));                                                    \
+		TYPE value = stream.pop_default_##TYPE(not_value(VALUE));                                                    \
 		if ((VALUE) != value)                                                                                       \
 		{                                                                                                           \
 			on_func_failed();                                                                                       \
-			std::cerr << "FAILED " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " #VALUE << std::endl; \
+			std::cerr << "FAILED " #TYPE " pop_default_" #TYPE "(const " #TYPE "&) with value " #VALUE << std::endl; \
 		}                                                                                                           \
 		else                                                                                                        \
-			std::cout << "OK " #TYPE " popdefault_" #TYPE "(const " #TYPE "&) with value " << #VALUE << std::endl;  \
+			std::cout << "OK " #TYPE " pop_default_" #TYPE "(const " #TYPE "&) with value " << #VALUE << std::endl;  \
 	}
 
 #include "test_set.h"
@@ -340,12 +340,12 @@ bool test_utils()
 
 		uint64_t			  ref = i;
 		cllio::memory_wstream w(&buffer[4], 8);
-		if (cllio::utils::write_packed_uint64_t(w, ref) == false)
+		if (cllio::utils::write_packed_uint64(w, ref) == false)
 			return false;
 
 		uint64_t			  check = std::numeric_limits<uint64_t>::max();
 		cllio::memory_rstream r(&buffer[4], 8);
-		if (cllio::utils::read_packed_uint64_t(r, check) == false)
+		if (cllio::utils::read_packed_uint64(r, check) == false)
 			return false;
 
 		if (check != ref)

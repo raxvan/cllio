@@ -13,12 +13,12 @@ namespace cllio
 
 		template <class W>
 		// 61 bits max precision
-		static inline bool write_packed_uint64_t(W& writer, const uint64_t value)
+		static inline bool write_packed_uint64(W& writer, const uint64_t value)
 		{
 			const uint8_t low_mask = (1 << 5) - 1;
 
 			if (value <= low_mask) // first 5 bits
-				return writer.trypush_uint8_t(char(value));
+				return writer.try_push_uint8(char(value));
 
 			uint8_t buffer[9];
 
@@ -50,30 +50,30 @@ namespace cllio
 		}
 		template <class W>
 		// 61 bits max precision
-		static inline bool write_packed_int64_t(W& writer, const int64_t value)
+		static inline bool write_packed_int64(W& writer, const int64_t value)
 		{
 			uint64_t v;
 			if (value < 0)
 				v = uint64_t(-value) << 1 | uint64_t(1);
 			else
 				v = uint64_t(value) << 1;
-			return write_packed_uint64_t(writer, v);
+			return write_packed_uint64(writer, v);
 		}
 		template <class W>
 		// 7 bytes max precision
 		static inline bool write_packed_size(W& writer, const std::size_t v)
 		{
-			return write_packed_uint64_t(writer, v);
+			return write_packed_uint64(writer, v);
 		}
 
 	public:
 		template <class R>
 		// 61 bits max precision
-		static inline bool read_packed_uint64_t(R& reader, uint64_t& value)
+		static inline bool read_packed_uint64(R& reader, uint64_t& value)
 		{
 			const uint8_t low_mask = (1 << 5) - 1;
 			uint8_t		  p;
-			if (reader.pop_uint8_t(p) == false)
+			if (reader.pop_uint8(p) == false)
 				return false;
 
 			if (p <= low_mask)
@@ -96,10 +96,10 @@ namespace cllio
 		}
 		template <class R>
 		// 61 bits max precision
-		static inline bool read_packed_int64_t(R& reader, int64_t& value)
+		static inline bool read_packed_int64(R& reader, int64_t& value)
 		{
 			uint64_t v;
-			if (read_packed_uint64_t(reader, v) == false)
+			if (read_packed_uint64(reader, v) == false)
 				return false;
 
 			if ((v & 1) != 0)
@@ -113,7 +113,7 @@ namespace cllio
 		static inline bool read_packed_size(R& reader, std::size_t& out)
 		{
 			uint64_t tmp;
-			if (read_packed_uint64_t(reader, tmp) == false)
+			if (read_packed_uint64(reader, tmp) == false)
 				return false;
 			CLLIO_ASSERT(tmp < std::numeric_limits<std::size_t>::max());
 			out = std::size_t(tmp);
@@ -124,7 +124,7 @@ namespace cllio
 		static inline bool read_packed_size_callback(R& reader, const F& _callback)
 		{
 			uint64_t tmp;
-			if (read_packed_uint64_t(reader, tmp) == false)
+			if (read_packed_uint64(reader, tmp) == false)
 				return false;
 			CLLIO_ASSERT(tmp < std::numeric_limits<std::size_t>::max());
 			return _callback(std::size_t(tmp));
